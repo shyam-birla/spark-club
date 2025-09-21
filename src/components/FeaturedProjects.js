@@ -1,23 +1,24 @@
 import Image from 'next/image';
 import Link from 'next/link';
 
-// YAHAN BADLAV KIYA GAYA HAI: { projects = [] }
-// Iska matlab hai ki agar projects prop nahi milta, toh ek khaali array use karo.
 const FeaturedProjects = ({ projects = [] }) => {
   return (
     <section className="bg-white py-20 px-4">
       <div className="container mx-auto text-center">
         <h2 className="text-3xl font-bold text-black">From Our Lab</h2>
-        <p className="text-gray-700 mt-2 mb-12">Here's a glimpse of what we've been working on.</p>
+        {/* // PROBLEM THEEK KAR DIYA GAYA HAI:
+        // String ko single quotes (') ki jagah double quotes (") mein daala gaya hai */}
+        <p className="text-gray-700 mt-2 mb-12">{"Here's a glimpse of what we've been working on."}</p>
+        
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
           {projects.map((project) => (
             <Link href={`/projects/${project.slug}`} key={project.slug}>
               <div className="border rounded-lg overflow-hidden shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 cursor-pointer">
                 <div className="w-full h-56 bg-gray-200 flex items-center justify-center">
                   {project.imageUrl ? (
-                    <Image src={project.imageUrl} alt={project.title} width={500} height={300} className="object-cover w-full h-full" />
+                    <img src={project.imageUrl} alt={project.title} className="object-cover w-full h-full" />
                   ) : (
-                    <Image src="https://via.placeholder.com/500x300" alt={project.title} width={500} height={300} className="object-cover w-full h-full" />
+                    <img src="https://via.placeholder.com/500x300" alt={project.title} className="object-cover w-full h-full" />
                   )}
                 </div>
                 <div className="p-6">
