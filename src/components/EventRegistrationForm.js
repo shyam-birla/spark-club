@@ -10,12 +10,11 @@ const EventRegistrationForm = ({ eventTitle }) => {
     mobile: '',
     branch: '',
     enrollmentNo: '',
-    year: '' // Added year field
+    year: ''
   });
 
   const [status, setStatus] = useState('');
 
-  // Handle changes to any form input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
@@ -24,14 +23,12 @@ const EventRegistrationForm = ({ eventTitle }) => {
     e.preventDefault();
     setStatus('Submitting...');
 
-    // Validate all fields including year
     if (!formData.name || !formData.email || !formData.mobile || !formData.branch || !formData.enrollmentNo || !formData.year) {
       setStatus('Please fill out all fields.');
       return;
     }
 
     try {
-      // NOTE: You will need to create this API route later
       const res = await fetch('/api/register', {
         method: 'POST',
         headers: {
@@ -41,8 +38,7 @@ const EventRegistrationForm = ({ eventTitle }) => {
       });
 
       if (res.ok) {
-        const data = await res.json();
-        setStatus(data.message || 'Registration successful!');
+        setStatus('Registration successful! Thank you.');
         setFormData({ name: '', email: '', mobile: '', branch: '', enrollmentNo: '', year: '' });
       } else {
         setStatus('Registration failed. Please try again.');
