@@ -13,8 +13,9 @@ export default function ContactPage() {
     <main className="container mx-auto px-4 py-20">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold">Get in Touch</h1>
+        {/* // PROBLEM THEEK KAR DIYA GAYA HAI */}
         <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
-          Have a question, a project idea, or just want to say hi? We'd love to hear from you.
+          {"Have a question, a project idea, or just want to say hi? We'd love to hear from you."}
         </p>
       </div>
 
