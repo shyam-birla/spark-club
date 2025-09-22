@@ -6,7 +6,7 @@ const FeaturedProjects = ({ projects = [] }) => {
     <section className="bg-white py-20 px-4">
       <div className="container mx-auto text-center">
         <h2 className="text-3xl font-bold text-black">From Our Lab</h2>
-        <p className="text-gray-700 mt-2 mb-12">Here\'s a glimpse of what we\'ve been working on.</p>
+        <p className="text-gray-700 mt-2 mb-12">Here&apos;s a glimpse of what we&apos;ve been working on.</p>
         
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8 text-left">
           {projects.map((project) => (
