@@ -2,6 +2,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/NavBar";
 import Footer from "@/components/Footer"; // Footer ko import karein
+import { client } from "../../sanity/lib/client";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -10,7 +11,16 @@ export const metadata = {
   description: "The official website of the SPARK tech club, a community for builders, innovators, and learners.",
 };
 
-export default function RootLayout({ children }) {
+const socialLinksQuery = `*[_type == "socialLink"]{
+  _id,
+  name,
+  url,
+  icon
+}`;
+
+export default async function RootLayout({ children }) {
+  const socialLinks = await client.fetch(socialLinksQuery);
+
   return (
     <html lang="en">
       {/* // YEH STRUCTURE BAHUT ZAROORI HAI */}
@@ -20,7 +30,7 @@ export default function RootLayout({ children }) {
           <main className="flex-grow">
             {children}
           </main>
-          <Footer /> {/* // Footer ko yahan add karein */}
+          <Footer socialLinks={socialLinks} /> {/* // Footer ko yahan add karein */}
         </div>
       </body>
     </html>

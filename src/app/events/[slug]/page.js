@@ -1,5 +1,6 @@
 import { client } from '../../../../sanity/lib/client';
 import Link from 'next/link';
+import Image from 'next/image';
 
 // Ek single event fetch karne ke liye GROQ query
 const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
@@ -29,14 +30,16 @@ export default async function EventDetailPage({ params }) {
   });
 
   return (
-    <main className="container mx-auto px-4 py-20 text-white">
+    <main className="bg-black container mx-auto px-4 py-20 text-white">
       {/* Cover Image */}
       {event.imageUrl && (
         <div className="relative w-full h-96 mb-8">
-          <img 
+          <Image 
             src={event.imageUrl} 
             alt={event.title} 
-            className="w-full h-full object-cover rounded-lg" 
+            layout="fill"
+            objectFit="cover"
+            className="rounded-lg" 
           />
         </div>
       )}

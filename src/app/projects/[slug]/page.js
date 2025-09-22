@@ -28,7 +28,7 @@ export default async function ProjectDetailPage({ params }) {
   }
 
   return (
-    <main className="container mx-auto px-4 py-20 text-white">
+    <main className="bg-black container mx-auto px-4 py-20 text-white">
       {/* Project Title */}
       <h1 className="text-4xl md:text-6xl font-bold mb-4">{project.title}</h1>
       

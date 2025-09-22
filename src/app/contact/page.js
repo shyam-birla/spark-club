@@ -1,5 +1,6 @@
 import ContactForm from "@/components/ContactForm";
 import Link from "next/link";
+import { client } from "../../../sanity/lib/client";
 
 // Social media links ke liye ek chhota component
 const SocialLink = ({ href, children }) => (
@@ -8,14 +9,21 @@ const SocialLink = ({ href, children }) => (
   </Link>
 );
 
-export default function ContactPage() {
+const socialLinksQuery = `*[_type == "socialLink"]{
+  _id,
+  name,
+  url
+}`;
+
+export default async function ContactPage() {
+  const socialLinks = await client.fetch(socialLinksQuery);
+
   return (
     <main className="container mx-auto px-4 py-20">
       <div className="text-center mb-12">
         <h1 className="text-5xl font-bold">Get in Touch</h1>
-        {/* // PROBLEM THEEK KAR DIYA GAYA HAI */}
         <p className="text-gray-400 mt-4 max-w-2xl mx-auto">
-          {"Have a question, a project idea, or just want to say hi? We'd love to hear from you."}
+          Have a question, a project idea, or just want to say hi? We'd love to hear from you.
         </p>
       </div>
 
@@ -24,9 +32,11 @@ export default function ContactPage() {
       <div className="text-center mt-16">
         <h2 className="text-2xl font-semibold mb-4">Connect with us on Social Media</h2>
         <div className="flex justify-center items-center gap-6 text-2xl">
-          <SocialLink href="https://github.com">GitHub</SocialLink>
-          <SocialLink href="https://linkedin.com">LinkedIn</SocialLink>
-          <SocialLink href="https://twitter.com">X (Twitter)</SocialLink>
+          {socialLinks.map((link) => (
+            <SocialLink key={link._id} href={link.url}>
+              {link.name}
+            </SocialLink>
+          ))}
         </div>
       </div>
     </main>

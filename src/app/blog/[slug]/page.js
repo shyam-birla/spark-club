@@ -1,5 +1,5 @@
 import { client } from '../../../../sanity/lib/client';
-import PortableTextComponent from '@/components/PortableTextComponent'; // We will create this next
+import PortableTextComponent from '@/components/PortableTextComponent';
 import Image from 'next/image';
 
 const postQuery = `*[_type == "blogPost" && slug.current == $slug][0]{
@@ -31,17 +31,19 @@ export default async function BlogPostPage({ params }) {
   });
 
   return (
-    <main className="container mx-auto px-4 py-20">
+    <main className="bg-black container mx-auto px-4 py-20">
       <article className="max-w-3xl mx-auto">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-white">{post.title}</h1>
         
         {/* Author Info */}
         <div className="flex items-center gap-4 mb-8">
           {post.author?.authorImageUrl && (
-            <img 
+            <Image 
               src={post.author.authorImageUrl} 
               alt={post.author.name}
-              className="w-12 h-12 rounded-full object-cover"
+              width={48}
+              height={48}
+              className="rounded-full object-cover"
             />
           )}
           <div>
@@ -53,10 +55,12 @@ export default async function BlogPostPage({ params }) {
         {/* Cover Image */}
         {post.imageUrl && (
           <div className="relative w-full h-96 mb-8">
-            <img 
+            <Image 
               src={post.imageUrl} 
               alt={post.title} 
-              className="w-full h-full object-cover rounded-lg" 
+              layout="fill"
+              objectFit="cover"
+              className="rounded-lg" 
             />
           </div>
         )}

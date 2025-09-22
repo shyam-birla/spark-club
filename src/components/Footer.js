@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import Image from 'next/image';
 
-const Footer = () => {
+const Footer = ({ socialLinks = [] }) => {
   return (
     <footer className="bg-gray-900 text-gray-400 border-t border-gray-800 mt-auto">
       <div className="container mx-auto px-6 py-12">
@@ -33,8 +33,13 @@ const Footer = () => {
           <div>
             <h3 className="text-white font-semibold mb-4 tracking-wider uppercase">Connect</h3>
             <ul className="space-y-2">
-              <li><a href="https://chat.whatsapp.com/Gl8jd4Xz0jKAd9QUCDIVQ9" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">WhatsApp</a></li>
-              <li><a href="https://www.instagram.com/spark_club_sati?igsh=MXhncDJmZ2t4Mmg0MA==" target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">Instagram</a></li>
+              {socialLinks.map((link) => (
+                <li key={link._id}>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">
+                    {link.name}
+                  </a>
+                </li>
+              ))}
               <li><a href="mailto:sparkclub.sati@gmail.com" className="hover:text-orange-400 transition-colors font-semibold">
                   sparkclub.sati@gmail.com
               </a></li>

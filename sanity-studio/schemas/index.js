@@ -10,7 +10,11 @@ import roadmapModule from './roadmapModule'
 import aboutPage from './aboutPage' // About Page ko import karein
 import contactSubmission from './contactSubmission'
 
+import socialLink from './socialLink'
+
+import technology from './technology'
+
 export const schemaTypes = [
     project, member, event, blogPost, blockContent,
-    resource, stream, roadmapModule, aboutPage, contactSubmission // Yahan add karein
+    resource, stream, roadmapModule, aboutPage, contactSubmission, socialLink, technology
 ]

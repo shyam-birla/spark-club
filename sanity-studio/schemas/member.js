@@ -45,5 +45,10 @@ export default {
       title: 'GitHub URL',
       type: 'url',
     },
+    {
+      name: 'bio',
+      title: 'Biography',
+      type: 'blockContent',
+    },
   ],
 };

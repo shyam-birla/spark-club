@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import Image from 'next/image';
 
 const EventCard = ({ event }) => {
   // Date ko a-sān format mein dikhane ke liye
@@ -12,17 +13,12 @@ const EventCard = ({ event }) => {
     <Link href={`/events/${event.slug}`}>
       <div className="bg-gray-800 rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer h-full flex flex-col">
         <div className="relative w-full h-48">
-          {event.imageUrl ? (
-            <img
-              src={event.imageUrl}
-              alt={event.title}
-              className="w-full h-full object-cover"
-            />
-          ) : (
-            <div className="w-full h-full bg-gray-700 flex items-center justify-center">
-              <span className="text-gray-400">No Image</span>
-            </div>
-          )}
+          <Image
+            src={event.imageUrl || '/placeholder.png'}
+            alt={event.title}
+            layout="fill"
+            objectFit="cover"
+          />
         </div>
         <div className="p-4 flex-grow">
           {event.status && (

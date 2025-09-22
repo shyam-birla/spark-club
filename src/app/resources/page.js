@@ -1,5 +1,6 @@
 import { client } from '../../../sanity/lib/client';
 import Link from 'next/link';
+import { FaVideo, FaFileAlt, FaGraduationCap, FaTools, FaLink } from 'react-icons/fa';
 
 // Sabhi streams aur unke andar ke modules/resources ko fetch karne ke liye query
 const streamsQuery = `*[_type == "stream"]{
@@ -23,17 +24,17 @@ const streamsQuery = `*[_type == "stream"]{
 // Chhota component jo har resource link ko uske type ke icon ke saath dikhayega
 const ResourceLink = ({ resource }) => {
   const getIcon = (type) => {
-    if (type === 'video') return '▶️';
-    if (type === 'article') return '📄';
-    if (type === 'course') return '🎓';
-    if (type === 'tool') return '🛠️';
-    return '🔗';
+    if (type === 'video') return <FaVideo />;
+    if (type === 'article') return <FaFileAlt />;
+    if (type === 'course') return <FaGraduationCap />;
+    if (type === 'tool') return <FaTools />;
+    return <FaLink />;
   };
 
   return (
     <Link href={resource.link} target="_blank" rel="noopener noreferrer">
       <div className="bg-gray-700 p-3 rounded-md hover:bg-gray-600 transition-colors flex items-center gap-3">
-        <span className="text-xl">{getIcon(resource.type)}</span>
+        <span className="text-xl text-orange-400">{getIcon(resource.type)}</span>
         <span className="text-white font-medium truncate">{resource.title}</span>
       </div>
     </Link>
