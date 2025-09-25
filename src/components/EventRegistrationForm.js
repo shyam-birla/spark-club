@@ -3,7 +3,7 @@
 import { useState } from 'react';
 
 // Event registration form with multiple inputs including year select
-const EventRegistrationForm = ({ eventTitle }) => {
+const EventRegistrationForm = ({ eventTitle, eventId }) => {
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -14,6 +14,7 @@ const EventRegistrationForm = ({ eventTitle }) => {
   });
 
   const [status, setStatus] = useState('');
+  const [disabled, setDisabled] = useState(false);
 
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -22,9 +23,11 @@ const EventRegistrationForm = ({ eventTitle }) => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setStatus('Submitting...');
+    setDisabled(true);
 
     if (!formData.name || !formData.email || !formData.mobile || !formData.branch || !formData.enrollmentNo || !formData.year) {
       setStatus('Please fill out all fields.');
+      setDisabled(false);
       return;
     }
 
@@ -34,17 +37,22 @@ const EventRegistrationForm = ({ eventTitle }) => {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ ...formData, eventTitle }),
+        body: JSON.stringify({ ...formData, eventTitle, eventId }), // eventId ko yahan add karein
       });
 
       if (res.ok) {
         setStatus('Registration successful! Thank you.');
         setFormData({ name: '', email: '', mobile: '', branch: '', enrollmentNo: '', year: '' });
+        // Success ke baad form ko disabled hi rakhein ya re-enable karein, as per UX choice
+        // setDisabled(true);
       } else {
-        setStatus('Registration failed. Please try again.');
+        const data = await res.json();
+        setStatus(data.message || 'Registration failed. Please try again.');
+        setDisabled(false);
       }
     } catch (error) {
       setStatus('Something went wrong. Please try again.');
+      setDisabled(false);
     }
   };
 
@@ -118,9 +126,10 @@ const EventRegistrationForm = ({ eventTitle }) => {
 
       <button
         type="submit"
-        className="w-full bg-orange-500 text-white px-6 py-3 rounded-md font-semibold text-lg hover:bg-orange-600 transition-colors disabled:bg-gray-500"
+        disabled={disabled}
+        className="w-full bg-orange-500 text-white px-6 py-3 rounded-md font-semibold text-lg hover:bg-orange-600 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed"
       >
-        Register Now
+        {disabled ? 'Submitting...' : 'Register Now'}
       </button>
       
       {status && <p className="text-center text-gray-300 mt-4">{status}</p>}

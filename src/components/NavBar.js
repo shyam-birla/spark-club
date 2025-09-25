@@ -7,7 +7,7 @@ const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-50 flex justify-between items-center p-4 bg-black text-white">
+    <header className="sticky top-0 z-50 flex justify-between items-center p-4 bg-black/80 backdrop-blur-lg border-b border-gray-800 text-white">
       {/* Logo */}
       <Link href="/">
         {/* Make sure your white logo is in public/logo-white.png */}

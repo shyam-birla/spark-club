@@ -18,38 +18,41 @@ const Footer = ({ socialLinks = [] }) => {
             </p>
           </div>
 
-          {/* Column 2: Quick Links 🧭 */}
-          <div>
-            <h3 className="text-white font-semibold mb-4 tracking-wider uppercase">Quick Links</h3>
-            <ul className="space-y-2">
-              <li><Link href="/about" className="hover:text-orange-400 transition-colors">About</Link></li>
-              <li><Link href="/projects" className="hover:text-orange-400 transition-colors">Projects</Link></li>
-              <li><Link href="/events" className="hover:text-orange-400 transition-colors">Events</Link></li>
-              <li><Link href="/contact" className="hover:text-orange-400 transition-colors">Contact</Link></li>
-            </ul>
-          </div>
+          {/* Container for right-side columns to ensure proper wrapping on mobile */}
+          <div className="md:col-span-2 grid grid-cols-2 gap-10">
+            {/* Column 2: Quick Links 🧭 */}
+            <div>
+              <h3 className="text-white font-semibold mb-4 tracking-wider uppercase">Quick Links</h3>
+                          <ul className="space-y-2">
+                            <li><Link href="/projects" className="hover:text-orange-400">Projects</Link></li>
+                            <li><Link href="/events" className="hover:text-orange-400">Events</Link></li>
+                            <li><Link href="/blog" className="hover:text-orange-400">Blog</Link></li>
+                            <li><Link href="/resources" className="hover:text-orange-400">Resources</Link></li>
+                            <li><Link href="/contact" className="hover:text-orange-400">Contact</Link></li>
+                          </ul>            </div>
 
-          {/* Column 3: Connect & CTA 🤝 */}
-          <div>
-            <h3 className="text-white font-semibold mb-4 tracking-wider uppercase">Connect</h3>
-            <ul className="space-y-2">
-              {socialLinks.map((link) => (
-                <li key={link._id}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">
-                    {link.name}
-                  </a>
-                </li>
-              ))}
-              <li><a href="mailto:sparkclub.sati@gmail.com" className="hover:text-orange-400 transition-colors font-semibold">
-                  sparkclub.sati@gmail.com
-              </a></li>
-            </ul>
-            <div className="mt-6">
-              <Link href="/join">
-                <button className="bg-orange-500 text-white px-5 py-2 rounded-md font-semibold hover:bg-orange-600 transition-colors w-full md:w-auto">
-                  Become a Member
-                </button>
-              </Link>
+            {/* Column 3: Connect & CTA 🤝 */}
+            <div>
+              <h3 className="text-white font-semibold mb-4 tracking-wider uppercase">Connect</h3>
+              <ul className="space-y-2">
+                {socialLinks.map((link) => (
+                  <li key={link._id}>
+                    <a href={link.url} target="_blank" rel="noopener noreferrer" className="hover:text-orange-400 transition-colors">
+                      {link.name}
+                    </a>
+                  </li>
+                ))}
+                <li><a href="mailto:sparkclub.sati@gmail.com" className="hover:text-orange-400 transition-colors font-semibold">
+                    sparkclub.sati@gmail.com
+                </a></li>
+              </ul>
+              <div className="mt-6">
+                <Link href="/join">
+                  <button className="bg-orange-500 text-white px-5 py-2 rounded-md font-semibold hover:bg-orange-600 transition-colors w-full md:w-auto">
+                    Become a Member
+                  </button>
+                </Link>
+              </div>
             </div>
           </div>
 

@@ -4,9 +4,7 @@
 **/
 import { defineCliConfig } from 'sanity/cli'
 
-// YAHAN BADLAV KIYA GAYA HAI:
-// Project ID aur Dataset ko seedha hardcode karein.
-const projectId = "jpsw6ns5"
-const dataset = "production"
+const projectId = process.env.NEXT_PUBLIC_SANITY_PROJECT_ID;
+const dataset = process.env.NEXT_PUBLIC_SANITY_DATASET;
 
 export default defineCliConfig({ api: { projectId, dataset } })

@@ -11,7 +11,7 @@ const EventCard = ({ event }) => {
 
   return (
     <Link href={`/events/${event.slug}`}>
-      <div className="bg-gray-800 rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer h-full flex flex-col">
+      <div className="bg-gray-800 rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer h-full flex flex-col border border-gray-700 hover:shadow-2xl hover:shadow-orange-500/20">
         <div className="relative w-full h-48">
           <Image
             src={event.imageUrl || '/placeholder.png'}

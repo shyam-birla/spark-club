@@ -19,7 +19,13 @@ const socialLinksQuery = `*[_type == "socialLink"]{
 }`;
 
 export default async function RootLayout({ children }) {
-  const socialLinks = await client.fetch(socialLinksQuery);
+  let socialLinks = []; // Default to empty array
+  try {
+    socialLinks = await client.fetch(socialLinksQuery);
+  } catch (error) {
+    console.error("Failed to fetch social links:", error);
+    // If fetching fails, the footer will simply not render the links.
+  }
 
   return (
     <html lang="en">
