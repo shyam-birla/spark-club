@@ -1,46 +1,20 @@
 @import "tailwindcss";
 
+/* Sirf Light Mode ke liye base colors */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --background: #ffffff; /* Pure White */
+  --foreground: #000000; /* Pure Black */
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #000000; /* Changed to black for gradient base */
-    --foreground: #ededed;
-  }
-
-  body {
-    /* Subtle gradient from a dark gray to black */
-    background-color: #000000;
-    background-image: linear-gradient(180deg, #1a1a1a 0%, #000000 100%);
-  }
-}
-
+/* Base styles ko body par apply karna */
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   text-rendering: optimizeLegibility;
 }
 
-/* Add a default transition to all elements for smoother hover effects */
-* {
-  transition-property: all;
-  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
-  transition-duration: 300ms;
+html {
+  scroll-behavior: smooth;
 }

@@ -11,8 +11,8 @@ export default defineConfig({
   name: 'default',
   title: 'SPARK Club Studio',
 
-  projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-  dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
+  projectId: 'jpsw6ns5',
+  dataset: 'production',
 
   plugins: [
     structureTool({

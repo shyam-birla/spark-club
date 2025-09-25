@@ -18,24 +18,27 @@ export default async function AboutPage() {
   }
 
   return (
-    <main className="bg-black container mx-auto px-4 py-20">
+    // Background ko dark se light kiya
+    <main className="bg-white container mx-auto px-4 py-20">
       <div className="max-w-4xl mx-auto text-center">
-        <h1 className="text-5xl font-bold text-white mb-8">{about.title}</h1>
+        {/* Text color ko white se black kiya */}
+        <h1 className="text-5xl font-bold text-black mb-8">{about.title}</h1>
       </div>
 
       {about.imageUrl && (
         <div className="relative w-full max-w-5xl h-96 mx-auto mb-12">
+          {/* Image component ko naye syntax ke hisaab se update kiya */}
           <Image 
             src={about.imageUrl} 
             alt={about.title} 
-            layout="fill"
-            objectFit="cover"
-            className="rounded-lg shadow-lg" 
+            fill
+            className="object-cover rounded-lg shadow-lg" 
           />
         </div>
       )}
 
-      <div className="max-w-3xl mx-auto prose prose-invert lg:prose-xl text-gray-300 leading-relaxed">
+      {/* Sanity se aa rahe content ko light theme ke liye update kiya */}
+      <div className="max-w-3xl mx-auto prose lg:prose-xl leading-relaxed">
         {about.content && (
           <PortableTextComponent value={about.content} />
         )}

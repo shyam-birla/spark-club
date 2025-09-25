@@ -2,17 +2,10 @@
 
 import { useState } from 'react';
 
-// Event registration form with multiple inputs including year select
 const EventRegistrationForm = ({ eventTitle, eventId }) => {
   const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    mobile: '',
-    branch: '',
-    enrollmentNo: '',
-    year: ''
+    name: '', email: '', mobile: '', branch: '', enrollmentNo: '', year: ''
   });
-
   const [status, setStatus] = useState('');
   const [disabled, setDisabled] = useState(false);
 
@@ -34,17 +27,13 @@ const EventRegistrationForm = ({ eventTitle, eventId }) => {
     try {
       const res = await fetch('/api/register', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ ...formData, eventTitle, eventId }), // eventId ko yahan add karein
+        headers: { 'Content-Type': 'application/json', },
+        body: JSON.stringify({ ...formData, eventTitle, eventId }),
       });
 
       if (res.ok) {
         setStatus('Registration successful! Thank you.');
         setFormData({ name: '', email: '', mobile: '', branch: '', enrollmentNo: '', year: '' });
-        // Success ke baad form ko disabled hi rakhein ya re-enable karein, as per UX choice
-        // setDisabled(true);
       } else {
         const data = await res.json();
         setStatus(data.message || 'Registration failed. Please try again.');
@@ -57,9 +46,12 @@ const EventRegistrationForm = ({ eventTitle, eventId }) => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-gray-800 text-white p-6 rounded-lg shadow-lg space-y-4">
-      <h3 className="text-xl font-semibold mb-2 text-center text-orange-400">Register for {eventTitle}</h3>
+    // Form container ko light theme ke liye update kiya
+    <form onSubmit={handleSubmit} className="max-w-md mx-auto bg-white text-black p-6 rounded-lg shadow-md space-y-4 border border-gray-200">
+      {/* Heading se orange color hataya */}
+      <h3 className="text-xl font-semibold mb-2 text-center text-black">Register for {eventTitle}</h3>
 
+      {/* Saare input fields ko light theme ke liye style kiya */}
       <input
         type="text"
         name="name"
@@ -67,9 +59,8 @@ const EventRegistrationForm = ({ eventTitle, eventId }) => {
         value={formData.name}
         onChange={handleChange}
         required
-        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-orange-500 focus:border-orange-500"
+        className="w-full px-4 py-2 bg-white border border-gray-300 rounded-md focus:ring-black focus:border-black"
       />
-
       <input
         type="email"
         name="email"
@@ -77,9 +68,8 @@ const EventRegistrationForm = ({ eventTitle, eventId }) => {
         value={formData.email}
         onChange={handleChange}
         required
-        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-orange-500 focus:border-orange-500"
+        className="w-full px-4 py-2 bg-white border border-gray-300 rounded-md focus:ring-black focus:border-black"
       />
-
       <input
         type="tel"
         name="mobile"
@@ -87,9 +77,8 @@ const EventRegistrationForm = ({ eventTitle, eventId }) => {
         value={formData.mobile}
         onChange={handleChange}
         required
-        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-orange-500 focus:border-orange-500"
+        className="w-full px-4 py-2 bg-white border border-gray-300 rounded-md focus:ring-black focus:border-black"
       />
-
       <input
         type="text"
         name="branch"
@@ -97,9 +86,8 @@ const EventRegistrationForm = ({ eventTitle, eventId }) => {
         value={formData.branch}
         onChange={handleChange}
         required
-        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-orange-500 focus:border-orange-500"
+        className="w-full px-4 py-2 bg-white border-gray-300 rounded-md focus:ring-black focus:border-black"
       />
-
       <input
         type="text"
         name="enrollmentNo"
@@ -107,15 +95,14 @@ const EventRegistrationForm = ({ eventTitle, eventId }) => {
         value={formData.enrollmentNo}
         onChange={handleChange}
         required
-        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-orange-500 focus:border-orange-500"
+        className="w-full px-4 py-2 bg-white border border-gray-300 rounded-md focus:ring-black focus:border-black"
       />
-      
       <select
         name="year"
         value={formData.year}
         onChange={handleChange}
         required
-        className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-md focus:ring-orange-500 focus:border-orange-500"
+        className="w-full px-4 py-2 bg-white border border-gray-300 rounded-md focus:ring-black focus:border-black"
       >
         <option value="" disabled>Select Your Year</option>
         <option value="1st Year">1st Year</option>
@@ -124,15 +111,17 @@ const EventRegistrationForm = ({ eventTitle, eventId }) => {
         <option value="4th Year">4th Year</option>
       </select>
 
+      {/* Button ko humare standard black button se replace kiya */}
       <button
         type="submit"
         disabled={disabled}
-        className="w-full bg-orange-500 text-white px-6 py-3 rounded-md font-semibold text-lg hover:bg-orange-600 transition-colors disabled:bg-gray-500 disabled:cursor-not-allowed"
+        className="w-full bg-black text-white px-6 py-3 rounded-md font-semibold text-lg hover:opacity-80 transition-opacity disabled:opacity-50 disabled:cursor-not-allowed"
       >
         {disabled ? 'Submitting...' : 'Register Now'}
       </button>
       
-      {status && <p className="text-center text-gray-300 mt-4">{status}</p>}
+      {/* Status message ko dark grey kiya */}
+      {status && <p className="text-center text-gray-600 mt-4">{status}</p>}
     </form>
   );
 };

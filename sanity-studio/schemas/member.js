@@ -1,5 +1,3 @@
-// sanity-studio/schemas/member.js
-
 export default {
   name: 'member',
   title: 'Member',
@@ -25,7 +23,6 @@ export default {
       name: 'role',
       title: 'Role / Position',
       type: 'string',
-      // Example: 'President', 'Developer', 'Designer'
     },
     {
       name: 'image',
@@ -39,11 +36,28 @@ export default {
       name: 'linkedinUrl',
       title: 'LinkedIn URL',
       type: 'url',
+      // Validation add kiya taaki sahi URL hi enter ho
+      validation: (Rule) => Rule.uri({
+        scheme: ['http', 'https']
+      }),
     },
     {
       name: 'githubUrl',
       title: 'GitHub URL',
       type: 'url',
+      // Validation add kiya taaki sahi URL hi enter ho
+      validation: (Rule) => Rule.uri({
+        scheme: ['http', 'https']
+      }),
+    },
+    // Naya Instagram field add kiya
+    {
+      name: 'instagramUrl',
+      title: 'Instagram URL',
+      type: 'url',
+      validation: (Rule) => Rule.uri({
+        scheme: ['http', 'https']
+      }),
     },
     {
       name: 'bio',

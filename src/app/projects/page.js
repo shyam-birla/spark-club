@@ -15,8 +15,11 @@ export default async function ProjectsPage() {
 
   return (
     <main className="container mx-auto px-4 py-20">
-      <h1 className="text-4xl font-bold mb-8">Projects</h1>
-      <p className="text-gray-400 mb-12">Explore our ongoing and past projects.</p>
+      <h1 className="text-4xl font-bold mb-8 text-black">Projects</h1>
+      {/* Paragraph text ko dark grey kiya */}
+      <p className="text-gray-600 mb-12">Explore our ongoing and past projects.</p>
+      
+      {/* Yeh component pehle se hi styled hai! */}
       <FeaturedProjects projects={projects} />
     </main>
   );

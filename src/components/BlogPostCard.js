@@ -10,18 +10,22 @@ const BlogPostCard = ({ post }) => {
 
   return (
     <Link href={`/blog/${post.slug}`}>
-      <div className="bg-gray-800 rounded-lg overflow-hidden transform hover:scale-105 transition-transform duration-300 cursor-pointer h-full flex flex-col border border-gray-700 hover:shadow-2xl hover:shadow-orange-500/20">
+      {/* Card ko light theme ke liye update kiya */}
+      <div className="bg-gray-50 rounded-lg overflow-hidden transition-all duration-300 cursor-pointer h-full flex flex-col border border-gray-200 hover:shadow-xl hover:scale-105 transform">
         <div className="relative w-full h-48">
+          {/* Image component ko naye syntax ke hisaab se update kiya */}
           <Image
             src={post.imageUrl || '/placeholder.png'}
             alt={post.title}
-            layout="fill"
-            objectFit="cover"
+            fill
+            className="object-cover"
+            unoptimized={post.imageUrl ? false : true}
           />
         </div>
         <div className="p-4 flex-grow flex flex-col">
-          <h3 className="text-xl font-bold text-white flex-grow">{post.title}</h3>
-          <p className="text-gray-400 text-sm mt-2">{formattedDate}</p>
+          {/* Text ko light theme ke liye update kiya */}
+          <h3 className="text-xl font-bold text-black flex-grow">{post.title}</h3>
+          <p className="text-gray-600 text-sm mt-2">{formattedDate}</p>
         </div>
       </div>
     </Link>

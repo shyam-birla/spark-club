@@ -20,16 +20,17 @@ const features = [
 
 const WhatWeDoSection = () => {
   return (
-    <section className="bg-gray-50 py-20 px-4">
+    // === YAHAN BADLAV KIYA GAYA HAI ===
+    // Background ko semi-transparent aur blurred kiya gaya hai
+    <section className="bg-white/50 backdrop-blur-sm py-20 px-4">
       <div className="container mx-auto text-center">
         <h2 className="text-3xl font-bold text-black mb-12">What We Do</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 text-left">
           {features.map((feature) => (
-            <div key={feature.title} className="bg-white p-8 rounded-lg shadow-md hover:shadow-xl transition-shadow">
-              <div className="text-4xl mb-4 text-orange-500">{feature.icon}</div>
-              <h3 className="text-xl font-bold text-gray-900 mb-2">{feature.title}</h3>
-              {/* Feature description with improved contrast */}
-              <p className="text-gray-700 leading-relaxed">{feature.description}</p>
+            <div key={feature.title} className="bg-gray-50 p-8 rounded-lg border border-gray-200 hover:border-black transition-colors duration-300">
+              <div className="text-4xl mb-4 text-black">{feature.icon}</div>
+              <h3 className="text-xl font-bold text-black mb-2">{feature.title}</h3>
+              <p className="text-gray-600 leading-relaxed">{feature.description}</p>
             </div>
           ))}
         </div>

@@ -1,24 +1,49 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { FaLinkedin, FaGithub, FaInstagram } from 'react-icons/fa';
 
 const MemberCard = ({ member }) => {
   return (
-    <Link href={`/members/${member.slug}`}>
-      <div className="bg-gray-800 rounded-lg overflow-hidden text-center transform hover:scale-105 transition-transform duration-300 cursor-pointer">
+    // Card ko light theme ke liye update kiya
+    <div className="bg-white rounded-lg text-center transition-all duration-300 shadow-md hover:shadow-xl border border-gray-200">
+      <Link href={`/members/${member.slug}`}>
         <div className="relative w-full h-60">
+          {/* Image component ko naye syntax ke hisaab se update kiya */}
           <Image
             src={member.imageUrl || '/placeholder.png'}
             alt={member.name}
-            layout="fill"
-            objectFit="cover"
+            fill
+            className="object-cover rounded-t-lg"
           />
         </div>
-        <div className="p-4">
-          <h3 className="text-xl font-bold text-white">{member.name}</h3>
-          <p className="text-orange-400">{member.role}</p>
+      </Link>
+      <div className="p-4">
+        <Link href={`/members/${member.slug}`}>
+          <h3 className="text-xl font-bold text-black">{member.name}</h3>
+          {/* Role ka color orange se dark grey kiya */}
+          <p className="text-gray-600">{member.role}</p>
+        </Link>
+        
+        {/* Naya Feature: Social Media Icons */}
+        <div className="flex justify-center gap-4 mt-4">
+          {member.linkedinUrl && (
+            <a href={member.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
+              <FaLinkedin size={24} />
+            </a>
+          )}
+          {member.githubUrl && (
+            <a href={member.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
+              <FaGithub size={24} />
+            </a>
+          )}
+          {member.instagramUrl && (
+            <a href={member.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
+              <FaInstagram size={24} />
+            </a>
+          )}
         </div>
       </div>
-    </Link>
+    </div>
   );
 };
 
