@@ -1,16 +1,23 @@
 import { NextResponse } from 'next/server';
 import { Resend } from 'resend';
-import { client } from '../../../../sanity/lib/client';
+import { client } from '../../../../sanity/lib/client'; // Public client ko import kiya
+
+// Naya "Write" client banayein jo token ka istemal karta hai
+const writeClient = client.withConfig({
+  token: process.env.SANITY_API_WRITE_TOKEN,
+  useCdn: false, // Data likhte waqt CDN use nahi karte
+  ignoreBrowserTokenWarning: true,
+});
 
 const resend = new Resend(process.env.RESEND_API_KEY);
-const sanityClient = client;
 
 export async function POST(request) {
   try {
     const formData = await request.json();
     const { name, email, eventTitle } = formData;
 
-    const event = await sanityClient.fetch(`*[_type == "event" && title == $eventTitle][0]`, { eventTitle });
+    // Event dhoondhne ke liye public client theek hai
+    const event = await client.fetch(`*[_type == "event" && title == $eventTitle][0]`, { eventTitle });
     
     if (!event) {
       throw new Error(`Event with title "${eventTitle}" not found.`);
@@ -18,7 +25,8 @@ export async function POST(request) {
     
     const eventId = event._id;
 
-    await sanityClient.create({
+    // Naya data create karne ke liye hum special "writeClient" ka istemal karenge
+    await writeClient.create({
       _type: 'registration',
       name: name,
       email: email,
@@ -27,18 +35,21 @@ export async function POST(request) {
       enrollmentNo: formData.enrollmentNo,
       year: formData.year,
       registrationDate: new Date().toISOString(),
-      event: { _type: 'reference', _ref: eventId },
+      event: {
+        _type: 'reference',
+        _ref: eventId,
+      },
     });
 
+    // Email bhejne ka logic same rahega...
     const eventDate = new Date(event.eventDate);
     const formattedDate = eventDate.toLocaleString('en-US', {
         weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit'
     });
-    
     const startTime = eventDate.toISOString().replace(/-|:|\.\d\d\d/g,"");
     const endTime = new Date(eventDate.getTime() + (2*60*60*1000)).toISOString().replace(/-|:|\.\d\d\d/g,"");
     const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${startTime}/${endTime}&details=${encodeURIComponent(event.description?.[0]?.children?.[0]?.text || 'See you there!')}&location=${encodeURIComponent(event.venue?.locationName || 'Check website for details')}`;
-
+    
     await resend.emails.send({
       from: 'Spark Club <onboarding@resend.dev>',
       to: email,
@@ -46,7 +57,7 @@ export async function POST(request) {
       html: `
         <div style="font-family: Arial, sans-serif; max-width: 600px; margin: auto; border: 1px solid #ddd; border-radius: 10px; overflow: hidden;">
           <div style="background-color: #f4f4f4; padding: 20px; text-align: center;">
-            <img src="https://www.sparkclubsati.vercel.app/spark_email.png" alt="Spark Club Logo" style="max-width: 150px;">
+            <img src="https://www.sparkclubsati.vercel.app/logo.png" alt="Spark Club Logo" style="max-width: 150px;">
           </div>
           <div style="padding: 20px; line-height: 1.6; color: #333;">
             <h1 style="color: #000; font-size: 24px;">Registration Confirmed!</h1>
