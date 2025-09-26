@@ -8,18 +8,22 @@ import FeaturedResources from '@/components/FeaturedResources';
 import FeaturedBlogPosts from '@/components/FeaturedBlogPosts';
 import AnimatedSection from '@/components/AnimatedSection';
 
+
 // --- Data Queries for Homepage Sections ---
 
-// === YAHAN BADLAV KIYA GAYA HAI ===
 const projectsQuery = `*[_type == "project"] | order(_createdAt desc) [0...3] {
-  _id, title, "slug": slug.current, description, "imageUrl": image.asset->url, tags
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  "cardImageUrl": cardImage.asset->url,
+  tags
 }`;
 
 const technologiesQuery = `*[_type == "technology"]{
   _id, name, "logoUrl": logo.asset->url
 }`;
 
-// === YAHAN BHI BADLAV KIYA GAYA HAI ===
 const eventsQuery = `*[_type == "event" && status == "upcoming"] | order(eventDate asc) [0...3] {
   _id, title, "slug": slug.current, eventDate, venue, "imageUrl": coverImage.asset->url
 }`;

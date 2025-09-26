@@ -1,5 +1,3 @@
-// sanity-studio/schemas/project.js
-
 export default {
   name: 'project',
   title: 'Project',
@@ -21,7 +19,6 @@ export default {
       },
       validation: (Rule) => Rule.required(),
     },
-    // NEW: Project ka status (Completed / In Progress)
     {
       name: 'status',
       title: 'Status',
@@ -32,33 +29,42 @@ export default {
           { title: 'In Progress', value: 'in-progress' },
           { title: 'Archived', value: 'archived' },
         ],
-        layout: 'radio', // Radio buttons ki tarah dikhega
+        layout: 'radio',
       },
-      initialValue: 'in-progress', // Default value
+      initialValue: 'in-progress',
     },
     {
-      name: 'image',
-      title: 'Image',
+      name: 'mainImage',
+      title: 'Main Project Image (for Detail Page)',
       type: 'image',
       options: {
         hotspot: true,
       },
+      description: 'This is the main image displayed at the top of the project detail page.'
     },
-    // IMPROVED: Description ko Rich Text banaya
+    {
+      name: 'cardImage',
+      title: 'Card Image (for Project List)',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+      description: 'This image appears on the project card in the list of all projects. Should be a poster-style image.'
+    },
     {
       name: 'description',
       title: 'Description',
-      type: 'array', // 'text' se 'array' kiya
+      type: 'array',
       of: [
         { 
-          type: 'block', // Yeh Rich Text enable karta hai (headings, bold, lists, etc.)
+          type: 'block',
           styles: [
             {title: 'Normal', value: 'normal'},
             {title: 'H2', value: 'h2'},
             {title: 'H3', value: 'h3'},
           ],
         },
-        { type: 'image' } // Description ke beech mein image add karne ke liye
+        { type: 'image' }
       ],
     },
     {
@@ -70,24 +76,29 @@ export default {
         layout: 'tags',
       },
     },
+    // === NAYA "TECHNOLOGIES" FIELD YAHAN ADD KIYA GAYA HAI ===
+    {
+      name: 'technologies',
+      title: 'Technologies',
+      type: 'array',
+      of: [{ type: 'reference', to: { type: 'technology' } }],
+      description: 'Is project mein use hui technologies select karein.'
+    },
     {
       name: 'githubUrl',
       title: 'GitHub URL',
       type: 'url',
     },
-    // NEW: Live Demo ka URL add karne ke liye
     {
       name: 'liveUrl',
       title: 'Live Demo URL',
       type: 'url',
     },
-    // NEW: Project team members ko add karne ke liye
-    // Iske liye aapko 'person' naam ka ek naya schema banana hoga
     {
       name: 'teamMembers',
       title: 'Team Members',
       type: 'array',
-      of: [{ type: 'reference', to: { type: 'person' } }],
+      of: [{ type: 'reference', to: { type: 'person' } }], // Note: This references 'person', make sure you have a 'person' schema.
     },
   ],
 };

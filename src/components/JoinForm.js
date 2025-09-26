@@ -27,22 +27,14 @@ const JoinForm = () => {
     try {
       const res = await fetch('/api/join', {
         method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
+        headers: { 'Content-Type': 'application/json', },
         body: JSON.stringify(formData),
       });
 
       const data = await res.json();
       if (res.ok) {
         setStatus({ message: data.message, type: 'success' });
-        setFormData({
-          name: '',
-          email: '',
-          year: '',
-          branch: '',
-          interests: ''
-        });
+        setFormData({ name: '', email: '', year: '', branch: '', interests: '' });
       } else {
         setStatus({ message: data.message || 'Something went wrong.', type: 'error' });
       }
@@ -52,14 +44,16 @@ const JoinForm = () => {
   };
 
   return (
-    <form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-6 p-8 bg-gray-800 rounded-lg shadow-lg">
-      <h2 className="text-3xl font-bold mb-6 text-white text-center">Join SPARK! Club</h2>
+    // Form container ko light theme ke liye update kiya
+    <form onSubmit={handleSubmit} className="max-w-lg mx-auto space-y-6 p-8 bg-white rounded-lg shadow-md border border-gray-200">
+      <h2 className="text-3xl font-bold mb-6 text-black text-center">Join SPARK! Club</h2>
 
+      {/* Saare input fields ko light theme ke anusaar style kiya */}
       <input
         type="text"
         name="name"
         placeholder="Your Name"
-        className="w-full bg-gray-700 border border-gray-600 px-4 py-2 rounded-md text-white focus:ring-orange-500 focus:border-orange-500"
+        className="w-full bg-white border border-gray-300 px-4 py-3 rounded-md text-black focus:ring-black focus:border-black"
         value={formData.name}
         onChange={handleChange}
       />
@@ -68,7 +62,7 @@ const JoinForm = () => {
         type="email"
         name="email"
         placeholder="Your Email"
-        className="w-full bg-gray-700 border border-gray-600 px-4 py-2 rounded-md text-white focus:ring-orange-500 focus:border-orange-500"
+        className="w-full bg-white border border-gray-300 px-4 py-3 rounded-md text-black focus:ring-black focus:border-black"
         value={formData.email}
         onChange={handleChange}
       />
@@ -76,8 +70,8 @@ const JoinForm = () => {
       <input
         type="text"
         name="year"
-        placeholder="Your Year of Study"
-        className="w-full bg-gray-700 border border-gray-600 px-4 py-2 rounded-md text-white focus:ring-orange-500 focus:border-orange-500"
+        placeholder="Your Year of Study (e.g., 1st Year)"
+        className="w-full bg-white border border-gray-300 px-4 py-3 rounded-md text-black focus:ring-black focus:border-black"
         value={formData.year}
         onChange={handleChange}
       />
@@ -85,8 +79,8 @@ const JoinForm = () => {
       <input
         type="text"
         name="branch"
-        placeholder="Your Branch"
-        className="w-full bg-gray-700 border border-gray-600 px-4 py-2 rounded-md text-white focus:ring-orange-500 focus:border-orange-500"
+        placeholder="Your Branch (e.g., CSE)"
+        className="w-full bg-white border border-gray-300 px-4 py-3 rounded-md text-black focus:ring-black focus:border-black"
         value={formData.branch}
         onChange={handleChange}
       />
@@ -94,19 +88,23 @@ const JoinForm = () => {
       <textarea
         name="interests"
         placeholder="Why do you want to join SPARK! Club?"
-        className="w-full bg-gray-700 border border-gray-600 px-4 py-2 rounded-md text-white focus:ring-orange-500 focus:border-orange-500"
+        className="w-full bg-white border border-gray-300 px-4 py-3 rounded-md text-black focus:ring-black focus:border-black"
         rows="5"
         value={formData.interests}
         onChange={handleChange}
       ></textarea>
 
+      {/* Status message ko behtar UI diya */}
       {status.message && (
-        <p className={`text-center ${status.type === 'success' ? 'text-green-500' : 'text-red-500'}`}>
+        <p className={`text-center p-3 rounded-md text-sm font-medium ${
+          status.type === 'success' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'
+        }`}>
           {status.message}
         </p>
       )}
 
-      <button type="submit" className="w-full bg-orange-500 text-white px-6 py-3 rounded-md font-semibold text-lg hover:bg-orange-600 transition-colors disabled:bg-gray-500">
+      {/* Button ko humare standard black button se replace kiya */}
+      <button type="submit" className="w-full bg-black text-white px-6 py-3 rounded-md font-semibold text-lg hover:opacity-80 transition-opacity disabled:bg-gray-500">
         Submit Application
       </button>
     </form>

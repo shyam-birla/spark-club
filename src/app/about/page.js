@@ -19,7 +19,7 @@ export default async function AboutPage() {
 
   return (
     // Background ko dark se light kiya
-    <main className="bg-white container mx-auto px-4 py-20">
+    <main className="bg-white/50 container mx-auto px-4 py-20">
       <div className="max-w-4xl mx-auto text-center">
         {/* Text color ko white se black kiya */}
         <h1 className="text-5xl font-bold text-black mb-8">{about.title}</h1>

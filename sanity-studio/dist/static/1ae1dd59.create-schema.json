@@ -1,0 +1,1326 @@
+[
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Completed",
+              "value": "completed"
+            },
+            {
+              "title": "In Progress",
+              "value": "in-progress"
+            },
+            {
+              "title": "Archived",
+              "value": "archived"
+            }
+          ],
+          "layout": "radio"
+        },
+        "initialValue": "in-progress",
+        "name": "status",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "This is the main image displayed at the top of the project detail page.",
+        "name": "mainImage",
+        "type": "image",
+        "title": "Main Project Image (for Detail Page)"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "description": "This image appears on the project card in the list of all projects. Should be a poster-style image.",
+        "name": "cardImage",
+        "type": "image",
+        "title": "Card Image (for Project List)"
+      },
+      {
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "i18nTitleKey": "inputs.portable-text.annotation.link",
+                  "options": {
+                    "modal": {
+                      "type": "popover"
+                    }
+                  },
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/",
+                                    "/^tel$/",
+                                    "/^mailto$/"
+                                  ],
+                                  "allowRelative": true,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ],
+                          "level": "error"
+                        }
+                      ],
+                      "description": "A valid web, email, phone, or relative link.",
+                      "name": "href",
+                      "type": "url",
+                      "title": "Link"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                },
+                {
+                  "value": "code",
+                  "title": "Code"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                },
+                {
+                  "value": "strike-through",
+                  "title": "Strike"
+                }
+              ]
+            },
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bulleted list"
+              },
+              {
+                "value": "number",
+                "title": "Numbered list"
+              }
+            ],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h2",
+                "title": "H2"
+              },
+              {
+                "value": "h3",
+                "title": "H3"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          },
+          {
+            "type": "image"
+          }
+        ],
+        "name": "description",
+        "type": "array"
+      },
+      {
+        "options": {
+          "layout": "tags"
+        },
+        "of": [
+          {
+            "type": "string"
+          }
+        ],
+        "name": "tags",
+        "type": "array"
+      },
+      {
+        "description": "Is project mein use hui technologies select karein.",
+        "of": [
+          {
+            "to": [
+              {
+                "type": "technology"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to technology"
+          }
+        ],
+        "name": "technologies",
+        "type": "array"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "githubUrl",
+        "type": "url",
+        "title": "GitHub URL"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "liveUrl",
+        "type": "url",
+        "title": "Live Demo URL"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "person"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to person"
+          }
+        ],
+        "name": "teamMembers",
+        "type": "array"
+      }
+    ],
+    "name": "project",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Team ke andar member kis order mein dikhega. Chota number pehle (President ko 1, VP ko 2).",
+        "name": "orderRank",
+        "type": "number",
+        "title": "Order Rank (within team)"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "to": [
+          {
+            "type": "team"
+          }
+        ],
+        "name": "team",
+        "type": "reference"
+      },
+      {
+        "options": {
+          "source": "name",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "name": "role",
+        "type": "string",
+        "title": "Role / Position"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "linkedinUrl",
+        "type": "url",
+        "title": "LinkedIn URL"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "githubUrl",
+        "type": "url",
+        "title": "GitHub URL"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "instagramUrl",
+        "type": "url",
+        "title": "Instagram URL"
+      },
+      {
+        "name": "bio",
+        "type": "blockContent",
+        "title": "Biography"
+      }
+    ],
+    "name": "member",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string",
+        "title": "Event Title"
+      },
+      {
+        "options": {
+          "source": "title"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "eventDate",
+        "type": "datetime",
+        "title": "Event Date & Time"
+      },
+      {
+        "of": [
+          {
+            "marks": {
+              "annotations": [
+                {
+                  "i18nTitleKey": "inputs.portable-text.annotation.link",
+                  "options": {
+                    "modal": {
+                      "type": "popover"
+                    }
+                  },
+                  "fields": [
+                    {
+                      "validation": [
+                        {
+                          "rules": [
+                            {
+                              "flag": "uri",
+                              "constraint": {
+                                "options": {
+                                  "scheme": [
+                                    "/^http$/",
+                                    "/^https$/",
+                                    "/^tel$/",
+                                    "/^mailto$/"
+                                  ],
+                                  "allowRelative": true,
+                                  "relativeOnly": false,
+                                  "allowCredentials": false
+                                }
+                              }
+                            }
+                          ],
+                          "level": "error"
+                        }
+                      ],
+                      "description": "A valid web, email, phone, or relative link.",
+                      "name": "href",
+                      "type": "url",
+                      "title": "Link"
+                    }
+                  ],
+                  "name": "link",
+                  "type": "object"
+                }
+              ],
+              "decorators": [
+                {
+                  "value": "strong",
+                  "title": "Strong"
+                },
+                {
+                  "value": "em",
+                  "title": "Italic"
+                },
+                {
+                  "value": "code",
+                  "title": "Code"
+                },
+                {
+                  "value": "underline",
+                  "title": "Underline"
+                },
+                {
+                  "value": "strike-through",
+                  "title": "Strike"
+                }
+              ]
+            },
+            "lists": [
+              {
+                "value": "bullet",
+                "title": "Bulleted list"
+              },
+              {
+                "value": "number",
+                "title": "Numbered list"
+              }
+            ],
+            "styles": [
+              {
+                "value": "normal",
+                "title": "Normal"
+              },
+              {
+                "value": "h1",
+                "title": "Heading 1"
+              },
+              {
+                "value": "h2",
+                "title": "Heading 2"
+              },
+              {
+                "value": "h3",
+                "title": "Heading 3"
+              },
+              {
+                "value": "h4",
+                "title": "Heading 4"
+              },
+              {
+                "value": "h5",
+                "title": "Heading 5"
+              },
+              {
+                "value": "h6",
+                "title": "Heading 6"
+              },
+              {
+                "value": "blockquote",
+                "title": "Quote"
+              }
+            ],
+            "of": [],
+            "type": "block"
+          }
+        ],
+        "name": "description",
+        "type": "array"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "coverImage",
+        "type": "image"
+      },
+      {
+        "options": {
+          "list": [
+            "upcoming",
+            "past"
+          ],
+          "layout": "radio"
+        },
+        "name": "status",
+        "type": "string"
+      },
+      {
+        "fields": [
+          {
+            "options": {
+              "list": [
+                "Online",
+                "Offline"
+              ]
+            },
+            "name": "type",
+            "type": "string",
+            "title": "Event Type"
+          },
+          {
+            "name": "locationName",
+            "type": "string"
+          },
+          {
+            "validation": [
+              {
+                "rules": [
+                  {
+                    "flag": "uri",
+                    "constraint": {
+                      "options": {
+                        "scheme": [
+                          "/^http$/",
+                          "/^https$/"
+                        ],
+                        "allowRelative": false,
+                        "relativeOnly": false,
+                        "allowCredentials": false
+                      }
+                    }
+                  }
+                ],
+                "level": "error"
+              }
+            ],
+            "name": "locationUrl",
+            "type": "url",
+            "title": "Location URL (Maps/Meeting Link)"
+          }
+        ],
+        "name": "venue",
+        "type": "object"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "registrationLink",
+        "type": "url",
+        "title": "Registration Link (External)"
+      },
+      {
+        "of": [
+          {
+            "to": [
+              {
+                "type": "person"
+              }
+            ],
+            "type": "reference",
+            "title": "Reference to person"
+          }
+        ],
+        "name": "speakers",
+        "type": "array"
+      },
+      {
+        "of": [
+          {
+            "options": {
+              "hotspot": true
+            },
+            "type": "image"
+          }
+        ],
+        "name": "gallery",
+        "type": "array",
+        "title": "Photo Gallery"
+      }
+    ],
+    "name": "event",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title",
+          "maxLength": 96
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              },
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "to": [
+          {
+            "type": "member"
+          }
+        ],
+        "name": "author",
+        "type": "reference"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "coverImage",
+        "type": "image"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "publishedAt",
+        "type": "datetime",
+        "title": "Published at"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "body",
+        "type": "blockContent"
+      }
+    ],
+    "name": "blogPost",
+    "type": "document"
+  },
+  {
+    "of": [
+      {
+        "marks": {
+          "annotations": [
+            {
+              "fields": [
+                {
+                  "validation": [
+                    {
+                      "rules": [
+                        {
+                          "flag": "uri",
+                          "constraint": {
+                            "options": {
+                              "scheme": [
+                                "/^http$/",
+                                "/^https$/"
+                              ],
+                              "allowRelative": false,
+                              "relativeOnly": false,
+                              "allowCredentials": false
+                            }
+                          }
+                        }
+                      ],
+                      "level": "error"
+                    }
+                  ],
+                  "name": "href",
+                  "type": "url",
+                  "title": "URL"
+                }
+              ],
+              "name": "link",
+              "type": "object",
+              "title": "URL"
+            }
+          ],
+          "decorators": [
+            {
+              "value": "strong",
+              "title": "Strong"
+            },
+            {
+              "value": "em",
+              "title": "Emphasis"
+            }
+          ]
+        },
+        "lists": [
+          {
+            "value": "bullet",
+            "title": "Bullet"
+          }
+        ],
+        "styles": [
+          {
+            "value": "normal",
+            "title": "Normal"
+          },
+          {
+            "value": "h1",
+            "title": "H1"
+          },
+          {
+            "value": "h2",
+            "title": "H2"
+          },
+          {
+            "value": "h3",
+            "title": "H3"
+          },
+          {
+            "value": "blockquote",
+            "title": "Quote"
+          }
+        ],
+        "of": [],
+        "type": "block"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "type": "image"
+      }
+    ],
+    "name": "blockContent",
+    "type": "array"
+  },
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string",
+        "title": "Resource Title"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "link",
+        "type": "url",
+        "title": "URL"
+      },
+      {
+        "options": {
+          "list": [
+            {
+              "title": "Video",
+              "value": "video"
+            },
+            {
+              "title": "Article",
+              "value": "article"
+            },
+            {
+              "title": "Course",
+              "value": "course"
+            },
+            {
+              "title": "Tool",
+              "value": "tool"
+            }
+          ],
+          "layout": "radio"
+        },
+        "name": "type",
+        "type": "string",
+        "title": "Resource Type"
+      }
+    ],
+    "name": "resource",
+    "type": "object",
+    "title": "Resource Link"
+  },
+  {
+    "fields": [
+      {
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "options": {
+          "source": "title"
+        },
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "custom"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "slug",
+        "type": "slug"
+      },
+      {
+        "description": "Yeh roadmap kiske baare mein hai?",
+        "name": "description",
+        "type": "text",
+        "title": "Short Description"
+      },
+      {
+        "of": [
+          {
+            "type": "roadmapModule"
+          }
+        ],
+        "name": "modules",
+        "type": "array",
+        "title": "Roadmap Modules"
+      }
+    ],
+    "name": "stream",
+    "type": "document",
+    "title": "Stream Roadmap"
+  },
+  {
+    "fields": [
+      {
+        "description": "E.g., \"Module 1: Python Basics\"",
+        "name": "title",
+        "type": "string",
+        "title": "Module Title"
+      },
+      {
+        "description": "Is module mein kya seekhenge?",
+        "name": "description",
+        "type": "text"
+      },
+      {
+        "of": [
+          {
+            "type": "resource",
+            "title": "Resource Link"
+          }
+        ],
+        "name": "resources",
+        "type": "array",
+        "title": "Resources for this module"
+      }
+    ],
+    "name": "roadmapModule",
+    "type": "object"
+  },
+  {
+    "fields": [
+      {
+        "description": "The main heading on the about page.",
+        "name": "title",
+        "type": "string",
+        "title": "Page Title"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "mainImage",
+        "type": "image"
+      },
+      {
+        "description": "The main body of text for the about page.",
+        "name": "content",
+        "type": "blockContent"
+      }
+    ],
+    "name": "aboutPage",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "readOnly": true,
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "readOnly": true,
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "readOnly": true,
+        "name": "subject",
+        "type": "string"
+      },
+      {
+        "readOnly": true,
+        "name": "message",
+        "type": "text"
+      },
+      {
+        "initialValue": false,
+        "name": "read",
+        "type": "boolean",
+        "title": "Mark as Read"
+      }
+    ],
+    "name": "contactSubmission",
+    "type": "document",
+    "title": "Contact Submissions"
+  },
+  {
+    "fields": [
+      {
+        "description": "e.g., GitHub, LinkedIn, Twitter",
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "uri",
+                "constraint": {
+                  "options": {
+                    "scheme": [
+                      "/^http$/",
+                      "/^https$/"
+                    ],
+                    "allowRelative": false,
+                    "relativeOnly": false,
+                    "allowCredentials": false
+                  }
+                }
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "url",
+        "type": "url",
+        "title": "URL"
+      },
+      {
+        "description": "e.g., github, linkedin, twitter. Use lowercase.",
+        "name": "icon",
+        "type": "string"
+      }
+    ],
+    "name": "socialLink",
+    "type": "document",
+    "title": "Social Media Link"
+  },
+  {
+    "fields": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "logo",
+        "type": "image"
+      }
+    ],
+    "name": "technology",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "description": "E.g., Project Lead, Developer, Designer",
+        "name": "role",
+        "type": "string"
+      },
+      {
+        "options": {
+          "hotspot": true
+        },
+        "name": "image",
+        "type": "image"
+      }
+    ],
+    "name": "person",
+    "type": "document"
+  },
+  {
+    "fields": [
+      {
+        "name": "name",
+        "type": "string"
+      },
+      {
+        "name": "email",
+        "type": "string"
+      },
+      {
+        "to": [
+          {
+            "type": "event"
+          }
+        ],
+        "name": "event",
+        "type": "reference"
+      },
+      {
+        "name": "mobile",
+        "type": "string",
+        "title": "Mobile Number"
+      },
+      {
+        "name": "branch",
+        "type": "string"
+      },
+      {
+        "name": "enrollmentNo",
+        "type": "string",
+        "title": "Enrollment Number"
+      },
+      {
+        "name": "year",
+        "type": "string"
+      },
+      {
+        "name": "registrationDate",
+        "type": "datetime"
+      }
+    ],
+    "readOnly": true,
+    "name": "registration",
+    "type": "document",
+    "title": "Registrations"
+  },
+  {
+    "fields": [
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Team ka naam (jaise \"Core Team\", \"Tech Team\")",
+        "name": "title",
+        "type": "string"
+      },
+      {
+        "validation": [
+          {
+            "rules": [
+              {
+                "flag": "presence",
+                "constraint": "required"
+              },
+              {
+                "flag": "min",
+                "constraint": 0
+              }
+            ],
+            "level": "error"
+          }
+        ],
+        "description": "Team kis order mein dikhegi. Chota number pehle aayega (jaise Core Team ko 1, Tech Team ko 2).",
+        "name": "orderRank",
+        "type": "number"
+      }
+    ],
+    "name": "team",
+    "type": "document"
+  }
+]

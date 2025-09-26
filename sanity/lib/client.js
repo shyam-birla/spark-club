@@ -1,13 +1,19 @@
-import { createClient } from 'next-sanity'
+// File: sanity/lib/client.js
 
+import { createClient } from 'next-sanity'
+import imageUrlBuilder from '@sanity/image-url'
 import { apiVersion, dataset, projectId, useCdn } from '../env'
 
-// Yeh ab aapka public client hai jo sirf data "padh" sakta hai.
-// Isse Vercel build fail nahi hoga.
 export const client = createClient({
   projectId,
   dataset,
   apiVersion,
-  useCdn: true, // Public data ke liye 'true' performance behtar karta hai
-  // Token yahan se hata diya gaya hai
+  useCdn: false, 
 })
+
+// === YEH CODE ADD KIYA GAYA HAI ===
+const builder = imageUrlBuilder(client)
+
+export function urlFor(source) {
+  return builder.image(source)
+}

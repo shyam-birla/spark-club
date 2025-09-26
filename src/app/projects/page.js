@@ -6,12 +6,12 @@ const projectsQuery = `*[_type == "project"] | order(_createdAt desc) {
   title,
   "slug": slug.current,
   description,
-  "imageUrl": image.asset->url,
+  "cardImageUrl": cardImage.asset->url,
   tags
 }`;
 
 export default async function ProjectsPage() {
-  const projects = await client.fetch(projectsQuery);
+  const projects = await client.fetch(projectsQuery, {}, { cache: 'no-store' });
 
   return (
     <main className="container mx-auto px-4 py-20">

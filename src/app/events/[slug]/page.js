@@ -1,4 +1,6 @@
-import { client } from '../../../../sanity/lib/client';
+// File: src/app/events/[slug]/page.js
+
+import { client, urlFor } from '../../../../sanity/lib/client'; // <-- BADLAV YAHAN HAI
 import Link from 'next/link';
 import Image from 'next/image';
 import { PortableText } from '@portabletext/react';
@@ -8,7 +10,6 @@ import EventRegistrationForm from '@/components/EventRegistrationForm';
 // Naya Function: Yeh Next.js ko batata hai ki kaun kaun se slugs hain
 export async function generateStaticParams() {
   const slugs = await client.fetch(`*[_type == "event" && defined(slug.current)]{ "slug": slug.current }`);
-  // Yeh is format mein data dega: [{ slug: 'event-1' }, { slug: 'event-2' }]
   return slugs;
 }
 
@@ -100,13 +101,21 @@ export default async function EventDetailPage({ params: { slug } }) {
         </div>
       )}
 
+      {/* === GALLERY SECTION (THEEK KIYA GAYA HAI) === */}
       {event.status === 'past' && event.gallery && event.gallery.length > 0 && (
         <div className="my-12">
           <h2 className="text-3xl font-bold mb-6 text-black">Event Gallery</h2>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
             {event.gallery.map((image, index) => (
               <div key={index} className="relative w-full h-48">
-                <Image src={client.imageBuilder.image(image).url()} alt={`Event photo ${index + 1}`} fill className="rounded-lg object-cover" />
+                {image && image.asset && (
+                  <Image 
+                    src={urlFor(image).url()} 
+                    alt={`Event photo ${index + 1}`} 
+                    fill 
+                    className="rounded-lg object-cover" 
+                  />
+                )}
               </div>
             ))}
           </div>

@@ -3,15 +3,26 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { PortableText } from '@portabletext/react';
 
+// Yeh Next.js ko batata hai ki kaun kaun se project pages hain
+export async function generateStaticParams() {
+  const slugs = await client.fetch(`*[_type == "project" && defined(slug.current)]{ "slug": slug.current }`);
+  return slugs;
+}
+
 const projectQuery = `*[_type == "project" && slug.current == $slug][0]{
   _id,
   title,
   description,
-  "imageUrl": image.asset->url,
+  "mainImageUrl": mainImage.asset->url,
   tags,
   githubUrl,
   liveUrl,
   status,
+  technologies[]->{
+    _id,
+    name,
+    "logoUrl": logo.asset->url
+  },
   teamMembers[]->{
     _id,
     name,
@@ -21,7 +32,7 @@ const projectQuery = `*[_type == "project" && slug.current == $slug][0]{
 }`;
 
 export default async function ProjectDetailPage({ params }) {
-  const { slug } = params;
+  const { slug } = await Promise.resolve(params);
   const project = await client.fetch(projectQuery, { slug });
 
   if (!project) {
@@ -29,9 +40,7 @@ export default async function ProjectDetailPage({ params }) {
   }
 
   return (
-    // Main container se dark theme colors hataye
     <main className="container mx-auto px-4 py-20">
-      {/* Status Badge ko light theme ke liye update kiya */}
       {project.status && (
         <span className={`inline-block px-3 py-1 text-sm font-bold rounded-full mb-4 ${
           project.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'
@@ -42,14 +51,17 @@ export default async function ProjectDetailPage({ params }) {
 
       <h1 className="text-4xl md:text-6xl font-bold mb-4 text-black">{project.title}</h1>
       
-      {/* NOTE: Please ensure your Image component code is here */}
+      {/* === YAHAN BADLAV KIYA GAYA HAI === */}
+      {project.mainImageUrl && (
+        <div className="relative w-full h-96 my-8 bg-transparent rounded-lg">
+          <Image src={project.mainImageUrl} alt={project.title} fill className="object-contain rounded-lg" />
+        </div>
+      )}
       
-      {/* Rich Text Description ko light theme ke liye update kiya */}
       <div className="prose max-w-none text-lg leading-relaxed mb-8">
         <PortableText value={project.description} />
       </div>
 
-      {/* Buttons ko light theme ke liye update kiya */}
       <div className="flex gap-4 mb-12">
         {project.githubUrl && (
           <Link href={project.githubUrl} target="_blank">
@@ -67,7 +79,20 @@ export default async function ProjectDetailPage({ params }) {
         )}
       </div>
 
-      {/* Team Members Section ko light theme ke liye update kiya */}
+      {project.technologies && project.technologies.length > 0 && (
+        <div className="mb-12">
+          <h2 className="text-3xl font-bold mb-6 text-black">Technologies Used</h2>
+          <div className="flex flex-wrap gap-4">
+            {project.technologies.map(tech => (
+              <div key={tech._id} className="flex items-center gap-2 bg-gray-100 p-2 pr-4 rounded-md border border-gray-200">
+                {tech.logoUrl && <Image src={tech.logoUrl} alt={tech.name} width={24} height={24} />}
+                <span className="font-semibold">{tech.name}</span>
+              </div>
+            ))}
+          </div>
+        </div>
+      )}
+
       {project.teamMembers && project.teamMembers.length > 0 && (
         <div>
           <h2 className="text-3xl font-bold mb-6 text-black">Meet the Team</h2>
