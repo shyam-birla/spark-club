@@ -5,7 +5,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaCheckCircle, FaVideo, FaFileAlt, FaLink, FaGraduationCap } from 'react-icons/fa';
 
-// --- CHANGE 1: Function ki definition mein (slug) ki jagah ({ slug }) kiya ---
+// --- Function ki definition mein (slug) ki jagah ({ slug }) kiya ---
 async function getRoadmapData({ slug }) {
   const query = `*[_type == "stream" && slug.current == $slug][0]{
     _id,
@@ -30,10 +30,7 @@ async function getRoadmapData({ slug }) {
           _key,
           title,
           duration,
-          type,
-          videoUrl,
-          link,
-          "fileURL": fileUpload.asset->url
+          type
         }
       }
     }
@@ -47,6 +44,8 @@ const ResourceIcon = ({ type }) => {
     switch (type) {
         case 'videoEmbed': return <FaVideo className="text-gray-500" />;
         case 'file': return <FaFileAlt className="text-gray-500" />;
+        case 'multiFile': return <FaFileAlt className="text-gray-500" />;
+        case 'article': return <FaFileAlt className="text-gray-500" />;
         case 'externalCourse': return <FaGraduationCap className="text-gray-500" />;
         default: return <FaLink className="text-gray-500" />;
     }
@@ -54,13 +53,14 @@ const ResourceIcon = ({ type }) => {
 
 
 export default async function RoadmapDetailPage({ params }) {
-  // --- CHANGE 2: Yahan hum ab poora 'params' object pass kar rahe hain ---
+  // --- Yahan hum ab poora 'params' object pass kar rahe hain ---
   const roadmap = await getRoadmapData(params);
 
   if (!roadmap) {
     return (
         <main className="container mx-auto px-4 py-20 text-center">
           <h1 className="text-4xl font-bold">Roadmap Not Found</h1>
+          <p className="mt-2 text-gray-600">We couldn&apos;t find the page you were looking for.</p>
         </main>
       );
   }

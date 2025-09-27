@@ -1,12 +1,12 @@
-// src/components/LearningInterface.js (FINAL - Using iFrame for Videos)
+// src/components/LearningInterface.js (COMPLETE - with useMemo fix)
 'use client'; 
 
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useMemo } from 'react'; // useMemo ko import kiya
 import { FaVideo, FaFileAlt, FaLink, FaGraduationCap, FaFileArchive, FaCheckCircle } from 'react-icons/fa';
 import { PortableText } from '@portabletext/react';
 import { useSession } from 'next-auth/react';
 
-// YouTube URL ko embeddable format mein badalne ke liye helper function
+// Helper function to convert YouTube URL to embeddable format
 const getYouTubeEmbedUrl = (url) => {
     if (!url) return '';
     try {
@@ -22,7 +22,7 @@ const getYouTubeEmbedUrl = (url) => {
         console.error("Invalid URL for YouTube embed:", error);
         return '';
     }
-    return url; // Fallback to original URL if parsing fails
+    return url;
 };
 
 const ResourceIcon = ({ type }) => {
@@ -40,15 +40,19 @@ export default function LearningInterface({ roadmap, initialProgress }) {
     const { data: session } = useSession();
     const [activeResource, setActiveResource] = useState(null);
     const [completed, setCompleted] = useState(() => new Set(initialProgress || []));
-    
-    const allResources = roadmap.modules?.flatMap(m => m.subTopics?.flatMap(st => st.resources)) || [];
+
+    // useMemo ka use karke 'allResources' ko cache kiya
+    const allResources = useMemo(() => {
+        return roadmap.modules?.flatMap(m => m.subTopics?.flatMap(st => st.resources)) || [];
+    }, [roadmap]);
+
     const activeResourceIndex = allResources.findIndex(r => r._key === activeResource?._key);
 
     useEffect(() => {
         if (allResources.length > 0 && !activeResource) {
             setActiveResource(allResources[0]);
         }
-    }, [roadmap, allResources, activeResource]);
+    }, [allResources, activeResource]);
     
     const handleMarkAsComplete = async (resourceKey) => {
         if (!session || !resourceKey || completed.has(resourceKey)) {
