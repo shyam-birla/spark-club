@@ -56,6 +56,8 @@ export default async function Home() {
     console.error("Failed to fetch homepage data:", error);
   }
 
+  console.log("Fetched Resources:", resources);
+
   return (
     <main>
       <HeroSection />
