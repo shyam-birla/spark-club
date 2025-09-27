@@ -15,7 +15,9 @@
     "sanity"
   ],
   "dependencies": {
+    "@portabletext/react": "^4.0.3",
     "@sanity/vision": "^3.99.0",
+    "@tailwindcss/typography": "^0.5.19",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-icons": "^5.5.0",

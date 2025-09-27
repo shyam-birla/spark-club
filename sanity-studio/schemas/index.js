@@ -14,9 +14,11 @@ import person from './person'
 import registration from './registration'
 import team from './team' // Step 1: Nayi team.js file ko import kiya
 import memberApplication from './memberApplication';
+import fileWithTitle from './fileWithTitle';
+import userProgress from './userProgress' // userProgress schema ko import kiya
 
 export const schemaTypes = [
     project, member, event, blogPost, blockContent,
     resource, stream, roadmapModule, aboutPage, contactSubmission, socialLink, technology, person, registration,
-    team, memberApplication // Step 2: Nayi team ko yahan list mein add kiya
+    team, memberApplication, fileWithTitle, userProgress // Step 2: Nayi team ko yahan list mein add kiya
 ]
