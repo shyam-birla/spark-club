@@ -1,4 +1,4 @@
-// schemas/resource.js (FINAL - With Multiple File Support)
+// schemas/resource.js (FINAL CORRECTED VERSION)
 export default {
   name: 'resource',
   title: 'Resource',
@@ -14,6 +14,7 @@ export default {
       name: 'duration',
       title: 'Duration (in minutes)',
       type: 'number',
+      description: 'E.g., 5 (for 5 minutes). Sirf number daalein.',
     },
     {
       name: 'type',
@@ -23,7 +24,7 @@ export default {
         list: [
           {title: 'Video (Embed)', value: 'videoEmbed'},
           {title: 'SPARK Article', value: 'article'}, 
-          {title: 'Slides / Multiple Files', value: 'multiFile'}, // NAYA OPTION
+          {title: 'Slides / Multiple Files', value: 'multiFile'},
           {title: 'Single Downloadable File', value: 'file'},
           {title: 'External Article / Link', value: 'link'},
           {title: 'Course / Tool', value: 'externalCourse'},
@@ -33,7 +34,13 @@ export default {
       initialValue: 'link',
       validation: (Rule) => Rule.required(),
     },
-    // NAYA FIELD multiple files ke liye
+    {
+        name: 'transcript',
+        title: 'Transcript',
+        type: 'text',
+        description: 'Video ki poori script yahan paste karein.',
+        hidden: ({parent}) => parent?.type !== 'videoEmbed',
+    },
     {
         name: 'files',
         title: 'Files',
@@ -55,7 +62,7 @@ export default {
     },
     {
       name: 'fileUpload',
-      title: 'Upload Single File', // Title change kar diya
+      title: 'Upload Single File',
       type: 'file',
       hidden: ({parent}) => parent?.type !== 'file',
     },
@@ -66,5 +73,17 @@ export default {
       hidden: ({parent}) => parent?.type !== 'link' && parent?.type !== 'externalCourse',
     },
   ],
-  // Preview logic wahi rahega
-};
+  preview: {
+    select: {
+      title: 'title',
+      type: 'type',
+      duration: 'duration'
+    },
+    prepare({title, type, duration}) {
+      return {
+        title: title || 'Untitled Resource',
+        subtitle: `${type || 'Not specified'}${duration ? ` • ${duration} min` : ''}`,
+      }
+    },
+  },
+}

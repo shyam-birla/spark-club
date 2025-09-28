@@ -1,8 +1,27 @@
+// sanity-studio/schemas/project.js
 export default {
   name: 'project',
   title: 'Project',
   type: 'document',
   fields: [
+    // --- FEATURE & ORDER FIELDS ---
+    {
+      name: 'isFeatured',
+      title: 'Feature on Homepage',
+      type: 'boolean',
+      description: 'Enable this to show the project on the homepage.',
+      initialValue: false,
+    },
+    {
+      name: 'displayOrder',
+      title: 'Display Order',
+      type: 'number',
+      description: 'A smaller number means higher priority (e.g., 1 will be shown before 2).',
+      validation: (Rule) => Rule.required().integer().positive(),
+      initialValue: 99,
+    },
+
+    // --- EXISTING FIELDS ---
     {
       name: 'title',
       title: 'Title',
@@ -19,15 +38,7 @@ export default {
       },
       validation: (Rule) => Rule.required(),
     },
-    // --- NAYA "AUTHORS" FIELD YAHAN ADD KIYA GAYA HAI ---
-    {
-        name: 'authors',
-        title: 'Author(s) / Contributor(s)',
-        type: 'array',
-        of: [{ type: 'reference', to: [{ type: 'profile' }] }],
-        description: 'Is project par kaam karne waale users ke profile select karein.'
-    },
-    // --- END OF CHANGE ---
+    // 'authors' field ko yahan se hata diya gaya hai.
     {
       name: 'status',
       title: 'Status',
@@ -46,18 +57,14 @@ export default {
       name: 'mainImage',
       title: 'Main Project Image (for Detail Page)',
       type: 'image',
-      options: {
-        hotspot: true,
-      },
+      options: { hotspot: true },
       description: 'This is the main image displayed at the top of the project detail page.'
     },
     {
       name: 'cardImage',
       title: 'Card Image (for Project List)',
       type: 'image',
-      options: {
-        hotspot: true,
-      },
+      options: { hotspot: true },
       description: 'This image appears on the project card in the list of all projects. Should be a poster-style image.'
     },
     {
@@ -81,9 +88,7 @@ export default {
       title: 'Tags',
       type: 'array',
       of: [{type: 'string'}],
-      options: {
-        layout: 'tags',
-      },
+      options: { layout: 'tags' },
     },
     {
       name: 'technologies',
@@ -102,11 +107,23 @@ export default {
       title: 'Live Demo URL',
       type: 'url',
     },
+    
+    // --- TEAM MEMBERS FIELD UPDATED TO REFERENCE 'member' ---
     {
       name: 'teamMembers',
       title: 'Team Members',
       type: 'array',
-      of: [{ type: 'reference', to: { type: 'person' } }], // Note: This references 'person', make sure you have a 'person' schema.
+      // Ab yeh 'member' schema se data lega
+      of: [{ type: 'reference', to: { type: 'member' } }], 
     },
   ],
+  orderings: [
+    {
+      title: 'Manual Order',
+      name: 'manualOrder',
+      by: [
+        {field: 'displayOrder', direction: 'asc'}
+      ]
+    },
+  ]
 };

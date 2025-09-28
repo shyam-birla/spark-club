@@ -18,7 +18,7 @@ export default async function ResourcesDiscoveryPage() {
 
   return (
     <main className="container mx-auto px-4 py-20">
-      <h1 className="text-4xl font-bold mb-2 text-black">Learning Roadmaps</h1>
+      <h1 className="text-4xl font-bold mb-2 text-black">Learning New Skills</h1>
       <p className="text-gray-600 mb-12">Your step-by-step guide to mastering new skills.</p>
       
       {/* Saare roadmaps ke liye ek grid layout */}

@@ -1,4 +1,4 @@
-// schemas/stream.js (FINAL, DETAILED VERSION)
+// schemas/stream.js (FINAL - With Homepage Featuring)
 export default {
   name: 'stream',
   title: 'Stream Roadmap',
@@ -10,11 +10,28 @@ export default {
       type: 'string',
       validation: (Rule) => Rule.required(),
     },
+    // --- NAYE FIELDS YAHAN ADD KIYE GAYE HAIN ---
+    {
+      name: 'isFeatured',
+      title: 'Feature on Homepage',
+      type: 'boolean',
+      description: 'Enable this to show this roadmap on the homepage.',
+      initialValue: false,
+    },
+    {
+      name: 'displayOrder',
+      title: 'Homepage Display Order',
+      type: 'number',
+      description: 'A smaller number (like 1, 2) will appear higher up on the homepage.',
+      hidden: ({document}) => !document?.isFeatured, // Sirf featured hone par dikhega
+      initialValue: 99,
+    },
+    // --- END OF NEW FIELDS ---
     {
       name: 'subtitle',
       title: 'Subtitle / Tagline',
       type: 'string',
-      description: 'Roadmap ke liye ek catchy one-liner (e.g., "Become a Job-Ready Web Developer from Scratch").'
+      description: 'Roadmap ke liye ek catchy one-liner.'
     },
     { 
       name: 'slug', 
@@ -48,9 +65,8 @@ export default {
     {
       name: 'skills',
       title: 'Skills You Will Gain',
-      description: 'Is roadmap se judi technologies/skills select karein.',
       type: 'array',
-      of: [{type: 'reference', to: {type: 'technology'}}], // Hum technology schema ko reuse kar rahe hain!
+      of: [{type: 'reference', to: {type: 'technology'}}],
     },
     {
       name: 'modules',

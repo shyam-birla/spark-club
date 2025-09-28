@@ -1,4 +1,4 @@
-// schemas/roadmapModule.js (FINAL VERSION with Sub-Topics)
+// schemas/roadmapModule.js (FINAL CORRECTED VERSION)
 export default {
   name: 'roadmapModule',
   title: 'Roadmap Module',
@@ -17,7 +17,7 @@ export default {
       description: 'Is module mein kya seekhenge?' 
     },
     {
-      name: 'subTopics', // 'resources' ko 'subTopics' se replace kar diya gaya hai
+      name: 'subTopics',
       title: 'Sub-Topics for this module',
       description: 'Content ko groups mein baantein (e.g., "Introduction", "Core Concepts")',
       type: 'array',
@@ -38,10 +38,9 @@ export default {
               name: 'resources',
               title: 'Resources for this sub-topic',
               type: 'array',
-              of: [{type: 'resource'}], // Resources ab sub-topic ke andar hain
+              of: [{type: 'resource'}], // Yahan hum resource 'object' ko direct use kar rahe hain
             },
           ],
-          // Sanity Studio mein preview ko behtar banane ke liye
           preview: {
             select: {
               title: 'title',

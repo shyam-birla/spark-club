@@ -14,5 +14,14 @@ export default {
       title: 'Logo',
       type: 'image',
     },
+    // --- YAHAN NAYA FIELD ADD KIYA GAYA HAI ---
+    {
+      name: 'showOnHomepage',
+      title: 'Show on Homepage',
+      type: 'boolean',
+      description: 'Enable this to feature the technology on the homepage.',
+      // initialValue ensures new technologies are shown by default
+      initialValue: true, 
+    },
   ],
 };
