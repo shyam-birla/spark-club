@@ -1,5 +1,4 @@
-// src/app/api/progress/route.js (FINAL ROBUST VERSION)
-
+// src/app/api/progress/route.js
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]/route';
@@ -38,6 +37,8 @@ export async function POST(request) {
                 roadmap: { _type: 'reference', _ref: roadmapId },
                 completedResources: [],
             })
+            // --- YAHAN CHANGE KIYA GAYA HAI ---
+            .set({ lastUpdated: new Date().toISOString() }) // Har update par date set karo
             .append('completedResources', [resourceKey])
             .commit({ autoGenerateArrayKeys: true });
 

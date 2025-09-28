@@ -19,6 +19,15 @@ export default {
       },
       validation: (Rule) => Rule.required(),
     },
+    // --- NAYA "AUTHORS" FIELD YAHAN ADD KIYA GAYA HAI ---
+    {
+        name: 'authors',
+        title: 'Author(s) / Contributor(s)',
+        type: 'array',
+        of: [{ type: 'reference', to: [{ type: 'profile' }] }],
+        description: 'Is project par kaam karne waale users ke profile select karein.'
+    },
+    // --- END OF CHANGE ---
     {
       name: 'status',
       title: 'Status',
@@ -76,7 +85,6 @@ export default {
         layout: 'tags',
       },
     },
-    // === NAYA "TECHNOLOGIES" FIELD YAHAN ADD KIYA GAYA HAI ===
     {
       name: 'technologies',
       title: 'Technologies',

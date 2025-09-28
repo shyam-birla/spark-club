@@ -16,9 +16,13 @@ import team from './team' // Step 1: Nayi team.js file ko import kiya
 import memberApplication from './memberApplication';
 import fileWithTitle from './fileWithTitle';
 import userProgress from './userProgress' // userProgress schema ko import kiya
+import profile from './profile';
+import education from './education';
+import workExperience from './workExperience';
+import externalProject from './externalProject';
 
 export const schemaTypes = [
     project, member, event, blogPost, blockContent,
     resource, stream, roadmapModule, aboutPage, contactSubmission, socialLink, technology, person, registration,
-    team, memberApplication, fileWithTitle, userProgress // Step 2: Nayi team ko yahan list mein add kiya
+    team, memberApplication, fileWithTitle, userProgress, profile, education, workExperience, externalProject // Step 2: Nayi team ko yahan list mein add kiya
 ]

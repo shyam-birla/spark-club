@@ -8,23 +8,29 @@ export default {
             name: 'userEmail',
             title: 'User Email',
             type: 'string',
-            readOnly: true, // Isko Sanity Studio se edit nahi kar sakte
+            readOnly: true,
         },
         {
             name: 'roadmap',
             title: 'Roadmap',
             type: 'reference',
-            to: [{type: 'stream'}], // 'stream' schema se link kar rahe hain
+            to: [{type: 'stream'}],
             readOnly: true,
         },
         {
             name: 'completedResources',
             title: 'Completed Resources',
             type: 'array',
-            of: [{type: 'string'}], // Yahan hum resource ka _key store karenge
+            of: [{type: 'string'}],
         },
+        // --- YEH NAYA FIELD ADD KAREIN ---
+        {
+            name: 'lastUpdated',
+            title: 'Last Updated',
+            type: 'datetime',
+        },
+        // --- END OF CHANGE ---
     ],
-    // Studio mein preview ko behtar banane ke liye
     preview: {
         select: {
             email: 'userEmail',

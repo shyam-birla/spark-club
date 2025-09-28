@@ -1,7 +1,8 @@
-// src/components/LearningInterface.js (COMPLETE - with useMemo fix)
+// src/components/LearningInterface.js (FINAL - With Smart Resume)
 'use client'; 
 
-import { useState, useEffect, useMemo } from 'react'; // useMemo ko import kiya
+import { useState, useEffect, useMemo } from 'react';
+import { useSearchParams } from 'next/navigation'; // Naya hook import kiya
 import { FaVideo, FaFileAlt, FaLink, FaGraduationCap, FaFileArchive, FaCheckCircle } from 'react-icons/fa';
 import { PortableText } from '@portabletext/react';
 import { useSession } from 'next-auth/react';
@@ -41,7 +42,8 @@ export default function LearningInterface({ roadmap, initialProgress }) {
     const [activeResource, setActiveResource] = useState(null);
     const [completed, setCompleted] = useState(() => new Set(initialProgress || []));
 
-    // useMemo ka use karke 'allResources' ko cache kiya
+    const searchParams = useSearchParams(); // URL se parameters get karne ke liye
+
     const allResources = useMemo(() => {
         return roadmap.modules?.flatMap(m => m.subTopics?.flatMap(st => st.resources)) || [];
     }, [roadmap]);
@@ -49,10 +51,23 @@ export default function LearningInterface({ roadmap, initialProgress }) {
     const activeResourceIndex = allResources.findIndex(r => r._key === activeResource?._key);
 
     useEffect(() => {
-        if (allResources.length > 0 && !activeResource) {
-            setActiveResource(allResources[0]);
+        // --- YAHAN LOGIC UPDATE KIYA GAYA HAI ---
+        const resumeKey = searchParams.get('resume_from');
+        let initialResource = null;
+
+        if (resumeKey) {
+            // Agar URL mein resume key hai, to us resource ko dhoondho
+            initialResource = allResources.find(r => r._key === resumeKey);
         }
-    }, [allResources, activeResource]);
+
+        // Agar resume key nahi hai ya nahi mila, to pehla resource select karo
+        if (!initialResource && allResources.length > 0) {
+            initialResource = allResources[0];
+        }
+
+        setActiveResource(initialResource);
+        // --- END OF CHANGE ---
+    }, [allResources, searchParams]); // Dependency array update kiya
     
     const handleMarkAsComplete = async (resourceKey) => {
         if (!session || !resourceKey || completed.has(resourceKey)) {
