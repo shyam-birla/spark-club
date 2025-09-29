@@ -10,7 +10,8 @@ export const config = {
 
     // Learning interface (pehle se protected hai)
     '/learn/:path*', 
-
+    '/contact',
+    '/join',
     // --- NAYA RULE ADD KIYA GAYA HAI ---
     // Yeh rule '/events' ke andar ke saare pages ko protect karega, 
     // lekin '/events' page ko nahi.

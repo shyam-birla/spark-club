@@ -1,9 +1,8 @@
-// src/components/LearningInterface.js (FINAL - With Smart Resume)
 'use client'; 
 
 import { useState, useEffect, useMemo } from 'react';
-import { useSearchParams } from 'next/navigation'; // Naya hook import kiya
-import { FaVideo, FaFileAlt, FaLink, FaGraduationCap, FaFileArchive, FaCheckCircle } from 'react-icons/fa';
+import { useSearchParams } from 'next/navigation';
+import { FaVideo, FaFileAlt, FaLink, FaGraduationCap, FaFileArchive, FaCheckCircle, FaChevronDown } from 'react-icons/fa';
 import { PortableText } from '@portabletext/react';
 import { useSession } from 'next-auth/react';
 
@@ -41,33 +40,37 @@ export default function LearningInterface({ roadmap, initialProgress }) {
     const { data: session } = useSession();
     const [activeResource, setActiveResource] = useState(null);
     const [completed, setCompleted] = useState(() => new Set(initialProgress || []));
+    
+    // Nayi state jo open module ko track karegi
+    // By default, pehla module open rahega
+    const [openModuleKey, setOpenModuleKey] = useState(roadmap.modules?.[0]?._key || null);
 
-    const searchParams = useSearchParams(); // URL se parameters get karne ke liye
+    // Module ko open/close karne ke liye function
+    const handleModuleToggle = (moduleKey) => {
+        setOpenModuleKey(prevKey => (prevKey === moduleKey ? null : moduleKey));
+    };
+    
+    const searchParams = useSearchParams();
 
     const allResources = useMemo(() => {
-        return roadmap.modules?.flatMap(m => m.subTopics?.flatMap(st => st.resources)) || [];
+        return roadmap.modules?.flatMap(m => m.subTopics?.flatMap(st => st.resources)).filter(Boolean) || [];
     }, [roadmap]);
 
-    const activeResourceIndex = allResources.findIndex(r => r._key === activeResource?._key);
+    const activeResourceIndex = allResources.findIndex(r => r?._key === activeResource?._key);
 
     useEffect(() => {
-        // --- YAHAN LOGIC UPDATE KIYA GAYA HAI ---
         const resumeKey = searchParams.get('resume_from');
         let initialResource = null;
 
         if (resumeKey) {
-            // Agar URL mein resume key hai, to us resource ko dhoondho
             initialResource = allResources.find(r => r._key === resumeKey);
         }
 
-        // Agar resume key nahi hai ya nahi mila, to pehla resource select karo
         if (!initialResource && allResources.length > 0) {
             initialResource = allResources[0];
         }
-
         setActiveResource(initialResource);
-        // --- END OF CHANGE ---
-    }, [allResources, searchParams]); // Dependency array update kiya
+    }, [allResources, searchParams]);
     
     const handleMarkAsComplete = async (resourceKey) => {
         if (!session || !resourceKey || completed.has(resourceKey)) {
@@ -123,29 +126,40 @@ export default function LearningInterface({ roadmap, initialProgress }) {
                 <nav>
                     {roadmap.modules?.map((module, moduleIndex) => (
                         <div key={module._key} className="border-b">
-                            <h3 className="p-4 font-semibold bg-gray-50">Module {moduleIndex + 1}: {module.title}</h3>
-                            {module.subTopics?.map((subTopic) => (
-                                <div key={subTopic._key} className="pl-4 py-2">
-                                    <h4 className="font-bold text-sm text-gray-500 uppercase tracking-wider mb-2">{subTopic.title}</h4>
-                                    <ul>
-                                        {subTopic.resources?.map((resource) => (
-                                            <li key={resource._key} className="flex items-center gap-1">
-                                                <button 
-                                                    onClick={() => setActiveResource(resource)}
-                                                    className={`w-full text-left p-3 rounded-md flex items-center gap-3 text-sm transition-colors ${
-                                                        activeResource?._key === resource._key ? 'bg-orange-100 text-orange-800' : 'hover:bg-gray-100'
-                                                    }`}
-                                                >
-                                                    <ResourceIcon type={resource.type} />
-                                                    <span className="flex-grow">{resource.title}</span>
-                                                    {resource.duration && <span className="text-gray-500">{resource.duration} min</span>}
-                                                </button>
-                                                {completed.has(resource._key) && <FaCheckCircle className="text-green-500 flex-shrink-0 mr-2" />}
-                                            </li>
-                                        ))}
-                                    </ul>
+                            <button 
+                                onClick={() => handleModuleToggle(module._key)}
+                                className="w-full p-4 font-semibold bg-gray-50 text-left flex justify-between items-center hover:bg-gray-100"
+                            >
+                                <span>Module {moduleIndex + 1}: {module.title}</span>
+                                <FaChevronDown className={`transition-transform duration-200 ${openModuleKey === module._key ? 'rotate-180' : ''}`} />
+                            </button>
+                            
+                            {openModuleKey === module._key && (
+                                <div className="pl-4 py-2 bg-white">
+                                    {module.subTopics?.map((subTopic) => (
+                                        <div key={subTopic._key} className="py-2">
+                                            <h4 className="font-bold text-sm text-gray-500 uppercase tracking-wider mb-2">{subTopic.title}</h4>
+                                            <ul>
+                                                {subTopic.resources?.map((resource) => (
+                                                    <li key={resource._key} className="flex items-center gap-1">
+                                                        <button 
+                                                            onClick={() => setActiveResource(resource)}
+                                                            className={`w-full text-left p-3 rounded-md flex items-center gap-3 text-sm transition-colors ${
+                                                                activeResource?._key === resource._key ? 'bg-orange-100 text-orange-800' : 'hover:bg-gray-100'
+                                                            }`}
+                                                        >
+                                                            <ResourceIcon type={resource.type} />
+                                                            <span className="flex-grow">{resource.title}</span>
+                                                            {resource.duration && <span className="text-gray-500">{resource.duration} min</span>}
+                                                        </button>
+                                                        {completed.has(resource._key) && <FaCheckCircle className="text-green-500 flex-shrink-0 mr-2" />}
+                                                    </li>
+                                                ))}
+                                            </ul>
+                                        </div>
+                                    ))}
                                 </div>
-                            ))}
+                            )}
                         </div>
                     ))}
                 </nav>
@@ -229,19 +243,19 @@ export default function LearningInterface({ roadmap, initialProgress }) {
                                 Previous Item
                             </button>
                              {session && (
-                                <div>
-                                    {completed.has(activeResource._key) ? (
-                                        <div className="inline-flex items-center gap-2 text-lg font-semibold text-green-600 p-3 bg-green-50 rounded-lg">
-                                            <FaCheckCircle />
-                                            <span>Completed</span>
-                                        </div>
-                                    ) : (
-                                        <button onClick={() => handleMarkAsComplete(activeResource._key)} className="bg-gray-800 text-white px-8 py-3 rounded-md font-semibold text-lg hover:bg-black">
-                                            Mark as Complete
-                                        </button>
-                                    )}
-                                </div>
-                            )}
+                                 <div>
+                                     {completed.has(activeResource._key) ? (
+                                         <div className="inline-flex items-center gap-2 text-lg font-semibold text-green-600 p-3 bg-green-50 rounded-lg">
+                                             <FaCheckCircle />
+                                             <span>Completed</span>
+                                         </div>
+                                     ) : (
+                                         <button onClick={() => handleMarkAsComplete(activeResource._key)} className="bg-gray-800 text-white px-8 py-3 rounded-md font-semibold text-lg hover:bg-black">
+                                             Mark as Complete
+                                         </button>
+                                     )}
+                                 </div>
+                             )}
                             <button onClick={goToNext} disabled={activeResourceIndex >= allResources.length - 1} className="bg-black text-white px-8 py-3 rounded-md font-semibold text-lg hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
                                 {completed.has(activeResource._key) ? 'Go to next item' : 'Complete & Continue'} →
                             </button>

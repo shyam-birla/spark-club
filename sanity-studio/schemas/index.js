@@ -19,10 +19,14 @@ import userProgress from './userProgress' // userProgress schema ko import kiya
 import profile from './profile';
 import education from './education';
 import workExperience from './workExperience';
-import externalProject from './externalProject';
+import externalProject from './externalProject'; // Step 3: Nayi category schema ko import kiya
+import category from './category';
+
+
 
 export const schemaTypes = [
     project, member, event, blogPost, blockContent,
     resource, stream, roadmapModule, aboutPage, contactSubmission, socialLink, technology, person, registration,
-    team, memberApplication, fileWithTitle, userProgress, profile, education, workExperience, externalProject // Step 2: Nayi team ko yahan list mein add kiya
+    team, memberApplication, fileWithTitle, userProgress, profile, education, workExperience, externalProject,
+    category,   // Step 2: Nayi team ko yahan list mein add kiya
 ]

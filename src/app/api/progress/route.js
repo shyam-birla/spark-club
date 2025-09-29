@@ -1,8 +1,10 @@
-// src/app/api/progress/route.js
+// src/app/api/progress/route.js (FINAL ROBUST VERSION)
+
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]/route';
 import { createClient } from 'next-sanity';
+import { revalidatePath } from 'next/cache';
 
 const sanityWriteClient = createClient({
     projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
@@ -28,19 +30,30 @@ export async function POST(request) {
     const documentId = `progress-${sanitizedEmail}-${roadmapId}`;
     
     try {
+        // --- YEH NAYA, SAFER TAREEKA HAI ---
+
+        // Step 1: Pehle document ko create karo agar woh nahi hai (createIfNotExists)
+        // Isse ensure hoga ki patch karne se pehle document hamesha maujood hai
+        await sanityWriteClient.createIfNotExists({
+            _id: documentId,
+            _type: 'userProgress',
+            userEmail: userEmail,
+            roadmap: { _type: 'reference', _ref: roadmapId },
+            completedResources: [],
+        });
+
+        // Step 2: Ab us document ko safely patch (update) karo
         await sanityWriteClient
             .patch(documentId)
-            .setIfMissing({
-                _id: documentId,
-                _type: 'userProgress',
-                userEmail: userEmail,
-                roadmap: { _type: 'reference', _ref: roadmapId },
-                completedResources: [],
-            })
-            // --- YAHAN CHANGE KIYA GAYA HAI ---
             .set({ lastUpdated: new Date().toISOString() }) // Har update par date set karo
-            .append('completedResources', [resourceKey])
+            // Hum 'append' ki jagah 'insert' ka use karenge taaki duplicate entries na hon
+            .insert('after', 'completedResources[-1]', [resourceKey])
             .commit({ autoGenerateArrayKeys: true });
+
+        // --- END OF CHANGE ---
+
+        // Profile page ka cache clear karo taaki wahan "Resume Learning" button update ho
+        revalidatePath('/profile');
 
         return NextResponse.json({ message: 'Progress updated successfully' }, { status: 200 });
 

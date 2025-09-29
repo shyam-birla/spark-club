@@ -1,4 +1,4 @@
-// schemas/stream.js (FINAL - With Homepage Featuring)
+// schemas/stream.js (FINAL - With Categories)
 export default {
   name: 'stream',
   title: 'Stream Roadmap',
@@ -10,7 +10,6 @@ export default {
       type: 'string',
       validation: (Rule) => Rule.required(),
     },
-    // --- NAYE FIELDS YAHAN ADD KIYE GAYE HAIN ---
     {
       name: 'isFeatured',
       title: 'Feature on Homepage',
@@ -23,10 +22,18 @@ export default {
       title: 'Homepage Display Order',
       type: 'number',
       description: 'A smaller number (like 1, 2) will appear higher up on the homepage.',
-      hidden: ({document}) => !document?.isFeatured, // Sirf featured hone par dikhega
+      hidden: ({document}) => !document?.isFeatured,
       initialValue: 99,
     },
-    // --- END OF NEW FIELDS ---
+    // --- NAYA "CATEGORIES" FIELD YAHAN ADD KIYA GAYA HAI ---
+    {
+        name: 'categories',
+        title: 'Categories',
+        type: 'array',
+        of: [{ type: 'reference', to: { type: 'category' } }],
+        description: 'Is roadmap ko ek ya ek se zyada category se jodein.'
+    },
+    // --- END OF NEW FIELD ---
     {
       name: 'subtitle',
       title: 'Subtitle / Tagline',
