@@ -21,12 +21,12 @@ import education from './education';
 import workExperience from './workExperience';
 import externalProject from './externalProject'; // Step 3: Nayi category schema ko import kiya
 import category from './category';
-
-
+import testimonial from './testimonial';
+import siteStats from './siteStats'
 
 export const schemaTypes = [
     project, member, event, blogPost, blockContent,
     resource, stream, roadmapModule, aboutPage, contactSubmission, socialLink, technology, person, registration,
     team, memberApplication, fileWithTitle, userProgress, profile, education, workExperience, externalProject,
-    category,   // Step 2: Nayi team ko yahan list mein add kiya
+    category, testimonial, siteStats,   // Step 2: Nayi team ko yahan list mein add kiya
 ]

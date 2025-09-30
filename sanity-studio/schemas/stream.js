@@ -1,4 +1,3 @@
-// schemas/stream.js (FINAL - With Categories)
 export default {
   name: 'stream',
   title: 'Stream Roadmap',
@@ -25,15 +24,48 @@ export default {
       hidden: ({document}) => !document?.isFeatured,
       initialValue: 99,
     },
-    // --- NAYA "CATEGORIES" FIELD YAHAN ADD KIYA GAYA HAI ---
+    // === YAHAN BADLAV KIYA GAYA HAI ===
     {
         name: 'categories',
         title: 'Categories',
         type: 'array',
-        of: [{ type: 'reference', to: { type: 'category' } }],
-        description: 'Is roadmap ko ek ya ek se zyada category se jodein.'
+        of: [
+          {
+            type: 'object',
+            fields: [
+              {
+                name: 'category',
+                title: 'Category',
+                type: 'reference',
+                to: [{ type: 'category' }],
+                validation: (Rule) => Rule.required(),
+              },
+              {
+                name: 'displayOrder',
+                title: 'Display Order in this Category',
+                type: 'number',
+                description: 'Is category ke andar yeh roadmap kaunse number par dikhega? (e.g., 1, 2, 3)',
+                validation: (Rule) => Rule.required(),
+              }
+            ],
+            // Yeh Sanity Studio mein preview ko behtar banata hai
+            preview: {
+                select: {
+                    title: 'category.title',
+                    order: 'displayOrder'
+                },
+                prepare({ title, order }) {
+                    return {
+                        title: title || 'No category selected',
+                        subtitle: `Order: ${order === undefined ? 'Not set' : order}`
+                    }
+                }
+            }
+          }
+        ],
+        description: 'Is roadmap ko ek ya ek se zyada category se jodein aur har category ke liye order set karein.'
     },
-    // --- END OF NEW FIELD ---
+    // === END OF CHANGE ===
     {
       name: 'subtitle',
       title: 'Subtitle / Tagline',

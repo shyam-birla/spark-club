@@ -1,30 +1,27 @@
-// src/app/learn/[slug]/page.js (FINAL CLIENT-SIDE FETCHING VERSION)
 'use client';
 
 import { useState, useEffect } from 'react';
-import { useParams } from 'next/navigation'; // Naya hook import kiya
+import { useParams } from 'next/navigation';
 import { useSession } from 'next-auth/react';
 import { client } from '../../../../sanity/lib/client';
 import LearningInterface from '@/components/LearningInterface';
 
 export default function LearnPage() {
-    const params = useParams(); // Hook ka use karke params get kiye
+    const params = useParams();
     const slug = params.slug;
 
-    // Saari state ab is page par manage hogi
     const { data: session } = useSession();
     const [roadmap, setRoadmap] = useState(null);
     const [initialProgress, setInitialProgress] = useState([]);
     const [loading, setLoading] = useState(true);
 
     useEffect(() => {
-        // Yeh effect slug ya session badalne par data fetch karega
         if (!slug) return;
 
         async function fetchData() {
             setLoading(true);
             try {
-                // 1. Roadmap ka data fetch karo
+                console.log("1. Fetching roadmap for slug:", slug);
                 const roadmapQuery = `*[_type == "stream" && slug.current == $slug][0]{
                     _id,
                     title,
@@ -54,17 +51,20 @@ export default function LearnPage() {
                 }`;
                 const roadmapData = await client.fetch(roadmapQuery, { slug });
                 setRoadmap(roadmapData);
+                console.log("2. Roadmap data fetched:", roadmapData);
 
-                // 2. User ka progress fetch karo
                 const userEmail = session?.user?.email;
                 const roadmapId = roadmapData?._id;
-                
+                console.log("3. Checking for progress with Email:", userEmail, "and Roadmap ID:", roadmapId);
+
                 if (userEmail && roadmapId) {
                     const progressQuery = `*[_type == "userProgress" && userEmail == $email && roadmap._ref == $roadmapId][0]{ completedResources }`;
                     const progress = await client.fetch(progressQuery, { email: userEmail, roadmapId });
+                    console.log("4. Progress data fetched from Sanity:", progress);
                     setInitialProgress(progress?.completedResources || []);
                 } else {
-                    setInitialProgress([]); // Agar user login nahi hai, to progress empty set karo
+                    console.log("User not logged in or roadmap not found, setting progress to empty.");
+                    setInitialProgress([]);
                 }
 
             } catch (error) {
@@ -75,7 +75,7 @@ export default function LearnPage() {
         }
 
         fetchData();
-    }, [slug, session]); // Dependency array mein session bhi add kiya
+    }, [slug, session]);
 
     if (loading) {
         return <div className="flex justify-center items-center h-screen">Loading...</div>;
@@ -92,6 +92,5 @@ export default function LearnPage() {
         );
     }
 
-    // Saara data Client Component ko pass karo
     return <LearningInterface roadmap={roadmap} initialProgress={initialProgress} />;
 }

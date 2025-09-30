@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState } from 'react';
+import { useState, useEffect, useCallback } from 'react'; // useCallback ko import kiya
 import { usePathname } from 'next/navigation';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
@@ -9,6 +9,33 @@ const NavBar = () => {
   const [isOpen, setIsOpen] = useState(false);
   const pathname = usePathname();
   const { data: session, status } = useSession();
+
+  // === YAHAN SE CHANGES SHURU ===
+  const [isVisible, setIsVisible] = useState(true);
+  const [lastScrollY, setLastScrollY] = useState(0);
+
+  // 1. controlNavbar function ko useCallback se wrap kiya
+  const controlNavbar = useCallback(() => {
+    if (typeof window !== 'undefined') {
+      if (window.scrollY > lastScrollY && window.scrollY > 100) { 
+        setIsVisible(false);
+      } else {
+        setIsVisible(true);
+      }
+      setLastScrollY(window.scrollY);
+    }
+  }, [lastScrollY]); // Iski dependency lastScrollY hai
+
+  // 2. useEffect ko controlNavbar par depend karwaya
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      window.addEventListener('scroll', controlNavbar);
+      return () => {
+        window.removeEventListener('scroll', controlNavbar);
+      };
+    }
+  }, [controlNavbar]); // Ab dependency array sahi hai
+  // === CHANGES YAHAN KHATAM ===
 
   const navLinks = [
     { href: "/projects", label: "Projects" },
@@ -21,7 +48,12 @@ const NavBar = () => {
   ];
 
   return (
-    <header className="sticky top-0 z-50 flex justify-between items-center p-4 bg-white/50 backdrop-blur-sm border-b border-gray-200">
+    <header 
+      className={`fixed top-0 left-0 right-0 z-50 flex justify-between items-center p-4 bg-white/50 backdrop-blur-sm border-b border-gray-200 transition-transform duration-300 ${
+        isVisible ? 'translate-y-0' : '-translate-y-full'
+      }`}
+    >
+      {/* Baaki ka poora code same rahega */}
       <Link href="/">
         <Image src="/logo-black.png" alt="SPARK! Club Logo" width={120} height={40} className="object-contain" />
       </Link>
@@ -48,7 +80,6 @@ const NavBar = () => {
 
         {status === 'authenticated' && (
           <>
-            {/* --- CHANGE 1: PROFILE LINK ADD KIYA GAYA HAI --- */}
             <Link href="/profile" className="flex items-center gap-2 group cursor-pointer">
               {session.user.image && (
                 <Image src={session.user.image} alt={session.user.name} width={40} height={40} className="rounded-full" />
@@ -57,8 +88,6 @@ const NavBar = () => {
                 Hi, {session.user.name.split(' ')[0]}
               </span>
             </Link>
-            {/* --- END OF CHANGE --- */}
-
             <button onClick={() => signOut()} className="bg-gray-200 text-black px-4 py-2 rounded-md font-bold text-sm hover:bg-gray-300 transition-colors">
               Logout
             </button>
@@ -88,12 +117,10 @@ const NavBar = () => {
               )}
               {status === 'authenticated' && (
                 <div className="flex flex-col items-center gap-4">
-                  {/* --- CHANGE 2: MOBILE MENU MEIN BHI PROFILE LINK --- */}
                   <Link href="/profile" className="flex items-center gap-2">
                     {session.user.image && (<Image src={session.user.image} alt={session.user.name} width={32} height={32} className="rounded-full" />)}
                     <span className="font-semibold">Hi, {session.user.name.split(' ')[0]}</span>
                   </Link>
-                  {/* --- END OF CHANGE --- */}
                   <button onClick={() => signOut()} className="bg-gray-200 text-black px-4 py-2 rounded-md font-bold text-sm hover:bg-gray-300 transition-colors">
                     Logout
                   </button>

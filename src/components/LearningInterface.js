@@ -6,7 +6,6 @@ import { FaVideo, FaFileAlt, FaLink, FaGraduationCap, FaFileArchive, FaCheckCirc
 import { PortableText } from '@portabletext/react';
 import { useSession } from 'next-auth/react';
 
-// Helper function to convert YouTube URL to embeddable format
 const getYouTubeEmbedUrl = (url) => {
     if (!url) return '';
     try {
@@ -40,16 +39,7 @@ export default function LearningInterface({ roadmap, initialProgress }) {
     const { data: session } = useSession();
     const [activeResource, setActiveResource] = useState(null);
     const [completed, setCompleted] = useState(() => new Set(initialProgress || []));
-    
-    // Nayi state jo open module ko track karegi
-    // By default, pehla module open rahega
-    const [openModuleKey, setOpenModuleKey] = useState(roadmap.modules?.[0]?._key || null);
-
-    // Module ko open/close karne ke liye function
-    const handleModuleToggle = (moduleKey) => {
-        setOpenModuleKey(prevKey => (prevKey === moduleKey ? null : moduleKey));
-    };
-    
+    const [openModuleKey, setOpenModuleKey] = useState(null);
     const searchParams = useSearchParams();
 
     const allResources = useMemo(() => {
@@ -58,29 +48,44 @@ export default function LearningInterface({ roadmap, initialProgress }) {
 
     const activeResourceIndex = allResources.findIndex(r => r?._key === activeResource?._key);
 
+    // Effect to set the initial/resumed active resource
     useEffect(() => {
         const resumeKey = searchParams.get('resume_from');
         let initialResource = null;
-
         if (resumeKey) {
             initialResource = allResources.find(r => r._key === resumeKey);
         }
-
         if (!initialResource && allResources.length > 0) {
             initialResource = allResources[0];
         }
         setActiveResource(initialResource);
     }, [allResources, searchParams]);
     
-    const handleMarkAsComplete = async (resourceKey) => {
-        if (!session || !resourceKey || completed.has(resourceKey)) {
-            return;
+    // Effect to auto-expand the module of the active resource
+    useEffect(() => {
+        // Condition logic is INSIDE the hook
+        if (activeResource && roadmap.modules) {
+            const parentModule = roadmap.modules.find(module => 
+                module.subTopics?.some(subTopic => 
+                    subTopic.resources?.some(resource => resource._key === activeResource._key)
+                )
+            );
+            
+            if (parentModule) {
+                setOpenModuleKey(parentModule._key);
+            }
         }
-        
+    }, [activeResource, roadmap.modules]);
+
+    const handleModuleToggle = (moduleKey) => {
+        setOpenModuleKey(prevKey => (prevKey === moduleKey ? null : moduleKey));
+    };
+    
+    const handleMarkAsComplete = async (resourceKey) => {
+        if (!session || !resourceKey || completed.has(resourceKey)) return;
         const newCompleted = new Set(completed);
         newCompleted.add(resourceKey);
         setCompleted(newCompleted);
-
         try {
             const response = await fetch('/api/progress', {
                 method: 'POST',
@@ -88,6 +93,7 @@ export default function LearningInterface({ roadmap, initialProgress }) {
                 body: JSON.stringify({
                     roadmapId: roadmap._id,
                     resourceKey: resourceKey,
+                    userEmail: session.user.email,
                 }),
             });
             if (!response.ok) throw new Error('Failed to save progress');
@@ -100,9 +106,7 @@ export default function LearningInterface({ roadmap, initialProgress }) {
     };
     
     const goToNext = () => {
-        if (activeResource) {
-            handleMarkAsComplete(activeResource._key);
-        }
+        if (activeResource) handleMarkAsComplete(activeResource._key);
         const nextIndex = activeResourceIndex + 1;
         if (nextIndex < allResources.length) {
             setActiveResource(allResources[nextIndex]);
@@ -118,7 +122,6 @@ export default function LearningInterface({ roadmap, initialProgress }) {
 
     return (
         <div className="flex h-screen bg-gray-100">
-            {/* Left Sidebar */}
             <aside className="w-80 h-full bg-white border-r border-gray-200 overflow-y-auto">
                 <div className="p-4 border-b">
                     <h2 className="font-bold text-lg truncate">{roadmap.title}</h2>
@@ -164,108 +167,24 @@ export default function LearningInterface({ roadmap, initialProgress }) {
                     ))}
                 </nav>
             </aside>
-
-            {/* Right Content Area */}
             <main className="flex-1 p-6 md:p-10 overflow-y-auto">
                 {activeResource ? (
                     <div className="max-w-4xl mx-auto">
                         <h1 className="text-3xl font-bold mb-6">{activeResource.title}</h1>
-                        
                         <div className="mb-8">
-                            {/* Video Player */}
-                            {activeResource.type === 'videoEmbed' && activeResource.videoUrl && (
-                                <div className="aspect-video w-full rounded-lg overflow-hidden border shadow-lg bg-black">
-                                    <iframe
-                                        src={getYouTubeEmbedUrl(activeResource.videoUrl)}
-                                        title={activeResource.title}
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                        allowFullScreen
-                                        className="w-full h-full"
-                                    ></iframe>
-                                </div>
-                            )}
-                            
-                            {/* Article Renderer */}
-                            {activeResource.type === 'article' && activeResource.articleBody && (
-                                <div className="prose lg:prose-xl bg-white p-6 md:p-8 rounded-lg shadow-md max-w-none">
-                                    <PortableText value={activeResource.articleBody} />
-                                </div>
-                            )}
-                            
-                            {/* Multi-File Viewer */}
-                            {activeResource.type === 'multiFile' && (
-                                <div className="space-y-8">
-                                    {activeResource.files?.map((fileItem) => (
-                                        <div key={fileItem._key} className="bg-white p-6 rounded-lg border">
-                                            <div className="flex justify-between items-center mb-4">
-                                                <h3 className="text-xl font-bold">{fileItem.title}</h3>
-                                                <a href={fileItem.fileURL} download target="_blank" rel="noopener noreferrer">
-                                                    <button className="bg-gray-800 text-white px-4 py-2 rounded-md font-semibold hover:bg-black text-sm">Download</button>
-                                                </a>
-                                            </div>
-                                            {fileItem.fileURL?.endsWith('.pdf') ? (
-                                                <div className="aspect-[4/3] w-full border rounded-lg overflow-hidden">
-                                                    <iframe src={fileItem.fileURL} className="w-full h-full" title={fileItem.title} />
-                                                </div>
-                                            ) : (
-                                                <div className="text-center py-10 bg-gray-50 rounded-lg"><p>This file type cannot be previewed.</p></div>
-                                            )}
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-
-                            {/* Single File Viewer */}
-                            {activeResource.type === 'file' && activeResource.fileURL && (
-                                <div className="bg-white p-6 rounded-lg border">
-                                    {activeResource.fileURL.endsWith('.pdf') ? (
-                                        <div className="mb-6"><div className="aspect-[4/3] w-full border rounded-lg overflow-hidden"><iframe src={activeResource.fileURL} className="w-full h-full" title={activeResource.title} /></div></div>
-                                    ) : (
-                                        <p className="mb-4 text-center">This is a downloadable file.</p>
-                                    )}
-                                    <div className="text-center"><a href={activeResource.fileURL} download target="_blank" rel="noopener noreferrer"><button className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-80">Download File</button></a></div>
-                                </div>
-                            )}
-
-                            {/* External Link */}
-                            {(activeResource.type === 'link' || activeResource.type === 'externalCourse') && activeResource.link && (
-                                 <div className="bg-white p-6 rounded-lg border text-center">
-                                     <p className="mb-4">This is an external resource. Click the button below to open it in a new tab.</p>
-                                     <a href={activeResource.link} target="_blank" rel="noopener noreferrer"><button className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-80">Visit Link</button></a>
-                                 </div>
-                            )}
+                            {activeResource.type === 'videoEmbed' && activeResource.videoUrl && ( <div className="aspect-video w-full rounded-lg overflow-hidden border shadow-lg bg-black"><iframe src={getYouTubeEmbedUrl(activeResource.videoUrl)} title={activeResource.title} frameBorder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowFullScreen className="w-full h-full"></iframe></div> )}
+                            {activeResource.type === 'article' && activeResource.articleBody && ( <div className="prose lg:prose-xl bg-white p-6 md:p-8 rounded-lg shadow-md max-w-none"><PortableText value={activeResource.articleBody} /></div> )}
+                            {activeResource.type === 'multiFile' && ( <div className="space-y-8">{activeResource.files?.map((fileItem) => ( <div key={fileItem._key} className="bg-white p-6 rounded-lg border"><div className="flex justify-between items-center mb-4"><h3 className="text-xl font-bold">{fileItem.title}</h3><a href={fileItem.fileURL} download target="_blank" rel="noopener noreferrer"><button className="bg-gray-800 text-white px-4 py-2 rounded-md font-semibold hover:bg-black text-sm">Download</button></a></div>{fileItem.fileURL?.endsWith('.pdf') ? (<div className="aspect-[4/3] w-full border rounded-lg overflow-hidden"><iframe src={fileItem.fileURL} className="w-full h-full" title={fileItem.title} /></div>) : (<div className="text-center py-10 bg-gray-50 rounded-lg"><p>This file type cannot be previewed.</p></div>)}</div>))}</div> )}
+                            {activeResource.type === 'file' && activeResource.fileURL && ( <div className="bg-white p-6 rounded-lg border">{activeResource.fileURL.endsWith('.pdf') ? (<div className="mb-6"><div className="aspect-[4/3] w-full border rounded-lg overflow-hidden"><iframe src={activeResource.fileURL} className="w-full h-full" title={activeResource.title} /></div></div>) : (<p className="mb-4 text-center">This is a downloadable file.</p>)}<div className="text-center"><a href={activeResource.fileURL} download target="_blank" rel="noopener noreferrer"><button className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-80">Download File</button></a></div></div> )}
+                            {(activeResource.type === 'link' || activeResource.type === 'externalCourse') && activeResource.link && ( <div className="bg-white p-6 rounded-lg border text-center"><p className="mb-4">This is an external resource. Click the button below to open it in a new tab.</p><a href={activeResource.link} target="_blank" rel="noopener noreferrer"><button className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-80">Visit Link</button></a></div> )}
                         </div>
-                        
-                        {/* Navigation Buttons */}
                         <div className="mt-8 flex justify-between items-center">
-                            <button onClick={goToPrevious} disabled={activeResourceIndex <= 0} className="bg-gray-200 text-black px-6 py-3 rounded-md font-semibold hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">
-                                Previous Item
-                            </button>
-                             {session && (
-                                 <div>
-                                     {completed.has(activeResource._key) ? (
-                                         <div className="inline-flex items-center gap-2 text-lg font-semibold text-green-600 p-3 bg-green-50 rounded-lg">
-                                             <FaCheckCircle />
-                                             <span>Completed</span>
-                                         </div>
-                                     ) : (
-                                         <button onClick={() => handleMarkAsComplete(activeResource._key)} className="bg-gray-800 text-white px-8 py-3 rounded-md font-semibold text-lg hover:bg-black">
-                                             Mark as Complete
-                                         </button>
-                                     )}
-                                 </div>
-                             )}
-                            <button onClick={goToNext} disabled={activeResourceIndex >= allResources.length - 1} className="bg-black text-white px-8 py-3 rounded-md font-semibold text-lg hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">
-                                {completed.has(activeResource._key) ? 'Go to next item' : 'Complete & Continue'} →
-                            </button>
+                            <button onClick={goToPrevious} disabled={activeResourceIndex <= 0} className="bg-gray-200 text-black px-6 py-3 rounded-md font-semibold hover:bg-gray-300 disabled:opacity-50 disabled:cursor-not-allowed">Previous Item</button>
+                             {session && ( <div>{completed.has(activeResource._key) ? (<div className="inline-flex items-center gap-2 text-lg font-semibold text-green-600 p-3 bg-green-50 rounded-lg"><FaCheckCircle /><span>Completed</span></div>) : (<button onClick={() => handleMarkAsComplete(activeResource._key)} className="bg-gray-800 text-white px-8 py-3 rounded-md font-semibold text-lg hover:bg-black">Mark as Complete</button>)}</div> )}
+                            <button onClick={goToNext} disabled={activeResourceIndex >= allResources.length - 1} className="bg-black text-white px-8 py-3 rounded-md font-semibold text-lg hover:opacity-80 disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2">{completed.has(activeResource._key) ? 'Go to next item' : 'Complete & Continue'} →</button>
                         </div>
                     </div>
-                ) : (
-                    <div className="text-center text-gray-500">
-                        <p>Select a lesson from the left to get started.</p>
-                    </div>
-                )}
+                ) : ( <div className="text-center text-gray-500"><p>Select a lesson from the left to get started.</p></div> )}
             </main>
         </div>
     );

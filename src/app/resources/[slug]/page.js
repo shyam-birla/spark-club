@@ -1,4 +1,3 @@
-// src/app/resources/[slug]/page.js (FINAL CLIENT-SIDE FIX)
 'use client';
 
 import { useState, useEffect } from 'react';
@@ -133,7 +132,8 @@ export default function RoadmapDetailPage() {
                             <h2 className="text-2xl font-bold mb-6">Syllabus</h2>
                             <div className="space-y-4">
                                 {roadmap.modules?.map((module, index) => (
-                                    <details key={module._key} className="bg-white rounded-lg border border-gray-200 group" open={index === 0}>
+                                    // === YAHAN BADLAV KIYA GAYA HAI ===
+                                    <details key={module._key} className="bg-white rounded-lg border border-gray-200 group">
                                         <summary className="p-5 font-bold text-lg cursor-pointer flex justify-between items-center group-hover:bg-gray-50">
                                             <span>Module {index + 1}: {module.title}</span><span className="transform transition-transform duration-200 group-open:rotate-180">▼</span>
                                         </summary>
