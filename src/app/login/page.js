@@ -18,7 +18,12 @@ export default function LoginPage() {
             height={50}
             className="mx-auto object-contain"
           />
+          <h1 className="mt-6 text-4xl font-bold text-gray-900">
+          
+            Welcome to SPARK
+          </h1>
           <h2 className="mt-6 text-2xl font-bold text-gray-900">
+              
             Join the Innovation Hub
           </h2>
           <p className="mt-2 text-sm text-gray-600">
