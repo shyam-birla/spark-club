@@ -17,7 +17,7 @@
     "@react-three/fiber": "^9.3.0",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.9.0",
-    "add-to-calendar-button-react": "^2.11.5",
+    "add-to-calendar-button-react": "^2.12.4",
     "framer-motion": "^12.23.22",
     "next": "15.5.3",
     "next-auth": "^4.24.11",

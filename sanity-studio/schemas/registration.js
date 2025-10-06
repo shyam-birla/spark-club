@@ -1,9 +1,8 @@
-// Ismein hum registration form ka saara data store karenge.
+// sanity-studio/schemas/registration.js
 export default {
   name: 'registration',
   title: 'Registrations',
   type: 'document',
-  // Isse Studio mein data a-sāni se dikhega, badla nahi ja sakega.
   readOnly: true, 
   fields: [
     {
@@ -16,8 +15,6 @@ export default {
       title: 'Email',
       type: 'string',
     },
-    // BEST PRACTICE: Event ka title save karne ki jagah,
-    // hum event ko direct reference karenge. Isse data connected rehta hai.
     {
       name: 'event',
       title: 'Event',
@@ -50,7 +47,6 @@ export default {
       type: 'datetime',
     },
   ],
-  // Studio mein list ko behtar dikhane ke liye
   preview: {
     select: {
       name: 'name',

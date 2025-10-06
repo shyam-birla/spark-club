@@ -1,33 +1,49 @@
-// src/app/events/[slug]/page.js (FINAL FIXED VERSION)
-
 import { client, urlFor } from '../../../../sanity/lib/client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { PortableText } from '@portabletext/react';
 import { AddToCalendarButton } from 'add-to-calendar-button-react';
 import EventRegistrationForm from '@/components/EventRegistrationForm';
+import { getServerSession } from 'next-auth/next';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
+import RegistrationStatus from '@/components/RegistrationStatus';
+
 
 export async function generateStaticParams() {
   const slugs = await client.fetch(`*[_type == "event" && defined(slug.current)]{ "slug": slug.current }`);
-  return slugs;
+  return slugs.map(s => ({ slug: s.slug }));
 }
 
-const RegistrationStatus = ({ event }) => {
-    if (event.registrationLink && event.registrationStatus === 'open') {
-        return (<Link href={event.registrationLink} target="_blank"><button className="w-full bg-black text-white px-6 py-3 rounded-md font-semibold text-lg hover:opacity-80 transition-opacity">Register Here (External Link)</button></Link>);
-    }
-    if (!event.registrationLink && event.registrationStatus === 'open') {
-        return <EventRegistrationForm eventTitle={event.title} eventId={event._id} />;
-    }
-    if (event.registrationStatus === 'comingSoon') {
-        return (<div className="text-center p-4 bg-blue-100 text-blue-800 rounded-md"><p className="font-semibold">Registrations will open soon. Stay tuned!</p></div>);
-    }
-    return (<div className="text-center p-4 bg-red-100 text-red-800 rounded-md"><p className="font-semibold">Registrations are now closed.</p></div>);
-};
+export async function generateMetadata({ params }) {
+  // === YAHAN BADLAV KIYA GAYA HAI ===
+  const { slug } = await params;
+  const query = `*[_type == "event" && slug.current == $slug][0]{
+    title,
+    "description": pt::text(description)
+  }`;
+  const event = await client.fetch(query, { slug });
 
-// --- YAHAN CHANGE KIYA GAYA HAI ---
+  if (!event) {
+    return { title: "Event Not Found" };
+  }
+
+  return {
+    title: `${event.title} | Spark Club Events`,
+    description: event.description?.substring(0, 160) || `Join us for the ${event.title} event hosted by Spark Club.`,
+  };
+}
+
+async function checkRegistration(email, eventId) {
+    if (!email || !eventId) return false;
+    const query = `count(*[_type == "registration" && email == $email && event._ref == $eventId])`;
+    const count = await client.fetch(query, { email, eventId });
+    return count > 0;
+}
+
 export default async function EventDetailPage({ params }) {
-  const { slug } = params; // Slug ko function ke andar destructure kiya
+  // === YAHAN BHI BADLAV KIYA GAYA HAI ===
+  const { slug } = await params;
+  const session = await getServerSession(authOptions);
 
   const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
     _id, title, eventDate, description, "imageUrl": coverImage.asset->url, 
@@ -37,11 +53,12 @@ export default async function EventDetailPage({ params }) {
   }`;
   
   const event = await client.fetch(eventQuery, { slug });
-  // --- END OF CHANGE ---
 
   if (!event) {
     return <div className="text-center py-20">Event not found.</div>;
   }
+
+  const isAlreadyRegistered = await checkRegistration(session?.user?.email, event._id);
 
   const formattedDate = new Date(event.eventDate).toLocaleString('en-US', {
     year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
@@ -53,7 +70,7 @@ export default async function EventDetailPage({ params }) {
     <main className="bg-white container mx-auto px-4 py-12 md:py-20">
       {event.imageUrl && 
         <div className="relative w-full h-64 md:h-96 mb-8">
-          <Image src={event.imageUrl} alt={event.title} fill className="object-cover rounded-lg" />
+          <Image src={event.imageUrl} alt={event.title} fill className="object-cover rounded-lg shadow-lg" />
         </div>
       }
       
@@ -76,22 +93,22 @@ export default async function EventDetailPage({ params }) {
       </div>
 
       {event.description && (
-        <div className="prose max-w-none text-lg leading-relaxed mb-12">
-            <PortableText value={event.description} />
+        <div className="prose max-w-none text-lg text-gray-800 leading-relaxed mb-12">
+          <PortableText value={event.description} />
         </div>
       )}
 
       {isUpcoming && (
         <div className="my-12 p-6 bg-gray-50 rounded-lg border border-gray-200">
           <h2 className="text-2xl font-bold mb-4 text-black">Join this Event!</h2>
-          {event.venue && <p className="mb-6 text-black">📍 **Venue:** <a href={event.venue.locationUrl} target="_blank" rel="noopener noreferrer" className="font-semibold hover:underline">{event.venue.locationName} ({event.venue.type})</a></p>}
+          {event.venue && <p className="mb-6 text-black">📍 **Venue:** <a href={event.venue.locationUrl} target="_blank" rel="noopener noreferrer" className="font-semibold text-orange-600 hover:underline">{event.venue.locationName} ({event.venue.type})</a></p>}
           
-          <RegistrationStatus event={event} />
+          <RegistrationStatus event={event} isAlreadyRegistered={isAlreadyRegistered} />
         </div>
       )}
 
       {event.speakers && event.speakers.length > 0 && (
-         <div className="my-12">
+          <div className="my-12">
             <h2 className="text-3xl font-bold mb-6 text-black">Speakers</h2>
             <div className="grid grid-cols-2 md:grid-cols-4 lg:grid-cols-6 gap-6">
                 {event.speakers.map(speaker => (
