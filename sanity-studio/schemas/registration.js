@@ -1,4 +1,3 @@
-// sanity-studio/schemas/registration.js
 export default {
   name: 'registration',
   title: 'Registrations',
@@ -15,6 +14,15 @@ export default {
       title: 'Email',
       type: 'string',
     },
+    // === YAHAN NAYA FIELD ADD KIYA GAYA HAI ===
+    {
+      name: 'userProfile',
+      title: 'User Profile',
+      description: 'Agar user logged in tha, toh yeh uski profile se link hoga.',
+      type: 'reference',
+      to: [{ type: 'profile' }], // Aapke 'profile' schema se link karega
+    },
+    // === END OF CHANGE ===
     {
       name: 'event',
       title: 'Event',

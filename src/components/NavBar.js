@@ -1,7 +1,7 @@
 'use client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { useState, useEffect, useCallback } from 'react'; // useCallback ko import kiya
+import { useState, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { useSession, signIn, signOut } from 'next-auth/react';
 
@@ -10,13 +10,12 @@ const NavBar = () => {
   const pathname = usePathname();
   const { data: session, status } = useSession();
 
-  // === YAHAN SE CHANGES SHURU ===
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  // 1. controlNavbar function ko useCallback se wrap kiya
   const controlNavbar = useCallback(() => {
     if (typeof window !== 'undefined') {
+      // Logic to hide navbar on scroll down and show on scroll up
       if (window.scrollY > lastScrollY && window.scrollY > 100) { 
         setIsVisible(false);
       } else {
@@ -24,9 +23,8 @@ const NavBar = () => {
       }
       setLastScrollY(window.scrollY);
     }
-  }, [lastScrollY]); // Iski dependency lastScrollY hai
+  }, [lastScrollY]);
 
-  // 2. useEffect ko controlNavbar par depend karwaya
   useEffect(() => {
     if (typeof window !== 'undefined') {
       window.addEventListener('scroll', controlNavbar);
@@ -34,8 +32,19 @@ const NavBar = () => {
         window.removeEventListener('scroll', controlNavbar);
       };
     }
-  }, [controlNavbar]); // Ab dependency array sahi hai
-  // === CHANGES YAHAN KHATAM ===
+  }, [controlNavbar]);
+
+  useEffect(() => {
+    // Logic to prevent background scroll when mobile menu is open
+    if (isOpen) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'auto';
+    }
+    return () => {
+      document.body.style.overflow = 'auto';
+    };
+  }, [isOpen]);
 
   const navLinks = [
     { href: "/projects", label: "Projects" },
@@ -49,11 +58,10 @@ const NavBar = () => {
 
   return (
     <header 
-      className={`fixed top-0 left-0 right-0 z-50 flex justify-between items-center p-4 bg-white/50 backdrop-blur-sm border-b border-gray-200 transition-transform duration-300 ${
-        isVisible ? 'translate-y-0' : '-translate-y-full'
-      }`}
+      className={`fixed top-0 left-0 right-0 z-50 flex justify-between items-center p-4 border-b transition-all duration-300 ${
+        (isVisible || isOpen) ? 'translate-y-0' : '-translate-y-full'
+      } bg-gray-100/80 backdrop-blur-md border-gray-200 shadow-sm`}
     >
-      {/* Baaki ka poora code same rahega */}
       <Link href="/">
         <Image src="/logo-black.png" alt="SPARK! Club Logo" width={120} height={40} className="object-contain" />
       </Link>
@@ -102,8 +110,8 @@ const NavBar = () => {
       </div>
 
       {isOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white/50 backdrop-blur-sm border-b border-gray-200">
-          <nav className="flex flex-col items-center gap-6 font-medium py-8">
+        <div className="md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 h-screen overflow-y-auto">
+           <nav className="flex flex-col items-center gap-6 font-medium py-8">
             {navLinks.map((link) => {
                 const isActive = pathname === link.href;
                 return (<Link key={link.label} href={link.href} className={`transition-colors ${isActive ? 'text-black' : 'text-gray-500 hover:text-black'}`}>{link.label}</Link>)

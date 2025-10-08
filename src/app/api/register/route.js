@@ -13,12 +13,12 @@ export async function POST(request) {
   try {
     const { name, email, eventTitle, eventId, mobile, branch, enrollmentNo, year, honeypot } = await request.json();
 
-    // Spam Protection: Agar honeypot field bhara hua hai, toh yeh ek bot hai.
+    // Spam Protection
     if (honeypot) {
       return NextResponse.json({ message: 'Registration successful!' }, { status: 200 });
     }
 
-    // Duplicate Check: Check karo ki user pehle se registered hai ya nahi.
+    // Duplicate Check
     const existingRegistration = await client.fetch(
       `*[_type == "registration" && email == $email && event._ref == $eventId][0]`,
       { email, eventId }
@@ -28,28 +28,50 @@ export async function POST(request) {
       return NextResponse.json({ message: 'You are already registered for this event.' }, { status: 409 });
     }
 
-    // Email template ke liye event ki poori details fetch karo
+    // Event details fetch karna
     const event = await client.fetch(`*[_type == "event" && _id == $eventId][0]`, { eventId });
     if (!event) {
         throw new Error(`Event with ID "${eventId}" not found.`);
     }
 
-    // Naya data create karo
-    await writeClient.create({
+    // === YAHAN NAYA LOGIC ADD KIYA GAYA HAI ===
+    // User ki email se uski profile ID dhoondho
+    let userProfileId = null;
+    const profile = await client.fetch(
+      `*[_type == "profile" && userEmail == $email][0]{ _id }`,
+      { email }
+    );
+    if (profile) {
+      userProfileId = profile._id;
+    }
+
+    // Registration data taiyar karo
+    const registrationData = {
       _type: 'registration',
       name, email, mobile, branch, enrollmentNo, year,
       registrationDate: new Date().toISOString(),
       event: { _type: 'reference', _ref: eventId },
-    });
+    };
 
-    // Email bhejne ke liye zaroori data taiyar karo
+    // Agar profile mili, toh use registration se link karo
+    if (userProfileId) {
+      registrationData.userProfile = {
+        _type: 'reference',
+        _ref: userProfileId,
+      };
+    }
+    // === END OF CHANGE ===
+
+    // Naya data create karo
+    await writeClient.create(registrationData);
+
+    // Email bhejne ka logic
     const eventDate = new Date(event.eventDate);
     const formattedDate = eventDate.toLocaleString('en-US', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' });
     const startTime = eventDate.toISOString().replace(/-|:|\.\d\d\d/g,"");
     const endTime = new Date(eventDate.getTime() + (2*60*60*1000)).toISOString().replace(/-|:|\.\d\d\d/g,"");
     const googleCalendarLink = `https://www.google.com/calendar/render?action=TEMPLATE&text=${encodeURIComponent(event.title)}&dates=${startTime}/${endTime}&details=${encodeURIComponent(event.description?.[0]?.children?.[0]?.text || 'See you there!')}&location=${encodeURIComponent(event.venue?.locationName || 'Check website for details')}`;
     
-    // User ko confirmation email bhejo
     await resend.emails.send({
       from: 'Spark Club <onboarding@resend.dev>',
       to: email,

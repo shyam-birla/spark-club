@@ -1564,6 +1564,16 @@
         "type": "string"
       },
       {
+        "description": "Agar user logged in tha, toh yeh uski profile se link hoga.",
+        "to": [
+          {
+            "type": "profile"
+          }
+        ],
+        "name": "userProfile",
+        "type": "reference"
+      },
+      {
         "to": [
           {
             "type": "event"
