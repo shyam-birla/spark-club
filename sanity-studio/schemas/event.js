@@ -1,5 +1,5 @@
 // schemas/event.js (FINAL - With Categories & New Registration Status)
-export default {
+const event = {
   name: 'event',
   title: 'Event',
   type: 'document',
@@ -91,3 +91,5 @@ export default {
     },
   ],
 };
+
+export default event;

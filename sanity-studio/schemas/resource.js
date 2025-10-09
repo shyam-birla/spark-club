@@ -1,5 +1,5 @@
 // schemas/resource.js (FINAL CORRECTED VERSION)
-export default {
+const resource = {
   name: 'resource',
   title: 'Resource',
   type: 'object',
@@ -87,3 +87,5 @@ export default {
     },
   },
 }
+
+export default resource;

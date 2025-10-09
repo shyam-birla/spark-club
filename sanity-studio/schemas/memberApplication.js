@@ -1,5 +1,5 @@
 // sanity-studio/schemas/memberApplication.js
-export default {
+const memberApplication = {
   name: 'memberApplication',
   title: 'Member Applications',
   type: 'document',
@@ -50,3 +50,5 @@ export default {
     },
   },
 };
+
+export default memberApplication;

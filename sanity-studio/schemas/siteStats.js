@@ -1,5 +1,5 @@
 // sanity-studio/schemas/siteStats.js
-export default {
+const siteStats = {
     name: 'siteStats',
     title: 'Site Stats',
     type: 'document',
@@ -21,3 +21,5 @@ export default {
         },
     ],
 }
+
+export default siteStats;

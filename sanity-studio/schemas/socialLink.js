@@ -1,5 +1,5 @@
 // sanity-studio/schemas/socialLink.js
-export default {
+const socialLink = {
   name: 'socialLink',
   title: 'Social Media Link',
   type: 'document',
@@ -23,3 +23,5 @@ export default {
     },
   ],
 };
+
+export default socialLink;

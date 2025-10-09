@@ -1,5 +1,5 @@
 // schemas/profile.js (Updated with External Projects)
-export default {
+const profile = {
     name: 'profile',
     title: 'User Profile',
     type: 'document',
@@ -32,3 +32,5 @@ export default {
         }
     }
 };
+
+export default profile;

@@ -1,5 +1,5 @@
 // sanity-studio/schemas/contactSubmission.js
-export default {
+const contactSubmission = {
   name: 'contactSubmission',
   title: 'Contact Submissions',
   type: 'document',
@@ -56,3 +56,5 @@ export default {
     }
   }
 }
+
+export default contactSubmission;

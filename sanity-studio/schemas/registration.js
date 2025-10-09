@@ -1,4 +1,4 @@
-export default {
+const registration = {
   name: 'registration',
   title: 'Registrations',
   type: 'document',
@@ -69,3 +69,5 @@ export default {
     },
   },
 };
+
+export default registration;

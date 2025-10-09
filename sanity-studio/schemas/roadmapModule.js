@@ -1,5 +1,5 @@
 // schemas/roadmapModule.js (FINAL CORRECTED VERSION)
-export default {
+const roadmapModule = {
   name: 'roadmapModule',
   title: 'Roadmap Module',
   type: 'object',
@@ -58,3 +58,5 @@ export default {
     },
   ],
 };
+
+export default roadmapModule;

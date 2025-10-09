@@ -9,4 +9,10 @@ import { defineCliConfig } from 'sanity/cli'
 const projectId = "jpsw6ns5"
 const dataset = "production"
 
-export default defineCliConfig({ api: { projectId, dataset } })
+export default defineCliConfig({
+  api: { projectId, dataset },
+  studioHost: 'sparkcommunity',
+  deployment: {
+    appId: 'gf4bl6l0vjhdt2bxdep1myd2',
+  },
+})

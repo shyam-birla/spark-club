@@ -1,5 +1,5 @@
 // schemas/externalProject.js
-export default {
+const externalProject = {
     name: 'externalProject',
     title: 'External Project',
     type: 'object',
@@ -30,3 +30,5 @@ export default {
         }
     ],
 };
+
+export default externalProject;

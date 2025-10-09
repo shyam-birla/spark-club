@@ -1,7 +1,7 @@
 // sanity-studio/schemas/testimonial.js
 
 // Make sure 'export default' is written exactly like this
-export default {
+const testimonial = {
   name: 'testimonial',
   title: 'Testimonial',
   type: 'document',
@@ -48,3 +48,5 @@ export default {
     },
   },
 };
+
+export default testimonial;

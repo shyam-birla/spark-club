@@ -1,5 +1,5 @@
 // schemas/userProgress.js
-export default {
+const userProgress = {
     name: 'userProgress',
     title: 'User Progress',
     type: 'document',
@@ -45,3 +45,5 @@ export default {
         }
     }
 }
+
+export default userProgress;

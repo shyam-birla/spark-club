@@ -1,5 +1,5 @@
 // sanity-studio/schemas/technology.js
-export default {
+const technology = {
   name: 'technology',
   title: 'Technology',
   type: 'document',
@@ -25,3 +25,5 @@ export default {
     },
   ],
 };
+
+export default technology;

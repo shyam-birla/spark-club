@@ -1,5 +1,5 @@
 // schemas/workExperience.js
-export default {
+const workExperience = {
     name: 'workExperience',
     title: 'Work Experience',
     type: 'object',
@@ -11,3 +11,5 @@ export default {
         { name: 'description', title: 'Description', type: 'text' },
     ],
 };
+
+export default workExperience;

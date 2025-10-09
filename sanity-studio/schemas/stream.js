@@ -1,4 +1,4 @@
-export default {
+const stream = {
   name: 'stream',
   title: 'Stream Roadmap',
   type: 'document',
@@ -122,3 +122,5 @@ export default {
     },
   },
 };
+
+export default stream;

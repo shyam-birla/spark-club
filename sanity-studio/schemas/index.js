@@ -1,32 +1,56 @@
-import project from './project'
-import member from './member'
-import event from './event'
-import blogPost from './blogPost'
-import blockContent from './blockContent'
-import resource from './resource'
-import stream from './stream'
-import roadmapModule from './roadmapModule'
-import aboutPage from './aboutPage'
-import contactSubmission from './contactSubmission'
-import socialLink from './socialLink'
-import technology from './technology'
-import person from './person'
-import registration from './registration'
-import team from './team' // Step 1: Nayi team.js file ko import kiya
-import memberApplication from './memberApplication';
-import fileWithTitle from './fileWithTitle';
-import userProgress from './userProgress' // userProgress schema ko import kiya
-import profile from './profile';
-import education from './education';
-import workExperience from './workExperience';
-import externalProject from './externalProject'; // Step 3: Nayi category schema ko import kiya
+
+import aboutPage from './aboutPage';
+import blockContent from './blockContent';
+import blogPost from './blogPost';
 import category from './category';
+import contactSubmission from './contactSubmission';
+import education from './education';
+import event from './event';
+import externalProject from './externalProject';
+import fileWithTitle from './fileWithTitle';
+import member from './member';
+import memberApplication from './memberApplication';
+import person from './person';
+import profile from './profile';
+import project from './project';
+import registration from './registration';
+import resource from './resource';
+import roadmapModule from './roadmapModule';
+import siteStats from './siteStats';
+import socialLink from './socialLink';
+import stream from './stream';
+import team from './team';
+import technology from './technology';
 import testimonial from './testimonial';
-import siteStats from './siteStats'
+import userProgress from './userProgress';
+import workExperience from './workExperience';
+import researchProject from './researchProject';
 
 export const schemaTypes = [
-    project, member, event, blogPost, blockContent,
-    resource, stream, roadmapModule, aboutPage, contactSubmission, socialLink, technology, person, registration,
-    team, memberApplication, fileWithTitle, userProgress, profile, education, workExperience, externalProject,
-    category, testimonial, siteStats,   // Step 2: Nayi team ko yahan list mein add kiya
+    aboutPage,
+    blockContent,
+    blogPost,
+    category,
+    contactSubmission,
+    education,
+    event,
+    externalProject,
+    fileWithTitle,
+    member,
+    memberApplication,
+    person,
+    profile,
+    project,
+    registration,
+    resource,
+    roadmapModule,
+    siteStats,
+    socialLink,
+    stream,
+    team,
+    technology,
+    testimonial,
+    userProgress,
+    workExperience,
+    researchProject,
 ]

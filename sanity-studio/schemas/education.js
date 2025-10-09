@@ -1,5 +1,5 @@
 // schemas/education.js
-export default {
+const education = {
     name: 'education',
     title: 'Education',
     type: 'object',
@@ -10,3 +10,5 @@ export default {
         { name: 'endDate', title: 'End Date', type: 'date', options: { dateFormat: 'YYYY-MM' } },
     ],
 };
+
+export default education;

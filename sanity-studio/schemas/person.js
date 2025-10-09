@@ -1,5 +1,5 @@
 // sanity-studio/schemas/person.js
-export default {
+const person = {
   name: 'person',
   title: 'Person',
   type: 'document',
@@ -26,3 +26,5 @@ export default {
     },
   ],
 };
+
+export default person;

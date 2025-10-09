@@ -1,7 +1,7 @@
 // sanity-studio/schemas/blockContent.js
 
 // 👉 Yeh line sabse zaroori hai
-export default {
+const blockContent = {
   name: 'blockContent',
   title: 'Block Content',
   type: 'array',
@@ -44,3 +44,5 @@ export default {
     },
   ],
 };
+
+export default blockContent;

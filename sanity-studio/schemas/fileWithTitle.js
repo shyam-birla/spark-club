@@ -1,5 +1,5 @@
 // schemas/fileWithTitle.js
-export default {
+const fileWithTitle = {
     name: 'fileWithTitle',
     title: 'File with Title',
     type: 'object',
@@ -19,3 +19,5 @@ export default {
         },
     ],
 }
+
+export default fileWithTitle;

@@ -1,5 +1,5 @@
 // sanity-studio/schemas/aboutPage.js
-export default {
+const aboutPage = {
   name: 'aboutPage',
   title: 'About Page',
   type: 'document',
@@ -26,3 +26,5 @@ export default {
     },
   ],
 }
+
+export default aboutPage;

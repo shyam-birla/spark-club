@@ -1,4 +1,4 @@
-export default {
+const member = {
   name: 'member',
   title: 'Member',
   type: 'document',
@@ -68,3 +68,5 @@ export default {
     },
   ],
 };
+
+export default member;
