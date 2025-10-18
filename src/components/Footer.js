@@ -12,7 +12,7 @@ const Footer = ({ socialLinks = [] }) => {
           <div className="flex flex-col items-center md:items-start md:col-span-2">
             <Link href="/" className="flex items-center gap-3 mb-4">
               <Image src="/logo-black.png" alt="SPARK Club Logo" width={50} height={50} />
-              <span className="text-xl font-bold text-black">SPARK Club</span>
+              <span className="text-xl font-bold text-black">SPARK Community</span>
             </Link>
             <p className="text-sm max-w-md">
               Society of Programmers, Aspiring Research and Knowledge (SPARK). Igniting the future of technology, one project at a time.
@@ -42,7 +42,7 @@ const Footer = ({ socialLinks = [] }) => {
                   </li>
                 ))}
                 <li><a href="mailto:sparkclub.sati@gmail.com" className="hover:text-black transition-colors font-semibold">
-                  sparkclub.sati@gmail.com
+                  spark.community.contact@gmail.com
                 </a></li>
               </ul>
               <div className="mt-6">
@@ -62,7 +62,7 @@ const Footer = ({ socialLinks = [] }) => {
       {/* Bottom Bar ke background ko bhi 50% transparent aur blurred kiya gaya hai */}
       <div className="bg-gray-200/50 backdrop-blur-sm py-4">
         <div className="container mx-auto px-6 text-center text-sm text-gray-700 sm:flex sm:justify-between">
-          <span>&copy; {new Date().getFullYear()} SPARK Club SATI. All Rights Reserved.</span>
+          <span>&copy; {new Date().getFullYear()} SPARK Community. All Rights Reserved.</span>
           <span className="mt-2 sm:mt-0 block">
             <Link href="/privacy-policy" className="hover:text-black">Privacy Policy</Link>
           </span>
