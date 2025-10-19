@@ -7,12 +7,12 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote } from 'react-icons/fa';
 import Attendees from '@/components/Attendees';
-import { AddToCalendarButton } from 'add-to-calendar-button-react'; // <-- 1. IMPORT ADD KIYA
+import AddToCalendar from '@/components/AddToCalendar';
 import ImageGalleryWithLightbox from '@/components/ImageGalleryWithLightbox';
 
 const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
-    _id, title, eventDate, description, "imageUrl": coverImage.asset->url, 
-    venue, registrationLink, registrationStatus, schedule,
+    _id, title, eventDate, endDate, description, "imageUrl": coverImage.asset->url, 
+    venue{ type, locationName, locationUrl }, registrationLink, registrationStatus, schedule,
     speakers[]->{ _id, name, role, "imageUrl": image.asset->url },
     gallery,
     youtubeLinks,
@@ -22,7 +22,6 @@ const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
         userProfile->{ _id, userName, "imageUrl": userImage.asset->url }
     }[0...12]
 }`
-
 async function checkRegistration(email, eventId) {
     if (!email || !eventId) return false;
     const query = `count(*[_type == "registration" && email == $email && event._ref == $eventId])`;
@@ -64,6 +63,20 @@ const getYouTubeEmbedUrl = (url) => {
         return '';
     }
     return url;
+};
+
+const toPlainText = (blocks) => {
+    if (!blocks || blocks.length === 0) {
+        return '';
+    }
+    return blocks
+        .map(block => {
+            if (block._type !== 'block' || !block.children) {
+                return '';
+            }
+            return block.children.map(child => child.text).join('');
+        })
+        .join('\n\n'); // Use \n\n for new paragraphs
 };
 
 const KeyDetails = ({ event }) => (
@@ -116,21 +129,11 @@ export default async function EventDetailPage({ params }) {
                             {/* --- 2. BUTTON KO YAHAN TITLE KE SAATH ADD KIYA GAYA HAI --- */}
                             <div>
                                 <h1 className="text-4xl md:text-5xl font-bold text-black">{event.title}</h1>
-                                <div className="mt-4">
-                                    <AddToCalendarButton
-                                        name={event.title}
-                                        startDate={new Date(event.eventDate).toISOString().split('T')[0]}
-                                        startTime={new Date(event.eventDate).toTimeString().split(' ')[0]}
-                                        endTime="18:00"
-                                        timeZone="Asia/Kolkata"
-                                        location={event.venue?.locationName || 'Check Details'}
-                                        options={['Apple', 'Google', 'Outlook.com']}
-                                        buttonStyle="round"
-                                        light
-                                    />
-                                </div>
                             </div>
                             <div className="mt-6"> <KeyDetails event={event} /> </div>
+                            <div className="mb-4">
+                                <AddToCalendar event={event} plainDescription={toPlainText(event.description)} />
+                            </div>
                             {isUpcoming && (
                                 <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
                                     <p className="font-semibold text-center mb-4 text-black">Welcome! To join the event, please register below.</p>

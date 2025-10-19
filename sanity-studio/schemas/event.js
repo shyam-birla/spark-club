@@ -24,13 +24,17 @@ const event = {
       of: [{ type: 'reference', to: { type: 'category' } }],
       description: 'Is event ko ek ya ek se zyada category se jodein (e.g., Workshop, Hackathon).'
     },
-    { 
-      name: 'eventDate', 
-      title: 'Event Date & Time', 
-      type: 'datetime', 
-      validation: (Rule) => Rule.required() 
-    },
-    {
+        {
+          name: 'eventDate',
+          title: 'Event Start Date & Time',
+          type: 'datetime',
+          validation: (Rule) => Rule.required()
+        },
+        {
+          name: 'endDate',
+          title: 'Event End Date & Time',
+          type: 'datetime',
+        },    {
       name: 'registrationStatus',
       title: 'Registration Status',
       type: 'string',
