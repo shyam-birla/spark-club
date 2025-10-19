@@ -4,6 +4,9 @@ import Navbar from "@/components/NavBar";
 // Footer yahan se hata diya gaya hai
 import Global3DCanvas from '@/components/Global3DCanvas';
 import NextAuthProvider from '@/components/NextAuthProvider';
+import { Analytics } from '@vercel/analytics/react';
+import { SpeedInsights } from '@vercel/speed-insights/next';
+
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -36,6 +39,8 @@ export default async function RootLayout({ children }) {
             {/* Footer component ko yahan se hata diya gaya hai */}
           </div>
         </NextAuthProvider>
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   );

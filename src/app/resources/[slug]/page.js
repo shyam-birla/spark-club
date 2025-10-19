@@ -7,6 +7,7 @@ import { client } from '../../../../sanity/lib/client';
 import Link from 'next/link';
 import Image from 'next/image';
 import { FaCheckCircle, FaVideo, FaFileAlt, FaLink, FaGraduationCap, FaFileArchive } from 'react-icons/fa';
+import ResourceCard from '@/components/ResourceCard';
 
 const ResourceIcon = ({ type }) => {
     switch (type) {
@@ -41,7 +42,7 @@ export default function RoadmapDetailPage() {
                     whatYouWillLearn,
                     skills[]->{ _id, name, "logoUrl": logo.asset->url },
                     "allResourceKeys": modules[].subTopics[].resources[]._key,
-                    modules[]{ _key, title, description, subTopics[]{ _key, title, resources[]{ _key, title, duration, type } } }
+                    modules[]{ _key, title, description, subTopics[]{ _key, title, resources[]{ _key, title, duration, type, "cardImageUrl": cardImage.asset->url } } }
                 }`;
                 const roadmapData = await client.fetch(roadmapQuery, { slug });
                 setRoadmap(roadmapData);
@@ -142,13 +143,11 @@ export default function RoadmapDetailPage() {
                                             {module.subTopics?.map((subTopic) => (
                                                 <div key={subTopic._key} className="mb-4">
                                                     <h4 className="font-semibold text-gray-800 mb-2">{subTopic.title}</h4>
-                                                    <ul className="space-y-2 pl-4">
+                                                    <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mt-4">
                                                         {subTopic.resources?.map((resource) => (
-                                                            <li key={resource._key} className="flex items-center gap-3 text-sm">
-                                                                <ResourceIcon type={resource.type} /><span className="flex-grow">{resource.title}</span>{resource.duration && <span className="text-gray-500">{resource.duration} min</span>}
-                                                            </li>
+                                                            <ResourceCard key={resource._key} resource={resource} />
                                                         ))}
-                                                    </ul>
+                                                    </div>
                                                 </div>
                                             ))}
                                         </div>

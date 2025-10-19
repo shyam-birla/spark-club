@@ -42,18 +42,18 @@ const FeaturedProjects = ({ projects = [], showTitle = true, showButton = true }
             <motion.div key={project.slug} variants={cardVariants}>
               <Link href={`/projects/${project.slug}`}>
                 <div className="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden transition-shadow duration-300 hover:shadow-xl hover:scale-[1.03] transform cursor-pointer h-full flex flex-col">
-                  <div className="relative w-full h-48">
+                  <div className="relative w-full h-72">
                     {project.cardImageUrl && (
                       <Image
                         src={project.cardImageUrl}
                         alt={project.title || 'Project Image'}
                         fill
-                        className="object-cover"
+                        className="object-contain"
                       />
                     )}
                   </div>
-                  <div className="p-6 flex-grow">
-                    <h3 className="text-xl font-semibold text-black">{project.title}</h3>
+                  <div className="p-2 flex-grow">
+                    <h3 className="text-lg font-semibold text-black">{project.title}</h3>
                     {project.tags && project.tags.length > 0 && (
                       <div className="flex flex-wrap gap-2 mt-4">
                         {project.tags.map((tag) => (

@@ -2,18 +2,35 @@ import Image from 'next/image';
 import Link from 'next/link';
 
 const ResourceCard = ({ resource }) => {
+  // The resource object now needs to be queried to include the cardImageUrl
+  // I am assuming the query will be updated to provide `cardImageUrl` and `slug`
+  const resourceUrl = resource.slug ? `/resources/${resource.slug}` : resource.url;
+  const linkTarget = resource.slug ? '_self' : '_blank';
+
   return (
-    <Link href={resource.url} target="_blank" rel="noopener noreferrer">
-      <div className="bg-white p-6 rounded-lg h-full border border-gray-200 transform transition-all duration-300 hover:scale-105 hover:shadow-xl">
-        {resource.icon && (
-          <Image src={resource.icon} alt={`${resource.title} icon`} width={40} height={40} className="mb-4" />
-        )}
-        <h3 className="text-xl font-bold text-black mb-2">{resource.title}</h3>
-        <p className="text-gray-600">{resource.description}</p>
+    (<Link
+      href={resourceUrl}
+      target={linkTarget}
+      rel={linkTarget === '_blank' ? 'noopener noreferrer' : undefined}>
+
+      <div className="bg-white rounded-lg overflow-hidden transition-all duration-300 cursor-pointer h-full flex flex-col border-4 border-red-500 hover:shadow-xl hover:scale-105 transform">
+        <div className="relative w-full h-72">
+          {resource.cardImageUrl && (
+            <Image
+              src={resource.cardImageUrl}
+              alt={resource.title}
+              fill
+              className="object-contain" />
+          )}
+        </div>
+        <div className="p-2 flex-grow flex flex-col">
+          <h3 className="text-lg font-bold text-black mt-2">{resource.title}</h3>
+          <p className="text-gray-600 text-sm mt-1 flex-grow">{resource.description}</p>
+        </div>
       </div>
-    </Link>
+
+    </Link>)
   );
 };
 
-// Yahan galti theek kar di gayi hai
 export default ResourceCard;

@@ -25,4 +25,6 @@ const nextConfig = {
   },
 };
 
+// Trigger new build
+
 export default nextConfig;

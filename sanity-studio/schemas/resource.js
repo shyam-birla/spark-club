@@ -72,6 +72,14 @@ const resource = {
       type: 'url',
       hidden: ({parent}) => parent?.type !== 'link' && parent?.type !== 'externalCourse',
     },
+    {
+      name: 'cardImage',
+      title: 'Card Image',
+      type: 'image',
+      options: {
+        hotspot: true,
+      },
+    },
   ],
   preview: {
     select: {
