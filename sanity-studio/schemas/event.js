@@ -84,10 +84,22 @@ const event = {
       of: [{ type: 'reference', to: { type: 'person' } }],
     },
     {
-      name: 'gallery', 
-      title: 'Photo Gallery', 
+      name: 'gallery',
+      title: 'Photo Gallery',
       type: 'array',
       of: [{ type: 'image', options: { hotspot: true } }],
+    },
+    {
+      name: 'youtubeLinks',
+      title: 'YouTube Video Links',
+      type: 'array',
+      of: [{ type: 'url', title: 'YouTube URL' }],
+    },
+    {
+      name: 'mainEventRecording',
+      title: 'Main Event Recording',
+      type: 'url',
+      description: 'The main recording of the event (YouTube URL).',
     },
   ],
 };

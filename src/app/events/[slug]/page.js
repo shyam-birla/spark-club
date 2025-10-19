@@ -8,17 +8,20 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote } from 'react-icons/fa';
 import Attendees from '@/components/Attendees';
 import { AddToCalendarButton } from 'add-to-calendar-button-react'; // <-- 1. IMPORT ADD KIYA
+import ImageGalleryWithLightbox from '@/components/ImageGalleryWithLightbox';
 
 const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
     _id, title, eventDate, description, "imageUrl": coverImage.asset->url, 
     venue, registrationLink, registrationStatus, schedule,
     speakers[]->{ _id, name, role, "imageUrl": image.asset->url },
     gallery,
+    youtubeLinks,
+    mainEventRecording,
     "registeredCount": count(*[_type == "registration" && references(^._id)]),
     "attendees": *[_type == "registration" && references(^._id) && defined(userProfile)]{
         userProfile->{ _id, userName, "imageUrl": userImage.asset->url }
     }[0...12]
-}`;
+}`
 
 async function checkRegistration(email, eventId) {
     if (!email || !eventId) return false;
@@ -42,6 +45,26 @@ export async function generateMetadata({ params }) {
         description: event.description?.substring(0, 160) || `Join us for the ${event.title} event.`,
     };
 }
+
+
+
+const getYouTubeEmbedUrl = (url) => {
+    if (!url) return '';
+    try {
+        const urlObj = new URL(url);
+        let videoId = null;
+        if (urlObj.hostname === 'www.youtube.com' || urlObj.hostname === 'youtube.com') {
+            videoId = urlObj.searchParams.get('v');
+        } else if (urlObj.hostname === 'youtu.be') {
+            videoId = urlObj.pathname.slice(1);
+        }
+        if (videoId) return `https://www.youtube.com/embed/${videoId}`;
+    } catch (error) {
+        console.error("Invalid URL for YouTube embed:", error);
+        return '';
+    }
+    return url;
+};
 
 const KeyDetails = ({ event }) => (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-black mb-8">
@@ -80,7 +103,7 @@ export default async function EventDetailPage({ params }) {
     return (
         <main className="bg-gray-50/50 backdrop-blur-sm py-20">
             <div className="container mx-auto px-4">
-                <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
                     
                     <aside className="lg:col-span-1 space-y-6 lg:sticky top-24 self-start">
                         {event.imageUrl && (<div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg"><Image src={event.imageUrl} alt={event.title} fill className="object-cover" /></div>)}
@@ -88,22 +111,24 @@ export default async function EventDetailPage({ params }) {
                         <Attendees attendees={event.attendees} total={event.registeredCount} />
                     </aside>
 
-                    <div className="lg:col-span-2 space-y-8">
+                    <div className="lg:col-span-3 space-y-8">
                         <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
                             {/* --- 2. BUTTON KO YAHAN TITLE KE SAATH ADD KIYA GAYA HAI --- */}
-                            <div className="flex justify-between items-start flex-wrap gap-4">
+                            <div>
                                 <h1 className="text-4xl md:text-5xl font-bold text-black">{event.title}</h1>
-                                <AddToCalendarButton
-                                    name={event.title}
-                                    startDate={new Date(event.eventDate).toISOString().split('T')[0]}
-                                    startTime={new Date(event.eventDate).toTimeString().split(' ')[0]}
-                                    endTime="18:00"
-                                    timeZone="Asia/Kolkata"
-                                    location={event.venue?.locationName || 'Check Details'}
-                                    options={['Apple', 'Google', 'Outlook.com']}
-                                    buttonStyle="round"
-                                    light
-                                />
+                                <div className="mt-4">
+                                    <AddToCalendarButton
+                                        name={event.title}
+                                        startDate={new Date(event.eventDate).toISOString().split('T')[0]}
+                                        startTime={new Date(event.eventDate).toTimeString().split(' ')[0]}
+                                        endTime="18:00"
+                                        timeZone="Asia/Kolkata"
+                                        location={event.venue?.locationName || 'Check Details'}
+                                        options={['Apple', 'Google', 'Outlook.com']}
+                                        buttonStyle="round"
+                                        light
+                                    />
+                                </div>
                             </div>
                             <div className="mt-6"> <KeyDetails event={event} /> </div>
                             {isUpcoming && (
@@ -113,8 +138,24 @@ export default async function EventDetailPage({ params }) {
                                 </div>
                             )}
                         </section>
-                        
+
                         {event.description && (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><div className="prose max-w-none text-lg leading-relaxed"><PortableText value={event.description} /></div></section>)}
+
+                        {event.mainEventRecording && getYouTubeEmbedUrl(event.mainEventRecording) && (
+                            <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                                <h2 className="text-2xl font-bold text-black mb-6">Event Recording</h2>
+                                <div className="relative w-full" style={{paddingBottom: "56.25%"}}>
+                                    <iframe
+                                        className="absolute top-0 left-0 w-full h-full"
+                                        src={getYouTubeEmbedUrl(event.mainEventRecording)}
+                                        title="Event Recording"
+                                        frameBorder="0"
+                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                        allowFullScreen
+                                    ></iframe>
+                                </div>
+                            </section>
+                        )}
                         
                         {event.schedule && event.schedule.length > 0 && <EventSchedule schedule={event.schedule} />}
 
@@ -133,18 +174,35 @@ export default async function EventDetailPage({ params }) {
                             </section>
                         )}
 
-                        {!isUpcoming && event.gallery && event.gallery.length > 0 && (
-                             <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                                <h2 className="text-2xl font-bold text-black mb-6">Event Gallery</h2>
-                                <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                    {event.gallery.map((image, index) => (
-                                        <div key={index} className="relative w-full h-48">
-                                            {image && image.asset && ( <Image src={urlFor(image).url()} alt={`Event photo ${index + 1}`} fill className="rounded-lg object-cover" /> )}
-                                        </div>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {!isUpcoming && event.gallery && event.gallery.length > 0 && (
+                                <ImageGalleryWithLightbox gallery={event.gallery} />
+                            )}
+                            {!isUpcoming && event.youtubeLinks && event.youtubeLinks.length > 0 && (
+                                <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                                    <h2 className="text-2xl font-bold text-black mb-6">Event Videos</h2>
+                                    <div className="grid grid-cols-1 gap-4">
+                                        {event.youtubeLinks.map((videoUrl, index) => {
+                                            const embedUrl = getYouTubeEmbedUrl(videoUrl);
+                                            if (!embedUrl) return null;
+
+                                            return (
+                                                <div key={index} className="relative w-full" style={{paddingBottom: "56.25%"}}>
+                                                    <iframe
+                                                        className="absolute top-0 left-0 w-full h-full"
+                                                        src={embedUrl}
+                                                        title={`Event video ${index + 1}`}
+                                                        frameBorder="0"
+                                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                                                        allowFullScreen
+                                                    ></iframe>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+                                </section>
+                            )}
+                        </div>
                     </div>
                 </div>
             </div>
