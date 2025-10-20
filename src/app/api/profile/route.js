@@ -3,17 +3,8 @@
 import { NextResponse } from 'next/server';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '../auth/[...nextauth]/route';
-import { createClient } from 'next-sanity';
+import { writeClient } from '../../../../sanity/lib/client';
 import { revalidatePath } from 'next/cache';
-
-// Sanity client with write permissions
-const sanityWriteClient = createClient({
-    projectId: process.env.NEXT_PUBLIC_SANITY_PROJECT_ID,
-    dataset: process.env.NEXT_PUBLIC_SANITY_DATASET,
-    apiVersion: '2023-05-03',
-    useCdn: false, // `false` for write operations
-    token: process.env.SANITY_API_WRITE_TOKEN, // Make sure this token has write permissions
-});
 
 export async function POST(request) {
     // 1. Authenticate the user
@@ -31,13 +22,13 @@ export async function POST(request) {
 
     try {
         // 3. Find any old, duplicate profiles for the same user
-        const oldProfiles = await sanityWriteClient.fetch(
+        const oldProfiles = await writeClient.fetch(
             `*[_type == "profile" && userEmail == $email && _id != $correctId]`,
             { email: userEmail, correctId: correctProfileId }
         );
 
         // 4. Start a Sanity transaction
-        let tx = sanityWriteClient.transaction();
+        let tx = writeClient.transaction();
 
         // 5. If duplicate profiles are found, delete them
         if (oldProfiles && oldProfiles.length > 0) {
@@ -81,7 +72,7 @@ export async function POST(request) {
         });
         
         // 8. Commit the transaction
-        await tx.commit();
+      await tx.commit();
 
         // 9. Revalidate the cache
         revalidatePath('/profile');

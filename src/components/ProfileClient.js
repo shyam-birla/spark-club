@@ -4,6 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaLinkedin, FaGithub, FaGlobe, FaBriefcase, FaGraduationCap, FaCertificate, FaLightbulb, FaProjectDiagram } from 'react-icons/fa';
+import { urlFor } from '../../sanity/lib/client';
 
 const Section = ({ title, icon, children }) => (
     <motion.section 
@@ -36,7 +37,7 @@ const formatDate = (dateString) => {
 
 export default function ProfileClient({ session, profileData }) {
     const trulyCompleted = profileData?.completedRoadmaps?.filter(p => p.completedCount === p.roadmap.totalResources) || [];
-    const profileImageUrl = profileData?.userImage?.asset?.url || session?.user?.image || '/default-avatar.png';
+    const profileImageUrl = profileData?.userImage ? urlFor(profileData.userImage).width(120).height(120).url() : session?.user?.image || '/default-avatar.png';
 
     return (
         <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">

@@ -6,6 +6,7 @@ import Global3DCanvas from '@/components/Global3DCanvas';
 import NextAuthProvider from '@/components/NextAuthProvider';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
+import ProfileChecker from '@/components/ProfileChecker';
 
 
 const spaceGrotesk = Space_Grotesk({
@@ -33,7 +34,7 @@ export default async function RootLayout({ children }) {
             <Navbar />
             
             <main className="flex-grow pt-20">
-              {children}
+              <ProfileChecker>{children}</ProfileChecker>
             </main>
 
             {/* Footer component ko yahan se hata diya gaya hai */}

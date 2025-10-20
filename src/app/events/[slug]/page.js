@@ -9,6 +9,7 @@ import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote } from 
 import Attendees from '@/components/Attendees';
 import AddToCalendar from '@/components/AddToCalendar';
 import ImageGalleryWithLightbox from '@/components/ImageGalleryWithLightbox';
+import Collaborators from '@/components/Collaborators';
 
 const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
     _id, title, eventDate, endDate, description, "imageUrl": coverImage.asset->url, 
@@ -18,9 +19,20 @@ const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
     youtubeLinks,
     mainEventRecording,
     "registeredCount": count(*[_type == "registration" && references(^._id)]),
-    "attendees": *[_type == "registration" && references(^._id) && defined(userProfile)]{
-        userProfile->{ _id, userName, "imageUrl": userImage.asset->url }
-    }[0...12]
+    "attendees": *[_type == "registration" && references(^._id)]{
+        _key,
+        ...userProfile->{
+            "name": userName,
+            "imageUrl": userImage.asset->url
+        },
+        ...select(userProfile == null => {
+            "name": name
+        })
+    }[0...12],
+    collaborators[]{
+      name,
+      "logoUrl": logo.asset->url
+    }
 }`
 async function checkRegistration(email, eventId) {
     if (!email || !eventId) return false;
@@ -81,8 +93,8 @@ const toPlainText = (blocks) => {
 
 const KeyDetails = ({ event }) => (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-black mb-8">
-        <div className="flex items-center gap-2"><FaCalendar className="text-gray-500" /> <span>{new Date(event.eventDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}</span></div>
-        <div className="flex items-center gap-2"><FaClock className="text-gray-500" /> <span>{new Date(event.eventDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit' })}</span></div>
+        <div className="flex items-center gap-2"><FaCalendar className="text-gray-500" /> <span>{new Date(event.eventDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'Asia/Kolkata' })}</span></div>
+        <div className="flex items-center gap-2"><FaClock className="text-gray-500" /> <span>{new Date(event.eventDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' })}</span></div>
         <div className="flex items-center gap-2"><FaMapMarkerAlt className="text-gray-500" /> <span>{event.venue?.locationName || 'TBA'}</span></div>
     </div>
 );
@@ -103,6 +115,23 @@ const EventSchedule = ({ schedule }) => (
     </section>
 );
 
+
+const portableTextComponents = {
+  block: {
+    h1: ({ children }) => <h1 className="text-4xl font-bold my-4">{children}</h1>,
+    h2: ({ children }) => <h2 className="text-3xl font-bold my-4">{children}</h2>,
+    h3: ({ children }) => <h3 className="text-2xl font-bold my-4">{children}</h3>,
+    normal: ({ children }) => <p className="mb-4">{children}</p>,
+    blockquote: ({ children }) => <blockquote className="border-l-4 border-gray-300 pl-4 my-4">{children}</blockquote>,
+  },
+  list: {
+    bullet: ({ children }) => <ul className="list-disc list-inside my-4">{children}</ul>,
+  },
+  listItem: {
+    bullet: ({ children }) => <li className="mb-2">{children}</li>,
+  },
+};
+
 export default async function EventDetailPage({ params }) {
     const { slug } = await params;
     const session = await getServerSession(authOptions);
@@ -117,11 +146,11 @@ export default async function EventDetailPage({ params }) {
         <main className="bg-gray-50/50 backdrop-blur-sm py-20">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
-                    
                     <aside className="lg:col-span-1 space-y-6 lg:sticky top-24 self-start">
                         {event.imageUrl && (<div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg"><Image src={event.imageUrl} alt={event.title} fill className="object-cover" /></div>)}
                         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm"><h3 className="font-bold text-lg mb-2">Hosted By</h3><p>SPARK Community</p></div>
                         <Attendees attendees={event.attendees} total={event.registeredCount} />
+                        <Collaborators collaborators={event.collaborators} />
                     </aside>
 
                     <div className="lg:col-span-3 space-y-8">
@@ -142,7 +171,9 @@ export default async function EventDetailPage({ params }) {
                             )}
                         </section>
 
-                        {event.description && (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><div className="prose max-w-none text-lg leading-relaxed"><PortableText value={event.description} /></div></section>)}
+                
+
+                        {event.description && (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><div className="prose max-w-none text-lg leading-relaxed"><PortableText value={event.description} components={portableTextComponents} /></div></section>)}
 
                         {event.mainEventRecording && getYouTubeEmbedUrl(event.mainEventRecording) && (
                             <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">

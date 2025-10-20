@@ -80,26 +80,34 @@ export default function EditProfilePage() {
         setFormData(prev => ({ ...prev, [name]: value }));
     };
     
-    const handleImageUpload = (e) => {
+    const handleImageUpload = async (e) => {
         const selectedFile = e.target.files[0];
         if (!selectedFile) return;
 
         setPreviewImage(URL.createObjectURL(selectedFile));
         setIsUploading(true);
-        
-        client.assets.upload('image', selectedFile, {
-            contentType: selectedFile.type,
-            filename: selectedFile.name
-        })
-        .then((document) => {
+
+        const formData = new FormData();
+        formData.append('file', selectedFile);
+
+        try {
+            const response = await fetch('/api/upload-image', {
+                method: 'POST',
+                body: formData,
+            });
+
+            if (!response.ok) {
+                throw new Error('Upload failed');
+            }
+
+            const document = await response.json();
             setImageAsset(document);
-            setIsUploading(false);
-        })
-        .catch((error) => {
+        } catch (error) {
             console.error('Image upload error:', error);
-            setIsUploading(false);
             alert('Image upload failed. Please try again.');
-        });
+        } finally {
+            setIsUploading(false);
+        }
     };
 
     const handleArrayChange = (index, event, field) => {

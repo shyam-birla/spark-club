@@ -56,5 +56,10 @@ export default async function ProfilePage() {
     }
 
     const profileData = await getFullUserProfile(session.user.email);
+
+    if (!profileData) {
+        redirect('/profile/edit');
+    }
+
     return <ProfileClient session={session} profileData={profileData} />;
 }

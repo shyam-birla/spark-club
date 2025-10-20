@@ -105,6 +105,20 @@ const event = {
       type: 'url',
       description: 'The main recording of the event (YouTube URL).',
     },
+    {
+      name: 'collaborators',
+      title: 'Collaborators',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'name', title: 'Collaborator Name', type: 'string' },
+            { name: 'logo', title: 'Collaborator Logo', type: 'image' },
+          ],
+        },
+      ],
+    },
   ],
 };
 
