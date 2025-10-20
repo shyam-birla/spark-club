@@ -5,16 +5,25 @@ import { PortableText } from '@portabletext/react';
 import RegistrationStatus from '@/components/RegistrationStatus';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote } from 'react-icons/fa';
+import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote, FaMicrophone } from 'react-icons/fa';
 import Attendees from '@/components/Attendees';
 import AddToCalendar from '@/components/AddToCalendar';
 import ImageGalleryWithLightbox from '@/components/ImageGalleryWithLightbox';
 import Collaborators from '@/components/Collaborators';
+import HostedBy from '@/components/HostedBy';
+import SocialShare from '@/components/SocialShare';
+import CountdownTimer from '@/components/Countdown';
+import RelatedEvents from '@/components/RelatedEvents';
 
 const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
     _id, title, eventDate, endDate, description, "imageUrl": coverImage.asset->url, 
     venue{ type, locationName, locationUrl }, registrationLink, registrationStatus, schedule,
     speakers[]->{ _id, name, role, "imageUrl": image.asset->url },
+    hostedBy[]{
+      name,
+      "logoUrl": logo.asset->url
+    },
+    categories[]->{_id, title},
     gallery,
     youtubeLinks,
     mainEventRecording,
@@ -148,9 +157,9 @@ export default async function EventDetailPage({ params }) {
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
                     <aside className="lg:col-span-1 space-y-6 lg:sticky top-24 self-start">
                         {event.imageUrl && (<div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg"><Image src={event.imageUrl} alt={event.title} fill className="object-cover" /></div>)}
-                        <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm"><h3 className="font-bold text-lg mb-2">Hosted By</h3><p>SPARK Community</p></div>
-                        <Attendees attendees={event.attendees} total={event.registeredCount} />
+                        <HostedBy hosts={event.hostedBy} />
                         <Collaborators collaborators={event.collaborators} />
+                        <Attendees attendees={event.attendees} total={event.registeredCount} />
                     </aside>
 
                     <div className="lg:col-span-3 space-y-8">
@@ -158,13 +167,26 @@ export default async function EventDetailPage({ params }) {
                             {/* --- 2. BUTTON KO YAHAN TITLE KE SAATH ADD KIYA GAYA HAI --- */}
                             <div>
                                 <h1 className="text-4xl md:text-5xl font-bold text-black">{event.title}</h1>
+                                {event.categories && (
+                                    <div className="flex flex-wrap gap-2 mt-2">
+                                        {event.categories.map((category) => (
+                                            <span key={category.title} className="bg-orange-100 text-orange-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">
+                                                {category.title}
+                                            </span>
+                                        ))}
+                                    </div>
+                                )}
                             </div>
                             <div className="mt-6"> <KeyDetails event={event} /> </div>
                             <div className="mb-4">
                                 <AddToCalendar event={event} plainDescription={toPlainText(event.description)} />
+                                <SocialShare url={`https://sparkcommunity.vercel.app/events/${slug}`} title={event.title} />
                             </div>
                             {isUpcoming && (
                                 <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
+                                    <div className="flex justify-center mb-4">
+                                      <CountdownTimer date={event.eventDate} />
+                                    </div>
                                     <p className="font-semibold text-center mb-4 text-black">Welcome! To join the event, please register below.</p>
                                     <RegistrationStatus event={event} isAlreadyRegistered={isAlreadyRegistered} />
                                 </div>
@@ -195,7 +217,7 @@ export default async function EventDetailPage({ params }) {
 
                         {event.speakers && event.speakers.length > 0 && (
                             <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                                <h2 className="text-2xl font-bold text-black mb-6">Speakers</h2>
+                                <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaMicrophone /> Speakers</h2>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                                     {event.speakers.map(speaker => (
                                         <div key={speaker._id} className="text-center">
@@ -237,6 +259,8 @@ export default async function EventDetailPage({ params }) {
                                 </section>
                             )}
                         </div>
+
+                        <RelatedEvents currentEventId={event._id} categories={event.categories} />
                     </div>
                 </div>
             </div>

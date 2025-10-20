@@ -1,4 +1,4 @@
-# SPARK Club Website
+# SPARK Community Website
 
 This is the official website for the **Society of Programmers, Aspiring Research and Knowledge (SPARK)** club.
 

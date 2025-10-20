@@ -33,7 +33,7 @@ export default async function RootLayout({ children }) {
           <div className="relative z-10 flex flex-col min-h-screen">
             <Navbar />
             
-            <main className="flex-grow pt-20">
+            <main className="flex-grow pt-16">
               <ProfileChecker>{children}</ProfileChecker>
             </main>
 

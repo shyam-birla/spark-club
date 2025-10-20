@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { FaHandshake } from 'react-icons/fa';
 
 export default function Collaborators({ collaborators }) {
   if (!collaborators || collaborators.length === 0) {
@@ -7,7 +8,7 @@ export default function Collaborators({ collaborators }) {
 
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-      <h3 className="font-bold text-lg mb-4">In Collaboration With</h3>
+      <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><FaHandshake /> In Collaboration With</h3>
       <div className="flex flex-wrap gap-4">
         {collaborators.map((collaborator, index) => (
           <div key={index} className="group relative">

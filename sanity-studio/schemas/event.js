@@ -88,6 +88,20 @@ const event = {
       of: [{ type: 'reference', to: { type: 'person' } }],
     },
     {
+      name: 'hostedBy',
+      title: 'Hosted By',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'name', title: 'Host Name', type: 'string' },
+            { name: 'logo', title: 'Host Logo', type: 'image' },
+          ],
+        },
+      ],
+    },
+    {
       name: 'gallery',
       title: 'Photo Gallery',
       type: 'array',

@@ -1,4 +1,5 @@
 import Image from 'next/image';
+import { FaUsers } from 'react-icons/fa';
 
 const getInitials = (name) => {
   if (!name) return '';
@@ -23,7 +24,7 @@ export default function Attendees({ attendees, total }) {
   if (!attendees || total === 0) {
     return (
         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h3 className="font-bold text-lg mb-4">Attendees</h3>
+            <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><FaUsers /> Attendees</h3>
             <p className="text-sm text-gray-500">Be the first one to register!</p>
         </div>
     );
@@ -35,7 +36,7 @@ export default function Attendees({ attendees, total }) {
 
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-        <h3 className="font-bold text-lg mb-4">{total} Going</h3>
+        <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><FaUsers /> {total} Going</h3>
         
         <div className="flex flex-wrap -space-x-2">
             {displayedAttendees.map(attendee => (
