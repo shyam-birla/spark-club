@@ -4,13 +4,13 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { client } from '../../../../sanity/lib/client';
-import { FaPlus, FaTrash } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaCamera } from 'react-icons/fa';
+import Image from 'next/image';
 
 export default function EditProfilePage() {
     const { data: session, status } = useSession();
     const router = useRouter();
     
-    // State to hold all available technologies for the dropdown
     const [allTechnologies, setAllTechnologies] = useState([]);
     
     const [formData, setFormData] = useState({
@@ -27,19 +27,21 @@ export default function EditProfilePage() {
     const [loading, setLoading] = useState(true);
     const [saving, setSaving] = useState(false);
 
-    // Fetch profile data and all technologies
+    const [imageAsset, setImageAsset] = useState(null);
+    const [previewImage, setPreviewImage] = useState(null);
+    const [isUploading, setIsUploading] = useState(false);
+
     useEffect(() => {
         if (status === 'authenticated') {
             const userEmail = session.user.email;
             
-            // Fetch all technologies using the correct field name 'name'
             client.fetch(`*[_type == "technology"]{_id, name} | order(name asc)`).then(techs => {
                 setAllTechnologies(techs);
             });
 
-            // Fetch user profile data, expanding technology IDs for the form
             const query = `*[_type == "profile" && userEmail == $email] | order(_updatedAt desc)[0]{
                 ...,
+                "userImage": userImage.asset->{_id, url},
                 "externalProjects": externalProjects[]{..., "technologies": technologies[]->._id}
             }`;
             
@@ -54,11 +56,16 @@ export default function EditProfilePage() {
                         portfolioUrl: data.portfolioUrl || '',
                         education: data.education || [],
                         workExperience: data.workExperience || [],
-                        // Ensure technologies is an array of IDs for the form state
                         externalProjects: data.externalProjects?.map(p => ({...p, technologies: p.technologies || []})) || [],
                     });
+                    if (data.userImage?.url) {
+                        setPreviewImage(data.userImage.url);
+                    }
                 } else {
                     setFormData(prev => ({ ...prev, userName: session.user.name }));
+                    if (session.user.image) {
+                        setPreviewImage(session.user.image);
+                    }
                 }
                 setLoading(false);
             });
@@ -71,6 +78,28 @@ export default function EditProfilePage() {
     const handleChange = (e) => {
         const { name, value } = e.target;
         setFormData(prev => ({ ...prev, [name]: value }));
+    };
+    
+    const handleImageUpload = (e) => {
+        const selectedFile = e.target.files[0];
+        if (!selectedFile) return;
+
+        setPreviewImage(URL.createObjectURL(selectedFile));
+        setIsUploading(true);
+        
+        client.assets.upload('image', selectedFile, {
+            contentType: selectedFile.type,
+            filename: selectedFile.name
+        })
+        .then((document) => {
+            setImageAsset(document);
+            setIsUploading(false);
+        })
+        .catch((error) => {
+            console.error('Image upload error:', error);
+            setIsUploading(false);
+            alert('Image upload failed. Please try again.');
+        });
     };
 
     const handleArrayChange = (index, event, field) => {
@@ -94,7 +123,6 @@ export default function EditProfilePage() {
         setFormData(prev => ({ ...prev, [field]: newArray }));
     };
 
-    // Special handler for multi-select technologies
     const handleTechChange = (projectIndex, event) => {
         const selectedTechIds = Array.from(event.target.selectedOptions, option => option.value);
         const newProjects = [...formData.externalProjects];
@@ -106,8 +134,8 @@ export default function EditProfilePage() {
         e.preventDefault();
         setSaving(true);
         try {
-            // Format data for Sanity, especially references
-            const finalData = {
+            // Create a mutable copy of the form data
+            const submissionData = {
                 ...formData,
                 externalProjects: formData.externalProjects.map(proj => ({
                     ...proj,
@@ -115,14 +143,28 @@ export default function EditProfilePage() {
                 }))
             };
 
+            // === THE FIX IS HERE ===
+            // Conditionally add the userImage to the submissionData object
+            if (imageAsset?._id) {
+                submissionData.userImage = {
+                    _type: 'image',
+                    asset: {
+                        _type: 'reference',
+                        _ref: imageAsset._id
+                    }
+                };
+            }
+
             const response = await fetch('/api/profile', {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(finalData), 
+                body: JSON.stringify(submissionData), // Send the corrected object
             });
 
             if (!response.ok) {
-                throw new Error('Failed to update profile');
+                const errorData = await response.json();
+                console.error("API Error Response:", errorData);
+                throw new Error(errorData.message || 'Failed to update profile');
             }
 
             alert('Profile updated successfully!');
@@ -147,9 +189,37 @@ export default function EditProfilePage() {
                 
                 <form onSubmit={handleSubmit} className="space-y-8">
                     
-                    {/* Basic Info Section */}
                     <div className="space-y-6">
                         <h2 className="text-xl font-semibold border-b pb-2">Basic Information</h2>
+
+                        <div className="flex items-center gap-6">
+                            <div className="relative">
+                                <Image
+                                    src={previewImage || '/default-avatar.png'}
+                                    alt="Profile Preview"
+                                    width={100}
+                                    height={100}
+                                    className="rounded-full object-cover border-4 border-white shadow-md"
+                                />
+                            </div>
+                            <div>
+                                <label htmlFor="profileImage" className="cursor-pointer bg-gray-100 text-black px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-200">
+                                    <FaCamera className="inline-block mr-2" />
+                                    {isUploading ? 'Uploading...' : 'Change Picture'}
+                                </label>
+                                <input
+                                    type="file"
+                                    id="profileImage"
+                                    name="profileImage"
+                                    accept="image/*"
+                                    onChange={handleImageUpload}
+                                    className="hidden"
+                                    disabled={isUploading}
+                                />
+                                <p className="text-xs text-gray-500 mt-2">PNG, JPG, GIF up to 5MB.</p>
+                            </div>
+                        </div>
+
                         <div>
                             <label htmlFor="userName" className="block text-sm font-medium text-gray-700">Full Name</label>
                             <input type="text" name="userName" id="userName" value={formData.userName} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required />
@@ -176,7 +246,6 @@ export default function EditProfilePage() {
                         </div>
                     </div>
 
-                    {/* Education Section */}
                     <div className="space-y-4">
                         <h2 className="text-xl font-semibold border-b pb-2">Education</h2>
                         {formData.education.map((edu, index) => (
@@ -193,7 +262,6 @@ export default function EditProfilePage() {
                         <button type="button" onClick={() => addArrayItem('education')} className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"><FaPlus /> Add Education</button>
                     </div>
 
-                    {/* Work Experience Section */}
                     <div className="space-y-4">
                         <h2 className="text-xl font-semibold border-b pb-2">Work Experience</h2>
                         {formData.workExperience.map((work, index) => (
@@ -211,7 +279,6 @@ export default function EditProfilePage() {
                         <button type="button" onClick={() => addArrayItem('workExperience')} className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"><FaPlus /> Add Work Experience</button>
                     </div>
 
-                    {/* External Projects Section with Technologies */}
                     <div className="space-y-4">
                         <h2 className="text-xl font-semibold border-b pb-2">Personal Projects</h2>
                         {formData.externalProjects.map((proj, index) => (
@@ -243,7 +310,7 @@ export default function EditProfilePage() {
                     </div>
 
                     <div className="text-right">
-                        <button type="submit" disabled={saving} className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-80 disabled:bg-gray-400">
+                        <button type="submit" disabled={saving || isUploading} className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-80 disabled:bg-gray-400">
                             {saving ? 'Saving...' : 'Save Changes'}
                         </button>
                     </div>
@@ -252,6 +319,3 @@ export default function EditProfilePage() {
         </main>
     );
 }
-
-
-

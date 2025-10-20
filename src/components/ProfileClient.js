@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { FaLinkedin, FaGithub, FaGlobe, FaBriefcase, FaGraduationCap, FaCertificate, FaLightbulb, FaProjectDiagram } from 'react-icons/fa';
 
+// Section component waise ka waisa hi rahega
 const Section = ({ title, icon, children }) => (
     <motion.section 
         initial={{ opacity: 0, y: 20 }}
@@ -20,6 +21,7 @@ const Section = ({ title, icon, children }) => (
     </motion.section>
 );
 
+// formatDate function bhi waise ka waisa hi rahega
 const formatDate = (dateString) => {
     if (!dateString) return 'Present';
     if (/^\d{4}-\d{2}$/.test(dateString)) {
@@ -37,15 +39,21 @@ const formatDate = (dateString) => {
 export default function ProfileClient({ session, profileData }) {
     const trulyCompleted = profileData?.completedRoadmaps?.filter(p => p.completedCount === p.roadmap.totalResources) || [];
 
+    // --- NAYA VARIABLE IMAGE URL KE LIYE ---
+    // Pehle Sanity se aayi image ko check karega.
+    // Agar nahi hai, to session (Google/GitHub) ki image use karega.
+    // Agar woh bhi nahi hai, to ek default avatar dikhayega.
+    const profileImageUrl = profileData?.userImage?.asset?.url || session?.user?.image || '/default-avatar.png';
+    // --- END OF CHANGE ---
+
     return (
-        // === YAHAN BADLAV KIYA GAYA HAI ===
         <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
             <div className="container mx-auto px-4">
                 {!profileData ? (
                     // New user state
                     <div className="text-center py-20">
                         <h2 className="text-2xl font-semibold text-black">Welcome, {session.user.name}!</h2>
-                        <p className="text-gray-600 mt-2">Let&#39;s set up your SPARK profile.</p>
+                        <p className="text-gray-600 mt-2">Let's set up your SPARK profile.</p>
                         <Link href="/profile/edit">
                             <button className="mt-6 bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-80">
                                 Create Your Profile
@@ -58,13 +66,15 @@ export default function ProfileClient({ session, profileData }) {
                         {/* --- Left Sidebar --- */}
                         <aside className="lg:col-span-1 space-y-6 lg:sticky top-24 self-start">
                             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-center">
+                                {/* --- IMAGE COMPONENT UPDATE KIYA GAYA HAI --- */}
                                 <Image 
-                                    src={session.user.image} 
-                                    alt={session.user.name}
+                                    src={profileImageUrl} // Yahan naya variable use kiya
+                                    alt={profileData.userName || session.user.name}
                                     width={120} 
                                     height={120} 
-                                    className="rounded-full mx-auto border-4 border-white shadow-lg"
+                                    className="rounded-full mx-auto border-4 border-white shadow-lg object-cover" // object-cover add kiya
                                 />
+                                {/* --- END OF UPDATE --- */}
                                 <h1 className="text-2xl font-bold text-black mt-4">{profileData.userName || session.user.name}</h1>
                                 <p className="text-md text-gray-500">{profileData.tagline}</p>
                                 <Link href="/profile/edit">
@@ -84,7 +94,7 @@ export default function ProfileClient({ session, profileData }) {
                             </div>
                         </aside>
 
-                        {/* --- Right Main Content --- */}
+                        {/* --- Right Main Content (Yeh section same rahega) --- */}
                         <div className="lg:col-span-2">
                             {profileData.workExperience?.length > 0 && (
                                 <Section title="Work Experience" icon={<FaBriefcase />}>
@@ -168,6 +178,5 @@ export default function ProfileClient({ session, profileData }) {
         </main>
     );
 }
-
 
 
