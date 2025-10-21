@@ -16,6 +16,7 @@ import Collaborators from '@/components/Collaborators';
 import HostedBy from '@/components/HostedBy';
 import SocialShare from '@/components/SocialShare';
 import DynamicCountdownTimer from '@/components/DynamicCountdownTimer';
+import EventFeedbackForm from '@/components/EventFeedbackForm';
 const RelatedEvents = dynamic(() => import('@/components/RelatedEvents'), {
     loading: () => <div className="h-40 w-full animate-pulse bg-gray-200 rounded-md"></div>
 });
@@ -60,7 +61,8 @@ const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
       options,
       placeholder,
       allowedFileTypes
-    }
+    },
+    "hasSubmittedFeedback": count(*[_type == "eventFeedback" && event._ref == ^._id && userProfile._ref in *[_type=="profile" && userEmail==$userEmail]._id]) > 0
 }`;
 // === END OF QUERY UPDATE ===
 
@@ -147,6 +149,20 @@ export default async function EventDetailPage({ params }) {
 
     const isAlreadyRegistered = event.isRegistered;
     const isUpcoming = new Date(event.eventDate) > new Date();
+    const isPastEvent = !isUpcoming;
+
+    // Fetch feedback data separately
+    const feedbackData = await client.fetch(
+        `*[_type == "eventFeedback" && event._ref == $eventId]{
+            rating
+        }`,
+        { eventId: event._id }
+    );
+
+    const feedbackCount = feedbackData.length;
+    const averageRating = feedbackCount > 0 
+        ? (feedbackData.reduce((sum, fb) => sum + fb.rating, 0) / feedbackCount).toFixed(1)
+        : 0;
 
     return (
         <main className="bg-gray-50/50 backdrop-blur-sm py-20">

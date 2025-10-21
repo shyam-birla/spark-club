@@ -1,3 +1,5 @@
+// schemas/registrationField.js
+
 const registrationField = {
   name: 'registrationField',
   title: 'Registration Field',
@@ -80,6 +82,13 @@ const registrationField = {
       description: 'Example text shown in the input field.',
     },
   ],
+  preview: {
+    select: {
+      title: 'label',
+      subtitle: 'type',
+    }
+  }
 };
 
 export default registrationField;
+

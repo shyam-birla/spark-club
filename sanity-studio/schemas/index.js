@@ -26,6 +26,7 @@ import userProgress from './userProgress';
 import workExperience from './workExperience';
 import researchProject from './researchProject';
 import registrationField from './registrationField';
+import eventFeedback from './eventFeedback';
 
 
 export const schemaTypes = [
@@ -56,4 +57,5 @@ export const schemaTypes = [
     workExperience,
     researchProject,
     registrationField,
+    eventFeedback,
 ]

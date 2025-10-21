@@ -17,7 +17,7 @@ const registration = {
     },
     // === YAHAN BADLAV KIYA GAYA HAI ===
     {
-      name: 'mobile',
+      name: 'mobileNo',
       title: 'Mobile Number',
       type: 'string',
     },

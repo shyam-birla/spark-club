@@ -74,6 +74,11 @@ export default function ProfileClient({ session, profileData }) {
                                         Edit Profile
                                     </button>
                                 </Link>
+                                <Link href="/profile/dashboard">
+                                    <button className="mt-2 w-full bg-gray-100 text-black px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-200">
+                                        My Event Registrations
+                                    </button>
+                                </Link>
                             </div>
                             <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                                 <h3 className="font-bold text-lg mb-4">Additional Info</h3>
