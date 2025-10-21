@@ -1,7 +1,7 @@
 import { client, urlFor } from '../../../../sanity/lib/client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PortableText } from '@portabletext/react';
+import PortableTextComponent from '@/components/PortableTextComponent';
 import { FaDownload, FaExternalLinkAlt, FaGithub, FaUserFriends } from 'react-icons/fa';
 
 // This function tells Next.js which pages to pre-build
@@ -125,7 +125,7 @@ export default async function ResearchDetailPage({ params }) {
               <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
                 <h2 className="text-2xl font-bold text-black mb-6">Abstract</h2>
                 <div className="prose max-w-none text-lg leading-relaxed">
-                  <PortableText value={project.description} />
+                  <PortableTextComponent value={project.description} />
                 </div>
               </section>
             )}

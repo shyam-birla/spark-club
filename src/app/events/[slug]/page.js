@@ -1,20 +1,26 @@
 import { client, urlFor } from '../../../../sanity/lib/client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { PortableText } from '@portabletext/react';
+import PortableTextComponent from '@/components/PortableTextComponent';
 import RegistrationStatus from '@/components/RegistrationStatus';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote, FaMicrophone } from 'react-icons/fa';
 import Attendees from '@/components/Attendees';
 import AddToCalendar from '@/components/AddToCalendar';
-import ImageGalleryWithLightbox from '@/components/ImageGalleryWithLightbox';
+import dynamic from 'next/dynamic';
+const ImageGalleryWithLightbox = dynamic(() => import('@/components/ImageGalleryWithLightbox'), {
+    loading: () => <div className="h-64 w-full animate-pulse bg-gray-200 rounded-md"></div>
+});
 import Collaborators from '@/components/Collaborators';
 import HostedBy from '@/components/HostedBy';
 import SocialShare from '@/components/SocialShare';
-import CountdownTimer from '@/components/Countdown';
-import RelatedEvents from '@/components/RelatedEvents';
+import DynamicCountdownTimer from '@/components/DynamicCountdownTimer';
+const RelatedEvents = dynamic(() => import('@/components/RelatedEvents'), {
+    loading: () => <div className="h-40 w-full animate-pulse bg-gray-200 rounded-md"></div>
+});
 
+// === YAHAN QUERY UPDATE KI GAYI HAI ===
 const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
     _id, title, eventDate, endDate, description, "imageUrl": coverImage.asset->url, 
     venue{ type, locationName, locationUrl }, registrationLink, registrationStatus, schedule,
@@ -41,14 +47,22 @@ const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
     collaborators[]{
       name,
       "logoUrl": logo.asset->url
+    },
+    "isRegistered": count(*[_type == "registration" && event._ref == ^._id && email == $userEmail]) > 0,
+    
+    // customRegistrationFields ko _key aur name.current ke saath fetch kiya
+    customRegistrationFields[]{
+      _key, // React key prop ke liye
+      label,
+      "name": name.current, // Object ki jagah string
+      type,
+      required,
+      options,
+      placeholder,
+      allowedFileTypes
     }
-}`
-async function checkRegistration(email, eventId) {
-    if (!email || !eventId) return false;
-    const query = `count(*[_type == "registration" && email == $email && event._ref == $eventId])`;
-    const count = await client.fetch(query, { email, eventId });
-    return count > 0;
-}
+}`;
+// === END OF QUERY UPDATE ===
 
 export async function generateStaticParams() {
     const slugs = await client.fetch(`*[_type == "event" && defined(slug.current)]{ "slug": slug.current }`);
@@ -97,14 +111,14 @@ const toPlainText = (blocks) => {
             }
             return block.children.map(child => child.text).join('');
         })
-        .join('\n\n'); // Use \n\n for new paragraphs
+        .join('\n\n');
 };
 
 const KeyDetails = ({ event }) => (
     <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-black mb-8">
         <div className="flex items-center gap-2"><FaCalendar className="text-gray-500" /> <span>{new Date(event.eventDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'Asia/Kolkata' })}</span></div>
         <div className="flex items-center gap-2"><FaClock className="text-gray-500" /> <span>{new Date(event.eventDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' })}</span></div>
-        <div className="flex items-center gap-2"><FaMapMarkerAlt className="text-gray-500" /> <span>{event.venue?.locationName || 'TBA'}</span></div>
+        <div className="flex items-center gap-2"><FaMapMarkerAlt className="text-gray-500" /> <span>{event.venue?.locationUrl ? <a href={event.venue.locationUrl} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-600">{event.venue.locationName}</a> : event.venue?.locationName || 'TBA'}</span></div>
     </div>
 );
 
@@ -124,31 +138,14 @@ const EventSchedule = ({ schedule }) => (
     </section>
 );
 
-
-const portableTextComponents = {
-  block: {
-    h1: ({ children }) => <h1 className="text-4xl font-bold my-4">{children}</h1>,
-    h2: ({ children }) => <h2 className="text-3xl font-bold my-4">{children}</h2>,
-    h3: ({ children }) => <h3 className="text-2xl font-bold my-4">{children}</h3>,
-    normal: ({ children }) => <p className="mb-4">{children}</p>,
-    blockquote: ({ children }) => <blockquote className="border-l-4 border-gray-300 pl-4 my-4">{children}</blockquote>,
-  },
-  list: {
-    bullet: ({ children }) => <ul className="list-disc list-inside my-4">{children}</ul>,
-  },
-  listItem: {
-    bullet: ({ children }) => <li className="mb-2">{children}</li>,
-  },
-};
-
 export default async function EventDetailPage({ params }) {
     const { slug } = await params;
     const session = await getServerSession(authOptions);
-    const event = await client.fetch(eventQuery, { slug });
+    const event = await client.fetch(eventQuery, { slug, userEmail: session?.user?.email }, { next: { revalidate: 600 } });
 
     if (!event) { return <div className="text-center py-20">Event not found.</div>; }
 
-    const isAlreadyRegistered = await checkRegistration(session?.user?.email, event._id);
+    const isAlreadyRegistered = event.isRegistered;
     const isUpcoming = new Date(event.eventDate) > new Date();
 
     return (
@@ -156,7 +153,7 @@ export default async function EventDetailPage({ params }) {
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
                     <aside className="lg:col-span-1 space-y-6 lg:sticky top-24 self-start">
-                        {event.imageUrl && (<div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg"><Image src={event.imageUrl} alt={event.title} fill className="object-cover" /></div>)}
+                        {event.imageUrl && (<div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg"><Image src={event.imageUrl} alt={event.title} fill className="object-cover" priority={true} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" /></div>)}
                         <HostedBy hosts={event.hostedBy} />
                         <Collaborators collaborators={event.collaborators} />
                         <Attendees attendees={event.attendees} total={event.registeredCount} />
@@ -164,7 +161,6 @@ export default async function EventDetailPage({ params }) {
 
                     <div className="lg:col-span-3 space-y-8">
                         <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                            {/* --- 2. BUTTON KO YAHAN TITLE KE SAATH ADD KIYA GAYA HAI --- */}
                             <div>
                                 <h1 className="text-4xl md:text-5xl font-bold text-black">{event.title}</h1>
                                 {event.categories && (
@@ -185,7 +181,7 @@ export default async function EventDetailPage({ params }) {
                             {isUpcoming && (
                                 <div className="p-6 bg-gray-50 rounded-lg border border-gray-200">
                                     <div className="flex justify-center mb-4">
-                                      <CountdownTimer date={event.eventDate} />
+                                        <DynamicCountdownTimer date={event.eventDate} />
                                     </div>
                                     <p className="font-semibold text-center mb-4 text-black">Welcome! To join the event, please register below.</p>
                                     <RegistrationStatus event={event} isAlreadyRegistered={isAlreadyRegistered} />
@@ -195,7 +191,7 @@ export default async function EventDetailPage({ params }) {
 
                 
 
-                        {event.description && (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><div className="prose max-w-none text-lg leading-relaxed"><PortableText value={event.description} components={portableTextComponents} /></div></section>)}
+                        {event.description && (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><div className="prose max-w-none text-lg leading-relaxed"><PortableTextComponent value={event.description} /></div></section>)}
 
                         {event.mainEventRecording && getYouTubeEmbedUrl(event.mainEventRecording) && (
                             <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
@@ -208,6 +204,7 @@ export default async function EventDetailPage({ params }) {
                                         frameBorder="0"
                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                         allowFullScreen
+                                        loading="lazy"
                                     ></iframe>
                                 </div>
                             </section>
@@ -251,6 +248,7 @@ export default async function EventDetailPage({ params }) {
                                                         frameBorder="0"
                                                         allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                                                         allowFullScreen
+                                                        loading="lazy"
                                                     ></iframe>
                                                 </div>
                                             );

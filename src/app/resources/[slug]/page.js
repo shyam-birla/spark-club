@@ -42,7 +42,7 @@ export default function RoadmapDetailPage() {
                     whatYouWillLearn,
                     skills[]->{ _id, name, "logoUrl": logo.asset->url },
                     "allResourceKeys": modules[].subTopics[].resources[]._key,
-                    modules[]{ _key, title, description, subTopics[]{ _key, title, resources[]{ _key, title, duration, type, "cardImageUrl": cardImage.asset->url } } }
+                    modules[]{ _key, title, description, subTopics[]{ _key, title, resources[]{ _key, title, duration, type, "cardImageUrl": cardImage.asset->url, "slug": slug.current, url } } }
                 }`;
                 const roadmapData = await client.fetch(roadmapQuery, { slug });
                 setRoadmap(roadmapData);

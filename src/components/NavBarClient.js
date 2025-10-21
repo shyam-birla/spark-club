@@ -84,7 +84,7 @@ export default function NavBarClient({ session, profileImageUrl }) {
       } bg-gray-100/80 backdrop-blur-md border-gray-200 shadow-sm`}
     >
       <Link href="/">
-        <Image src="/logo-black.png" alt="SPARK! Club Logo" width={60} height={20} className="object-contain" />
+        <Image src="/logo-black.png" alt="SPARK! Club Logo" width={40} height={40} className="object-contain" priority={true} />
       </Link>
 
       <NavMenu />

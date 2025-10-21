@@ -1,7 +1,7 @@
 import { client } from '../../../../sanity/lib/client';
 import Image from 'next/image';
 import Link from 'next/link';
-import { PortableText } from '@portabletext/react';
+import PortableTextComponent from '@/components/PortableTextComponent';
 
 // Yeh Next.js ko batata hai ki kaun kaun se project pages hain
 export async function generateStaticParams() {
@@ -108,7 +108,7 @@ export default async function ProjectDetailPage({ params }) {
                   <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
                     <h2 className="text-2xl font-bold text-black mb-6">About this Project</h2>
                     <div className="prose max-w-none text-lg leading-relaxed">
-                      <PortableText value={project.description} />
+                      <PortableTextComponent value={project.description} />
                     </div>
                   </section>
                 )}

@@ -8,29 +8,35 @@ const ResourceCard = ({ resource }) => {
   const linkTarget = resource.slug ? '_self' : '_blank';
 
   return (
-    (<Link
-      href={resourceUrl}
-      target={linkTarget}
-      rel={linkTarget === '_blank' ? 'noopener noreferrer' : undefined}>
-
-      <div className="bg-white rounded-lg overflow-hidden transition-all duration-300 cursor-pointer h-full flex flex-col border-4 border-red-500 hover:shadow-xl hover:scale-105 transform">
-        <div className="relative w-full h-72">
-          {resource.cardImageUrl && (
-            <Image
-              src={resource.cardImageUrl}
-              alt={resource.title}
-              fill
-              className="object-contain" />
-          )}
-        </div>
-        <div className="p-2 flex-grow flex flex-col">
-          <h3 className="text-lg font-bold text-black mt-2">{resource.title}</h3>
-          <p className="text-gray-600 text-sm mt-1 flex-grow">{resource.description}</p>
-        </div>
-      </div>
-
-    </Link>)
+    resourceUrl ? (
+      <Link
+        href={resourceUrl}
+        target={linkTarget}
+        rel={linkTarget === '_blank' ? 'noopener noreferrer' : undefined}>
+        <CardContent resource={resource} />
+      </Link>
+    ) : (
+      <CardContent resource={resource} />
+    )
   );
 };
+
+const CardContent = ({ resource }) => (
+  <div className="bg-white rounded-lg overflow-hidden transition-all duration-300 cursor-pointer h-full flex flex-col border-4 border-red-500 hover:shadow-xl hover:scale-105 transform">
+    <div className="relative w-full h-72">
+      {resource.cardImageUrl && (
+        <Image
+          src={resource.cardImageUrl}
+          alt={resource.title}
+          fill
+          className="object-contain" />
+      )}
+    </div>
+    <div className="p-2 flex-grow flex flex-col">
+      <h3 className="text-lg font-bold text-black mt-2">{resource.title}</h3>
+      <p className="text-gray-600 text-sm mt-1 flex-grow">{resource.description}</p>
+    </div>
+  </div>
+);
 
 export default ResourceCard;

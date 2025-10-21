@@ -25,6 +25,8 @@ import testimonial from './testimonial';
 import userProgress from './userProgress';
 import workExperience from './workExperience';
 import researchProject from './researchProject';
+import registrationField from './registrationField';
+
 
 export const schemaTypes = [
     aboutPage,
@@ -53,4 +55,5 @@ export const schemaTypes = [
     userProgress,
     workExperience,
     researchProject,
+    registrationField,
 ]

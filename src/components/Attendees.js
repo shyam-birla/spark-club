@@ -12,7 +12,7 @@ const getInitials = (name) => {
 
 const FallbackImage = ({ name }) => (
   <div
-    className="rounded-full border-2 border-white bg-gray-300 flex items-center justify-center"
+    className="rounded-full border-2 border-white bg-gray-300 flex items-center justify-center hover:scale-110 transition-transform duration-200"
     style={{ width: 40, height: 40 }}
     title={name}
   >
@@ -24,8 +24,8 @@ export default function Attendees({ attendees, total }) {
   if (!attendees || total === 0) {
     return (
         <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-            <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><FaUsers /> Attendees</h3>
-            <p className="text-sm text-gray-500">Be the first one to register!</p>
+            <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><FaUsers /> <span className="text-2xl font-extrabold text-black">{total}+</span> Attendees are coming in this event</h3>
+            <p className="text-sm text-gray-500">Join the fun! Be the first one to register.</p>
         </div>
     );
   }
@@ -36,7 +36,7 @@ export default function Attendees({ attendees, total }) {
 
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-        <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><FaUsers /> {total} Going</h3>
+        <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><FaUsers /> <span className="text-2xl font-extrabold text-black">{total}+</span> Attendees are coming in this event</h3>
         
         <div className="flex flex-wrap -space-x-2">
             {displayedAttendees.map(attendee => (
@@ -47,7 +47,7 @@ export default function Attendees({ attendees, total }) {
                         alt={attendee.name || 'Attendee'}
                         width={40}
                         height={40}
-                        className="rounded-full border-2 border-white"
+                        className="rounded-full border-2 border-white hover:scale-110 transition-transform duration-200"
                         title={attendee.name}
                     />
                 ) : (
@@ -59,7 +59,7 @@ export default function Attendees({ attendees, total }) {
         {firstAttendeeName && (
             <p className="text-sm text-gray-600 mt-4">
                 Joined by <strong className="text-black">{firstAttendeeName}</strong>
-                {othersCount > 0 && ` and ${othersCount} others`}
+                {total > 1 && ` and ${total - 1} other${total - 1 > 1 ? 's' : ''}`}
             </p>
         )}
     </div>

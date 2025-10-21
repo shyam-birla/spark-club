@@ -1,3 +1,4 @@
+// sanity-studio/schemas/registration.js
 const registration = {
   name: 'registration',
   title: 'Registrations',
@@ -14,15 +15,25 @@ const registration = {
       title: 'Email',
       type: 'string',
     },
-    // === YAHAN NAYA FIELD ADD KIYA GAYA HAI ===
+    // === YAHAN BADLAV KIYA GAYA HAI ===
+    {
+      name: 'mobile',
+      title: 'Mobile Number',
+      type: 'string',
+    },
+    {
+      name: 'collegeName', // "College/Institute/Organization Name" ke liye
+      title: 'College Name',
+      type: 'string',
+    },
+    // === END OF CHANGE ===
     {
       name: 'userProfile',
       title: 'User Profile',
-      description: 'Agar user logged in tha, toh yeh uski profile se link hoga.',
+      description: 'The user\'s main profile, if they were logged in.',
       type: 'reference',
-      to: [{ type: 'profile' }], // Aapke 'profile' schema se link karega
+      to: [{ type: 'profile' }],
     },
-    // === END OF CHANGE ===
     {
       name: 'event',
       title: 'Event',
@@ -30,24 +41,25 @@ const registration = {
       to: [{ type: 'event' }],
     },
     {
-      name: 'mobile',
-      title: 'Mobile Number',
-      type: 'string',
-    },
-    {
-      name: 'branch',
-      title: 'Branch',
-      type: 'string',
-    },
-    {
-      name: 'enrollmentNo',
-      title: 'Enrollment Number',
-      type: 'string',
-    },
-    {
-      name: 'year',
-      title: 'Year',
-      type: 'string',
+      name: 'customData',
+      title: 'Custom Registration Data',
+      type: 'object',
+      fields: [
+        {
+          name: 'fields',
+          title: 'Fields',
+          type: 'array',
+          of: [
+            {
+              type: 'object',
+              fields: [
+                { name: 'key', title: 'Field Name', type: 'string' },
+                { name: 'value', title: 'Field Value', type: 'string' },
+              ],
+            },
+          ],
+        },
+      ],
     },
     {
       name: 'registrationDate',

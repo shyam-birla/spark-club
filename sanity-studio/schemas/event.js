@@ -1,4 +1,4 @@
-// schemas/event.js (FINAL - With Categories & New Registration Status)
+// schemas/event.js
 const event = {
   name: 'event',
   title: 'Event',
@@ -24,17 +24,18 @@ const event = {
       of: [{ type: 'reference', to: { type: 'category' } }],
       description: 'Is event ko ek ya ek se zyada category se jodein (e.g., Workshop, Hackathon).'
     },
-        {
-          name: 'eventDate',
-          title: 'Event Start Date & Time',
-          type: 'datetime',
-          validation: (Rule) => Rule.required()
-        },
-        {
-          name: 'endDate',
-          title: 'Event End Date & Time',
-          type: 'datetime',
-        },    {
+    {
+      name: 'eventDate',
+      title: 'Event Start Date & Time',
+      type: 'datetime',
+      validation: (Rule) => Rule.required()
+    },
+    {
+      name: 'endDate',
+      title: 'Event End Date & Time',
+      type: 'datetime',
+    }, // <-- Fixed missing brace and comma here
+    {
       name: 'registrationStatus',
       title: 'Registration Status',
       type: 'string',
@@ -81,6 +82,19 @@ const event = {
       title: 'Registration Link (External)', 
       type: 'url' 
     },
+
+    // === NEW FIELD ADDED HERE ===
+    {
+      name: 'customRegistrationFields',
+      title: 'Custom Registration Fields',
+      type: 'array',
+      of: [{ type: 'registrationField' }],
+      description: 'Build a custom form for this event. Add any fields you need (e.g., "T-Shirt Size", "Team Name").',
+      // This field will be hidden if you are using an external registration link
+      hidden: ({ document }) => !!document?.registrationLink,
+    },
+    // === END OF NEW FIELD ===
+    
     {
       name: 'speakers', 
       title: 'Speakers', 
