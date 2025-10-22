@@ -107,7 +107,7 @@ export async function POST(request) {
     fullHtml = fullHtml.replace(/{{qrCodeImage}}/g, `<img src="${qrCodeDataUrl}" alt="QR Code" style="width: 100px; height: 100px;" />`);
 
     // 5. Generate PDF using Puppeteer (Asli Code for Vercel)
-    const executablePath = await chromium.executablePath();
+    const executablePath = await chromium.executablePath(process.env.CHROMIUM_PATH);
 
     const browser = await puppeteer.launch({
       args: [...chromium.args, '--no-sandbox', '--disable-setuid-sandbox'],

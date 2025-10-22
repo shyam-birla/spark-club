@@ -32,6 +32,13 @@ const certificateTemplate = {
       description: 'An optional image to preview the template design.',
       options: { hotspot: true },
     },
+    {
+      name: 'backgroundImage',
+      title: 'Background Image',
+      type: 'image',
+      description: 'The background image for the certificate (e.g., a Canva design).',
+      options: { hotspot: true },
+    },
   ],
   preview: {
     select: {
