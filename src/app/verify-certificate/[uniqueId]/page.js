@@ -60,6 +60,7 @@ const VerifyCertificatePage = () => {
               userProfile->{
                 userName,
                 email,
+                mobileNumber,
                 "profilePicture": userImage.asset->url
               }
             }`,
@@ -159,39 +160,39 @@ const VerifyCertificatePage = () => {
         <div className="flex flex-col lg:flex-row gap-8">
                     {/* Left Column (Main Content - approx 60%) */}
                     <div className="lg:w-3/5 space-y-8">
-                      <div className="flex flex-col lg:flex-row gap-8">
-                        {/* Event Banner */}
-                        {certificate.event?.coverImage && (
-                                          <div className="relative w-full h-48 rounded-lg overflow-hidden shadow-md lg:w-1/2">
-                                            <Image
-                                              src={certificate.event.coverImage}
-                                              alt={`${eventTitle} Banner`}
-                                              fill
-                                              style={{ objectFit: 'cover' }}
-                                            />
-                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                                            <h1 className="absolute bottom-4 left-4 text-white text-2xl font-bold">{eventTitle}</h1>
-                                          </div>                        )}
-          
-                        {/* Recipient Block */}
-                        <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200 lg:w-1/2">
+                                  <div className="flex flex-col lg:flex-row gap-8">
+                                    {/* Event Banner */}
+                                    {certificate.event?.coverImage && (
+                                      <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-md lg:w-1/3">
+                                        <Image
+                                          src={certificate.event.coverImage}
+                                          alt={`${eventTitle} Banner`}
+                                          fill
+                                          style={{ objectFit: 'contain' }}
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                        <h1 className="absolute bottom-4 left-4 text-white text-xl font-bold">{eventTitle}</h1>
+                                      </div>
+                                    )}
+                      
+                                    {/* Recipient Block */}
+                                    <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200 lg:w-2/3">
                           <div className="flex items-center mb-4">
-                            {certificate.userProfile?.profilePicture ? (
-                              <Image
-                                src={certificate.userProfile.profilePicture}
-                                alt={userName}
-                                width={64}
-                                height={64}
-                                className="rounded-full mr-4 object-cover"
-                              />
-                            ) : (
-                              <div className="w-16 h-16 rounded-full mr-4 bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-semibold">{userName.charAt(0)}</div>
-                            )}
-                            <div>
-                              <h2 className="text-xl font-bold text-gray-800">Certificate Awarded to {userName}</h2>
-                              <p className="text-sm text-gray-500">on {issueDate}</p>
-                            </div>
-                          </div>
+                                              {certificate.userProfile?.profilePicture ? (
+                                                <Image
+                                                  src={certificate.userProfile.profilePicture}
+                                                  alt={userName}
+                                                  width={96}
+                                                  height={96}
+                                                  className="rounded-full mr-4 object-cover"
+                                                />
+                                              ) : (
+                                                <div className="w-24 h-24 rounded-full mr-4 bg-gray-200 flex items-center justify-center text-gray-500 text-3xl font-semibold">{userName.charAt(0)}</div>
+                                              )}
+                                              <div>
+                                                <p className="text-lg font-semibold text-gray-800">Certificate Awarded to <span className="text-2xl font-extrabold text-black">{userName}</span></p>
+                                                <p className="text-sm text-gray-500">on {issueDate}</p>
+                                              </div>                          </div>
                           <p className="text-gray-700">{hostedBy} confirms that {userName} successfully participated in this event.</p>
                         </div>
                       </div>
@@ -223,7 +224,7 @@ const VerifyCertificatePage = () => {
               </div>
               <p className="text-gray-700 mb-2"><strong>Status:</strong> <span className="text-green-600">Verified</span></p>
               {/* TODO: Certificate ID is blank if uniqueId is not populated in Sanity. Please ensure uniqueId is set for certificate documents. */}
-              <p className="text-gray-700 mb-2"><strong>Certificate ID:</strong> {certificate.uniqueId}</p>
+              <p className="text-gray-700 mb-2"><strong>Certificate ID:</strong> {certificate.uniqueId || (certificate.userProfile?.mobileNumber ? `(Fallback: ${certificate.userProfile.mobileNumber.substring(0, 5)}...)` : 'N/A')}</p>
               <p className="text-gray-700"><strong>Issued by:</strong> {hostedBy}</p>
             </div>
 

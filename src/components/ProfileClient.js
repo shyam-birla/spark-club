@@ -35,9 +35,18 @@ const formatDate = (dateString) => {
     return dateString;
 };
 
+const getInitials = (name) => {
+    if (!name) return '';
+    const parts = name.split(' ');
+    if (parts.length === 1) return parts[0].charAt(0).toUpperCase();
+    return (parts[0].charAt(0) + parts[parts.length - 1].charAt(0)).toUpperCase();
+};
+
 export default function ProfileClient({ session, profileData }) {
     const trulyCompleted = profileData?.completedRoadmaps?.filter(p => p.completedCount === p.roadmap.totalResources) || [];
-    const profileImageUrl = profileData?.userImage ? urlFor(profileData.userImage).width(120).height(120).url() : session?.user?.image || '/default-avatar.png';
+    const userDisplayName = profileData?.userName || session?.user?.name || 'User';
+    const initials = getInitials(userDisplayName);
+    const profileImageUrl = profileData?.userImage ? urlFor(profileData.userImage).width(120).height(120).url() : null; // Set to null if no custom image
 
     return (
         <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
@@ -55,44 +64,20 @@ export default function ProfileClient({ session, profileData }) {
                     </div>
                 ) : (
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* Left Sidebar Skeleton */}
+                        {/* --- Left Sidebar --- */}
                         <aside className="lg:col-span-1 space-y-6 lg:sticky top-24 self-start">
-                            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-center animate-pulse">
-                                <div className="rounded-full mx-auto bg-gray-300 h-24 w-24 mb-4"></div>
-                                <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mb-2"></div>
-                                <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto"></div>
-                                <div className="h-10 bg-gray-300 rounded w-full mt-4"></div>
-                            </div>
-                            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm animate-pulse">
-                                <div className="h-6 bg-gray-300 rounded w-2/3 mb-4"></div>
-                                <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-                                <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
-                                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
-                            </div>
-                        </aside>
-
-                        {/* Right Main Content Skeleton */}
-                        <div className="lg:col-span-2 space-y-8">
-                            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm animate-pulse">
-                                <div className="h-8 bg-gray-300 rounded w-1/3 mb-6"></div>
-                                <div className="space-y-4">
-                                    <div className="h-4 bg-gray-300 rounded w-full"></div>
-                                    <div className="h-4 bg-gray-300 rounded w-5/6"></div>
-                                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                                </div>
-                            </div>
-                            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm animate-pulse">
-                                <div className="h-8 bg-gray-300 rounded w-1/3 mb-6"></div>
-                                <div className="space-y-4">
-                                    <div className="h-4 bg-gray-300 rounded w-full"></div>
-                                    <div className="h-4 bg-gray-300 rounded w-5/6"></div>
-                                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                )}
-            </div>
-        </main>
-    );
-}
+                            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-center">
+                                {profileImageUrl ? (
+                                    <Image 
+                                        src={profileImageUrl} 
+                                        alt={userDisplayName}
+                                        width={120} 
+                                        height={120} 
+                                        className="rounded-full mx-auto border-4 border-white shadow-lg object-cover"
+                                    />
+                                ) : (
+                                    <div className="rounded-full mx-auto border-4 border-white shadow-lg object-cover bg-gray-200 flex items-center justify-center text-black font-bold text-5xl h-32 w-32">
+                                        {initials}
+                                    </div>
+                                )}
+                                <h1 className="text-2xl font-bold text-black mt-4">{userDisplayName}</h1>}
