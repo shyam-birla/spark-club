@@ -110,11 +110,28 @@ const VerifyCertificatePage = () => {
   }
 
   if (error) {
-    return <div className="text-center py-8 text-red-600">Error: {error}</div>;
+    return (
+      <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
+        <div className="container mx-auto p-4 text-center text-red-600 bg-white rounded-lg shadow-md py-8">
+          <h1 className="text-3xl font-bold mb-4">ERROR 500: Internal Server Error (Probably)</h1>
+          <p className="text-lg mb-4">My apologies, human. It seems I encountered an unexpected exception while trying to verify this certificate.</p>
+          <p className="text-sm text-gray-700"><strong>Stack Trace (simplified):</strong> {error}</p>
+          <p className="text-sm text-gray-700 mt-2">Initiating self-repair protocols... (Just kidding, try a page refresh. If that fails, alert the nearest developer with the above error details!)</p>
+        </div>
+      </main>
+    );
   }
 
   if (!certificate) {
-    return <div className="text-center py-8 text-gray-600">Certificate not found.</div>;
+    return (
+      <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
+        <div className="container mx-auto p-4 text-center text-red-600 bg-white rounded-lg shadow-md py-8">
+          <h1 className="text-3xl font-bold mb-4">ERROR 404: Certificate Not Found!</h1>
+          <p className="text-lg mb-4">My apologies, human. It seems this certificate has gone missing in the digital ether or never existed.</p>
+          <p className="text-sm text-gray-700 mt-2">Initiating quantum search protocols... (Just kidding, double-check the ID. If that fails, the certificate might be a myth!)</p>
+        </div>
+      </main>
+    );
   }
 
   const eventTitle = certificate.event?.title || certificate.title;
