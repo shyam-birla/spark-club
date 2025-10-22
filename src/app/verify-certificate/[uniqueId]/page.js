@@ -4,7 +4,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import Link from 'next/link';
 import Image from 'next/image'; // Import Image
-import { client } '../../../../sanity/lib/client';
+import { client } from '../../../../sanity/lib/client';
 import PortableTextComponent from '../../../components/PortableTextComponent';
 import { FaDownload, FaShareAlt, FaLinkedin, FaWhatsapp, FaLink, FaCheckCircle, FaInstagram, FaGithub, FaEnvelope } from 'react-icons/fa';
 import { format } from 'date-fns';
