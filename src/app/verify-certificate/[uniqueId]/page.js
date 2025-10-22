@@ -310,6 +310,7 @@ const VerifyCertificatePage = () => {
           </div>
         </div>
       </footer>
+      </div>
     </div>
   );
 };
