@@ -11,7 +11,8 @@ const socialIconMap = {
   whatsapp: FaWhatsapp
 };
 
-const fetchedSocialLinks = await client.fetch('*[_type == "socialLink"]');
+const Footer = async () => {
+  const fetchedSocialLinks = await client.fetch('*[_type == "socialLink"]');
   const socialLinks = fetchedSocialLinks || []; // Ensure it's an array
 
   return (

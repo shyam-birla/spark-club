@@ -124,7 +124,7 @@ const VerifyCertificatePage = () => {
   const eventType = certificate.event?.venue?.type || 'N/A';
   const eventVenue = certificate.event?.venue?.locationName || 'N/A';
   const eventSlug = certificate.event?.slug?.current;
-  const hostedBy = certificate.event?.hostedBy && certificate.event.hostedBy.length > 0 ? certificate.event.hostedBy[0].name : 'SPARK Community';
+  const hostedBy = certificate.event?.hostedBy && certificate.event.hostedBy.length > 0 ? certificate.event.hostedBy[0]?.name : 'SPARK Community';
 
   return (
     <div className="min-h-screen bg-white">
