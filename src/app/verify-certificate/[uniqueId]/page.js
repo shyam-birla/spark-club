@@ -125,7 +125,7 @@ const VerifyCertificatePage = () => {
   const eventType = certificate.event?.venue?.type || 'N/A';
   const eventVenue = certificate.event?.venue?.locationName || 'N/A';
   const eventSlug = certificate.event?.slug?.current;
-  const hostedBy = certificate.event?.hostedBy && certificate.event.hostedBy.length > 0 ? certificate.event.hostedBy[0]?.name : 'SPARK Community';
+  const hostedBy = certificate.event?.hostedBy?.[0]?.name || 'SPARK Community';
 
   console.log('Debug: certificate.uniqueId', certificate.uniqueId);
   console.log('Debug: hostedBy', hostedBy);
@@ -139,44 +139,45 @@ const VerifyCertificatePage = () => {
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
-          {/* Left Column (Main Content - approx 60%) */}
-          <div className="lg:w-3/5 space-y-8">
-            {/* Event Banner */}
-            {certificate.event?.coverImage && (
-              <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-md">
-                <Image
-                  src={certificate.event.coverImage}
-                  alt={`${eventTitle} Banner`}
-                  fill
-                  style={{ objectFit: 'cover' }}
-                />
-                <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                <h1 className="absolute bottom-4 left-4 text-white text-3xl font-bold">{eventTitle}</h1>
-              </div>
-            )}
-
-            {/* Recipient Block */}
-            <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200">
-              <div className="flex items-center mb-4">
-                {certificate.userProfile?.profilePicture ? (
-                  <Image
-                    src={certificate.userProfile.profilePicture}
-                    alt={userName}
-                    width={64}
-                    height={64}
-                    className="rounded-full mr-4 object-cover"
-                  />
-                ) : (
-                  <div className="w-16 h-16 rounded-full mr-4 bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-semibold">{userName.charAt(0)}</div>
-                )}
-                <div>
-                  <h2 className="text-xl font-bold text-gray-800">Certificate Awarded to {userName}</h2>
-                  <p className="text-sm text-gray-500">on {issueDate}</p>
-                </div>
-              </div>
-              <p className="text-gray-700">Spark Community confirms that {userName} successfully participated in this event.</p>
-            </div>
-
+                    {/* Left Column (Main Content - approx 60%) */}
+                    <div className="lg:w-3/5 space-y-8">
+                      <div className="flex flex-col lg:flex-row gap-8">
+                        {/* Event Banner */}
+                        {certificate.event?.coverImage && (
+                          <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-md lg:w-1/2">
+                            <Image
+                              src={certificate.event.coverImage}
+                              alt={`${eventTitle} Banner`}
+                              fill
+                              style={{ objectFit: 'cover' }}
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                            <h1 className="absolute bottom-4 left-4 text-white text-3xl font-bold">{eventTitle}</h1>
+                          </div>
+                        )}
+          
+                        {/* Recipient Block */}
+                        <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200 lg:w-1/2">
+                          <div className="flex items-center mb-4">
+                            {certificate.userProfile?.profilePicture ? (
+                              <Image
+                                src={certificate.userProfile.profilePicture}
+                                alt={userName}
+                                width={64}
+                                height={64}
+                                className="rounded-full mr-4 object-cover"
+                              />
+                            ) : (
+                              <div className="w-16 h-16 rounded-full mr-4 bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-semibold">{userName.charAt(0)}</div>
+                            )}
+                            <div>
+                              <h2 className="text-xl font-bold text-gray-800">Certificate Awarded to {userName}</h2>
+                              <p className="text-sm text-gray-500">on {issueDate}</p>
+                            </div>
+                          </div>
+                          <p className="text-gray-700">Spark Community confirms that {userName} successfully participated in this event.</p>
+                        </div>
+                      </div>
             {/* Event Details Block */}
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center mb-4">
@@ -307,10 +308,16 @@ const VerifyCertificatePage = () => {
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
           <p>&copy; 2025 Spark Community. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            {/* Placeholder for social links from contacts like whatsapp, instagram, linkedin, github and gmail */}
-            <a href="#" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-400"><FaWhatsapp className="text-2xl" /></a>
-            <a href="#" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-400"><FaLinkedin className="text-2xl" /></a>
-            <a href="#" target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-400"><FaLink className="text-2xl" /></a> {/* Using FaLink as a placeholder for other social links */}
+            {socialLinks.map((link) => {
+              if (!link) return null;
+              const IconComponent = socialIconMap[link.icon];
+              if (!IconComponent) return null;
+              return (
+                <a key={link._id} href={link.url} target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-400">
+                  <IconComponent className="text-2xl" />
+                </a>
+              );
+            })}
           </div>
         </div>
       </footer>
