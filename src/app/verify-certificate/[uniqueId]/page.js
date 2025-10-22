@@ -3,6 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { client } from '../../../../sanity/lib/client'; // Adjust path as necessary
+import PortableTextComponent from '../../../../components/PortableTextComponent'; // Import PortableTextComponent
 
 const VerifyCertificatePage = () => {
   const { uniqueId } = useParams();
@@ -113,7 +114,13 @@ const VerifyCertificatePage = () => {
                 )}
                 <h3 className="text-xl font-semibold text-gray-800">{certificate.event?.title || 'Course Title'}</h3>
               </div>
-              <p className="text-gray-700 mb-4">{certificate.event?.description || 'A comprehensive course covering key concepts and practical applications.'}</p>
+              <div className="text-gray-700 mb-4">
+                {certificate.event?.description ? (
+                  <PortableTextComponent blocks={certificate.event.description} />
+                ) : (
+                  'A comprehensive course covering key concepts and practical applications.'
+                )}
+              </div>
               {/* Placeholder for ratings/enrollment */}
               <div className="text-sm text-gray-500">Ratings: ★★★★☆ (4.5/5) | Enrolled: 123,456</div>
             </div>
@@ -126,7 +133,13 @@ const VerifyCertificatePage = () => {
                   {certificate.event.learningOutcomes.map((outcome, index) => (
                     <li key={index} className="flex items-start text-gray-700">
                       <svg className="h-5 w-5 text-green-500 mr-2 mt-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20"><path fillRule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clipRule="evenodd"></path></svg>
-                      <span>{outcome}</span>
+                      <span>
+                        {typeof outcome === 'object' && outcome !== null && '_type' in outcome ? (
+                          <PortableTextComponent blocks={[outcome]} />
+                        ) : (
+                          outcome
+                        )}
+                      </span>
                     </li>
                   ))}
                 </ul>
@@ -140,7 +153,11 @@ const VerifyCertificatePage = () => {
                 <div className="flex flex-wrap gap-2">
                   {certificate.event.skillsGained.map((skill, index) => (
                     <span key={index} className="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">
-                      {skill}
+                      {typeof skill === 'object' && skill !== null && '_type' in skill ? (
+                        <PortableTextComponent blocks={[skill]} />
+                      ) : (
+                        skill
+                      )}
                     </span>
                   ))}
                 </div>
