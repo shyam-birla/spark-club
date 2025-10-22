@@ -86,14 +86,19 @@ export default function ProfileClient({ session, profileData }) {
                                     <Link href="/profile/edit">
                                         <button className="bg-orange-600 text-white px-4 py-2 rounded-md">Edit Profile</button>
                                     </Link>
+                                    <Link href="/profile/dashboard">
+                                        <button className="bg-gray-100 text-black px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-200">
+                                            My Events
+                                        </button>
+                                    </Link>
                                 </div>
                             </div>
-                        </aside>
-                        {/* --- Right Content --- */}
-                        <section className="lg:col-span-2">
                             <Section title="About" icon={<FaLightbulb />}>
                                 <p className="text-gray-700">{profileData?.about || 'No bio yet.'}</p>
                             </Section>
+                        </aside>
+                        {/* --- Right Content --- */}
+                        <section className="lg:col-span-2">
                             <Section title="Work Experience" icon={<FaBriefcase />}>
                                 {profileData.workExperience?.length > 0 ? (
                                     <div className="space-y-6">
