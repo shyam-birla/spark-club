@@ -32,6 +32,7 @@ const EventRegistrationWrapper = ({ eventId, onRegistrationSuccess, customRegist
   const [formData, setFormData] = useState(getInitialFormData);
   const [status, setStatus] = useState('idle');
   const [error, setError] = useState(null);
+  const [showForm, setShowForm] = useState(false);
 
   // Jab user logged in ho, toh form ko uski details se bhar dein
   useEffect(() => {
@@ -159,9 +160,7 @@ const EventRegistrationWrapper = ({ eventId, onRegistrationSuccess, customRegist
     }
   };
 
-  const [showForm, setShowForm] = useState(false);
 
-  // --- Success Message ---
   if (status === 'success') {
     return (
         <div className="text-center p-4 bg-green-100 text-green-800 rounded-md">

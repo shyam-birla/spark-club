@@ -17,6 +17,7 @@
     "@react-three/fiber": "^9.3.0",
     "@sanity/image-url": "^1.2.0",
     "@sanity/vision": "^4.9.0",
+    "@sparticuz/chromium-min": "^141.0.0",
     "@vercel/analytics": "^1.5.0",
     "@vercel/speed-insights": "^1.2.0",
     "add-to-calendar-button": "^2.12.12",
@@ -24,6 +25,8 @@
     "next": "^15.5.6",
     "next-auth": "^4.24.11",
     "next-sanity": "^11.1.1",
+    "puppeteer-core": "^24.26.0",
+    "qrcode": "^1.5.4",
     "react": "19.1.0",
     "react-countdown": "^2.3.6",
     "react-dom": "19.1.0",
@@ -36,6 +39,7 @@
     "resend": "^6.1.0",
     "sanity": "^4.9.0",
     "three": "^0.180.0",
+    "uuid": "^13.0.0",
     "yet-another-react-lightbox": "^3.25.0"
   },
   "devDependencies": {

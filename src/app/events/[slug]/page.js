@@ -116,13 +116,19 @@ const toPlainText = (blocks) => {
         .join('\n\n');
 };
 
-const KeyDetails = ({ event }) => (
-    <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-black mb-8">
-        <div className="flex items-center gap-2"><FaCalendar className="text-gray-500" /> <span>{new Date(event.eventDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'Asia/Kolkata' })}</span></div>
-        <div className="flex items-center gap-2"><FaClock className="text-gray-500" /> <span>{new Date(event.eventDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' })}</span></div>
-        <div className="flex items-center gap-2"><FaMapMarkerAlt className="text-gray-500" /> <span>{event.venue?.locationUrl ? <a href={event.venue.locationUrl} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-600">{event.venue.locationName}</a> : event.venue?.locationName || 'TBA'}</span></div>
-    </div>
-);
+const KeyDetails = ({ event }) => {
+    const startDate = new Date(event.eventDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'Asia/Kolkata' });
+    const endDate = event.endDate ? new Date(event.endDate).toLocaleDateString('en-US', { month: 'long', day: 'numeric', timeZone: 'Asia/Kolkata' }) : null;
+    const dateDisplay = endDate && startDate !== endDate ? `${startDate} - ${endDate}` : startDate;
+
+    return (
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 text-sm text-black mb-8">
+            <div className="flex items-center gap-2"><FaCalendar className="text-gray-500" /> <span>{dateDisplay}</span></div>
+            <div className="flex items-center gap-2"><FaClock className="text-gray-500" /> <span>{new Date(event.eventDate).toLocaleTimeString('en-US', { hour: '2-digit', minute: '2-digit', timeZone: 'Asia/Kolkata' })}</span></div>
+            <div className="flex items-center gap-2"><FaMapMarkerAlt className="text-gray-500" /> <span>{event.venue?.locationUrl ? <a href={event.venue.locationUrl} target="_blank" rel="noopener noreferrer" className="hover:underline text-blue-600">{event.venue.locationName}</a> : event.venue?.locationName || 'TBA'}</span></div>
+        </div>
+    );
+};
 
 const EventSchedule = ({ schedule }) => (
     <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
@@ -148,8 +154,8 @@ export default async function EventDetailPage({ params }) {
     if (!event) { return <div className="text-center py-20">Event not found.</div>; }
 
     const isAlreadyRegistered = event.isRegistered;
-    const isUpcoming = new Date(event.eventDate) > new Date();
-    const isPastEvent = !isUpcoming;
+    const isUpcoming = new Date(event.endDate || event.eventDate) > new Date();
+
 
     // Fetch feedback data separately
     const feedbackData = await client.fetch(
@@ -275,6 +281,17 @@ export default async function EventDetailPage({ params }) {
                         </div>
 
                         <RelatedEvents currentEventId={event._id} categories={event.categories} />
+
+                        {!isUpcoming && session?.user && (
+                            <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                                <h2 className="text-2xl font-bold text-black mb-6">Feedback</h2>
+                                {event.hasSubmittedFeedback ? (
+                                    <p>You have already submitted feedback for this event. Thank you!</p>
+                                ) : (
+                                    <EventFeedbackForm eventId={event._id} userEmail={session.user.email} />
+                                )}
+                            </section>
+                        )}
                     </div>
                 </div>
             </div>

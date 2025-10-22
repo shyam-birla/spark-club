@@ -27,6 +27,8 @@ import workExperience from './workExperience';
 import researchProject from './researchProject';
 import registrationField from './registrationField';
 import eventFeedback from './eventFeedback';
+import certificate from './certificate';
+import certificateTemplate from './certificateTemplate';
 
 
 export const schemaTypes = [
@@ -58,4 +60,6 @@ export const schemaTypes = [
     researchProject,
     registrationField,
     eventFeedback,
+    certificate,
+    certificateTemplate,
 ]

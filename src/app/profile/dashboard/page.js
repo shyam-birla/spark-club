@@ -4,6 +4,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { client } from '../../../../sanity/lib/client'; // Import Sanity client
 import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa'; // Import icons
+import UserCertificatesDisplay from '../../../components/UserCertificatesDisplay';
 
 async function getUserRegistrations() {
   const session = await getServerSession(authOptions);
@@ -72,7 +73,7 @@ export default async function DashboardPage() {
 
         {registrations.length === 0 ? (
           <div className="bg-white p-6 rounded-lg shadow-md text-center text-gray-600">
-            <p className="text-lg">You haven't registered for any events yet.</p>
+            <p className="text-lg">You haven&apos;t registered for any events yet.</p>
             <Link href="/events" className="mt-4 inline-block bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700">
               Browse Events
             </Link>
@@ -104,6 +105,11 @@ export default async function DashboardPage() {
             ))}
           </div>
         )}
+      </div>
+
+      {/* User Certificates Display */}
+      <div className="mt-12">
+        <UserCertificatesDisplay />
       </div>
     </main>
   );

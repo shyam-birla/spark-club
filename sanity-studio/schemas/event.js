@@ -28,12 +28,18 @@ const event = {
       name: 'eventDate',
       title: 'Event Start Date & Time',
       type: 'datetime',
+      options: {
+        displayTimeZone: 'Asia/Kolkata',
+      },
       validation: (Rule) => Rule.required()
     },
     {
       name: 'endDate',
       title: 'Event End Date & Time',
       type: 'datetime',
+      options: {
+        displayTimeZone: 'Asia/Kolkata',
+      },
     }, // <-- Fixed missing brace and comma here
     {
       name: 'registrationStatus',
@@ -95,6 +101,24 @@ const event = {
     },
     // === END OF NEW FIELD ===
     
+    {
+      name: 'issueCertificate',
+      title: 'Issue Certificates for this Event?',
+      type: 'boolean',
+      initialValue: false,
+      description: 'Check this if participants of this event should receive a certificate.',
+    },
+    {
+      name: 'certificateTemplate',
+      title: 'Certificate Template',
+      type: 'reference',
+      to: [{ type: 'certificateTemplate' }],
+      description: 'Select the template to use for certificates issued for this event.',
+      hidden: ({ document }) => !document?.issueCertificate, // Only show if issueCertificate is true
+      validation: (Rule) => Rule.custom((value, { document }) =>
+        document.issueCertificate && !value ? 'Certificate template is required if certificates are issued.' : true
+      ),
+    },
     {
       name: 'speakers', 
       title: 'Speakers', 

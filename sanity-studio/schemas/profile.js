@@ -42,6 +42,21 @@ const profile = {
             of: [{ type: 'externalProject' }],
             description: 'User dwara manually add kiye gaye projects.'
         },
+
+        {
+            name: 'role',
+            title: 'Role',
+            type: 'string',
+            options: {
+                list: [
+                    { title: 'Admin', value: 'admin' },
+                    { title: 'Member', value: 'member' }
+                ],
+                layout: 'radio'
+            },
+            initialValue: 'member',
+            validation: (Rule) => Rule.required()
+        },
     ],
     preview: {
         select: {
@@ -51,5 +66,6 @@ const profile = {
         }
     }
 };
+
 
 export default profile;
