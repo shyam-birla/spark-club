@@ -2,7 +2,9 @@
 
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
-import { client } from '../../../../sanity/lib/client';
+import Link from 'next/link';
+import Image from 'next/image'; // Import Image
+import { client } '../../../../sanity/lib/client';
 import PortableTextComponent from '../../../components/PortableTextComponent';
 import { FaDownload, FaShareAlt, FaLinkedin, FaWhatsapp, FaLink, FaCheckCircle, FaInstagram, FaGithub, FaEnvelope } from 'react-icons/fa';
 import { format } from 'date-fns';
@@ -129,7 +131,7 @@ const VerifyCertificatePage = () => {
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
         <div className="mb-6 text-sm text-gray-600">
-          <a href="/" className="hover:underline">Home</a> &gt; <a href="/profile" className="hover:underline">Accomplishments</a> &gt; <span className="font-semibold">Certificate Course</span>
+          <Link href="/" className="hover:underline">Home</Link> &gt; <a href="/profile" className="hover:underline">Accomplishments</a> &gt; <span className="font-semibold">Certificate Course</span>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -138,10 +140,11 @@ const VerifyCertificatePage = () => {
             {/* Event Banner */}
             {certificate.event?.coverImage && (
               <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-md">
-                <img
+                <Image
                   src={certificate.event.coverImage}
                   alt={`${eventTitle} Banner`}
-                  className="w-full h-full object-cover"
+                  fill
+                  style={{ objectFit: 'cover' }}
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
                 <h1 className="absolute bottom-4 left-4 text-white text-3xl font-bold">{eventTitle}</h1>
@@ -152,10 +155,12 @@ const VerifyCertificatePage = () => {
             <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center mb-4">
                 {certificate.userProfile?.profilePicture ? (
-                  <img
+                  <Image
                     src={certificate.userProfile.profilePicture}
                     alt={userName}
-                    className="w-16 h-16 rounded-full mr-4 object-cover"
+                    width={64}
+                    height={64}
+                    className="rounded-full mr-4 object-cover"
                   />
                 ) : (
                   <div className="w-16 h-16 rounded-full mr-4 bg-gray-200 flex items-center justify-center text-gray-500 text-xl font-semibold">{userName.charAt(0)}</div>
@@ -172,7 +177,7 @@ const VerifyCertificatePage = () => {
             <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
               <div className="flex items-center mb-4">
                 {/* Placeholder for SPARK Logo */}
-                <img src="/logo-black.png" alt="SPARK Logo" className="h-8 mr-3" />
+                <Image src="/logo-black.png" alt="SPARK Logo" width={32} height={32} className="mr-3" />
                 <h3 className="text-xl font-semibold text-gray-800">Event Details</h3>
               </div>
               <p className="text-gray-700 mb-2"><strong>Date:</strong> {eventDates}</p>
