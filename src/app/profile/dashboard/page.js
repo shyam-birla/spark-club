@@ -69,7 +69,7 @@ export default async function DashboardPage() {
   return (
     <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-6 text-black">My Event Registrations</h1>
+        <h1 className="text-3xl font-bold mb-6 text-black">My Events</h1>
 
         {registrations.length === 0 ? (
           <div className="bg-white p-6 rounded-lg shadow-md text-center text-gray-600">
