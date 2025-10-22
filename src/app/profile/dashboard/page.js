@@ -34,20 +34,49 @@ async function getUserRegistrations() {
 
     const userProfileId = profile._id;
 
-    // Then, fetch all registrations linked to this user profile
-    const registrations = await client.fetch(
-      `*[_type == "registration" && userProfile._ref == $userProfileId]{
-        _id,
-        registrationDate,
-        event->{_id, title, "slug": slug.current, eventDate, venue{locationName, type}},
-        // Add any other fields you want to display on the dashboard
-      }`,
-      { userProfileId }
-    );
+    // Fetch registrations and certificates in parallel
+    const [registrations, certificates] = await Promise.all([
+      client.fetch(
+        `*[_type == "registration" && userProfile._ref == $userProfileId]{
+          _id,
+          registrationDate,
+          event->{_id, title, "slug": slug.current, eventDate, venue{locationName, type}},
+        }`,
+        { userProfileId }
+      ),
+      client.fetch(
+        `*[_type == "certificate" && userProfile._ref == $userProfileId]{
+          _id,
+          uniqueId,
+          verificationUrl,
+          "certificateFileUrl": certificateFile.asset->url,
+          event->{_id} // Only need event ID to link with registrations
+        }`,
+        { userProfileId }
+      )
+    ]);
 
-    return registrations;
+    // Create a map for quick lookup of certificates by event ID
+    const certificatesByEventId = new Map();
+    certificates.forEach(cert => {
+      if (cert.event && cert.event._id) {
+        certificatesByEventId.set(cert.event._id, cert);
+      }
+    });
+
+    // Augment registrations with certificate data
+    const augmentedRegistrations = registrations.map(reg => {
+      const eventId = reg.event?._id;
+      const certificate = eventId ? certificatesByEventId.get(eventId) : undefined;
+      return {
+        ...reg,
+        certificate: certificate || null // Add certificate object or null if not found
+      };
+    });
+
+    return augmentedRegistrations;
   } catch (error) {
-    console.error('Error fetching user registrations directly:', error);
+    console.error('Error fetching user registrations and certificates:', error);
     return { error: error.message };
   }
 }
@@ -100,6 +129,28 @@ export default async function DashboardPage() {
                   <Link href={`/events/${reg.event.slug}`} className="mt-3 inline-block text-indigo-600 hover:underline text-sm">
                     View Event Details
                   </Link>
+                )}
+                {reg.certificate && (
+                  <div className="mt-4 flex flex-col space-y-2">
+                    {reg.certificate.certificateFileUrl && (
+                      <a
+                        href={reg.certificate.certificateFileUrl}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      >
+                        View Certificate
+                      </a>
+                    )}
+                    {reg.certificate.uniqueId && (
+                      <Link
+                        href={`/verify-certificate/${reg.certificate.uniqueId}`}
+                        className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                      >
+                        Verify Certificate
+                      </Link>
+                    )}
+                  </div>
                 )}
               </div>
             ))}

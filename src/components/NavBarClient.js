@@ -25,7 +25,7 @@ const NavMenu = ({ isMobile }) => {
 
 const AuthButtons = ({ session, profileImageUrl, isMobile }) => (
   <div className={`${isMobile ? 'flex flex-col items-center gap-4 mt-6' : 'hidden md:flex items-center gap-4'}`}>
-    {session === null ? (
+    {!session?.user ? (
       <button onClick={() => signIn()} className="bg-black text-white px-5 py-2 rounded-md font-bold hover:opacity-80 transition-opacity">
         Login
       </button>
