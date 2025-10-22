@@ -76,7 +76,7 @@ export default function ProfileClient({ session, profileData }) {
                                 </Link>
                                 <Link href="/profile/dashboard">
                                     <button className="mt-2 w-full bg-gray-100 text-black px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-200">
-                                        My Event Registrations
+                                        My Events
                                     </button>
                                 </Link>
                             </div>

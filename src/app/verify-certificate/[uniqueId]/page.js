@@ -75,7 +75,7 @@ const VerifyCertificatePage = () => {
         } else {
           setError('Certificate not found or invalid ID.');
         }
-        setSocialLinks(fetchedSocialLinks);
+        setSocialLinks(fetchedSocialLinks || []);
       } catch (err) {
         console.error('Error fetching data for verification:', err);
         setError('Failed to load certificate details: ' + err.message);
@@ -288,7 +288,7 @@ const VerifyCertificatePage = () => {
                 const IconComponent = socialIconMap[link.icon];
                 if (!IconComponent) return null; // Don't render if icon not found
                 return (
-                  <a key={link.name} href={link.url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">
+                  <a key={link._id} href={link.url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">
                     <IconComponent className="text-3xl" />
                   </a>
                 );
