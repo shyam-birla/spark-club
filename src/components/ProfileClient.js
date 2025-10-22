@@ -80,4 +80,4 @@ export default function ProfileClient({ session, profileData }) {
                                         {initials}
                                     </div>
                                 )}
-                                <h1 className="text-2xl font-bold text-black mt-4">{userDisplayName}</h1>}
+                                <h1 className="text-2xl font-bold text-black mt-4">{userDisplayName}</h1>
