@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'next/navigation';
 import { client } from '../../../../sanity/lib/client'; // Adjust path as necessary
-import PortableTextComponent from '../../../../components/PortableTextComponent'; // Import PortableTextComponent
+import PortableTextComponent from '../../../components/PortableTextComponent'; // Corrected path
 
 const VerifyCertificatePage = () => {
   const { uniqueId } = useParams();
