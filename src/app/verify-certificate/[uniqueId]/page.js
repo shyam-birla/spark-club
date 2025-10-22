@@ -88,20 +88,21 @@ const VerifyCertificatePage = () => {
     fetchData();
   }, [uniqueId]);
 
-  const handleShareLinkedIn = () => {
-    const text = `I just earned a certificate from Spark Community for ${certificate.event?.title || certificate.title}! Verify it here: ${certificate.verificationUrl}`;
-    window.open(`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(certificate.verificationUrl)}&title=${encodeURIComponent(certificate.title)}&summary=${encodeURIComponent(text)}`, '_blank');
-  };
-
-  const handleShareWhatsapp = () => {
-    const text = `Check out my certificate from Spark Community for ${certificate.event?.title || certificate.title}! Verify it here: ${certificate.verificationUrl}`;
-    window.open(`https://api.whatsapp.com/send?text=${encodeURIComponent(text)}`, '_blank');
-  };
-
-  const handleCopyLink = () => {
-    navigator.clipboard.writeText(certificate.verificationUrl);
-    setCopySuccess('Link copied!');
-    setTimeout(() => setCopySuccess(''), 3000);
+  const handleShare = () => {
+    if (navigator.share) {
+      navigator.share({
+        title: `Certificate from ${hostedBy} for ${certificate.event?.title || certificate.title}`,
+        text: `Check out my certificate from ${hostedBy} for ${certificate.event?.title || certificate.title}! Verify it here: ${certificate.verificationUrl}`,
+        url: certificate.verificationUrl,
+      })
+      .then(() => console.log('Successful share'))
+      .catch((error) => console.log('Error sharing', error));
+    } else {
+      // Fallback for browsers that do not support the Web Share API
+      navigator.clipboard.writeText(certificate.verificationUrl);
+      setCopySuccess('Link copied!');
+      setTimeout(() => setCopySuccess(''), 3000);
+    }
   };
 
   if (loading) {
@@ -119,8 +120,8 @@ const VerifyCertificatePage = () => {
   const eventTitle = certificate.event?.title || certificate.title;
   const userName = certificate.userProfile?.userName || 'N/A';
   const issueDate = certificate.issueDate ? format(new Date(certificate.issueDate), 'MMMM dd, yyyy') : 'N/A';
-  const eventDateStart = certificate.event?.eventDate ? format(new Date(certificate.event.eventDate), 'MMMM dd, yyyy') : 'N/A';
-  const eventDateEnd = certificate.event?.endDate ? format(new Date(certificate.event.endDate), 'MMMM dd, yyyy') : '';
+  const eventDateStart = certificate.event?.eventDate ? format(new Date(certificate.event.eventDate), 'MMMM dd, yyyy, hh:mm a') : 'N/A';
+  const eventDateEnd = certificate.event?.endDate ? format(new Date(certificate.event.endDate), 'MMMM dd, yyyy, hh:mm a') : '';
   const eventDates = eventDateEnd ? `${eventDateStart} - ${eventDateEnd}` : eventDateStart;
   const eventType = certificate.event?.venue?.type || 'N/A';
   const eventVenue = certificate.event?.venue?.locationName || 'N/A';
@@ -144,17 +145,16 @@ const VerifyCertificatePage = () => {
                       <div className="flex flex-col lg:flex-row gap-8">
                         {/* Event Banner */}
                         {certificate.event?.coverImage && (
-                          <div className="relative w-full h-64 rounded-lg overflow-hidden shadow-md lg:w-1/2">
-                            <Image
-                              src={certificate.event.coverImage}
-                              alt={`${eventTitle} Banner`}
-                              fill
-                              style={{ objectFit: 'cover' }}
-                            />
-                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                            <h1 className="absolute bottom-4 left-4 text-white text-3xl font-bold">{eventTitle}</h1>
-                          </div>
-                        )}
+                                          <div className="relative w-full h-48 rounded-lg overflow-hidden shadow-md lg:w-1/2">
+                                            <Image
+                                              src={certificate.event.coverImage}
+                                              alt={`${eventTitle} Banner`}
+                                              fill
+                                              style={{ objectFit: 'cover' }}
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+                                            <h1 className="absolute bottom-4 left-4 text-white text-2xl font-bold">{eventTitle}</h1>
+                                          </div>                        )}
           
                         {/* Recipient Block */}
                         <div className="bg-gray-50 p-6 rounded-lg shadow-sm border border-gray-200 lg:w-1/2">
@@ -175,7 +175,7 @@ const VerifyCertificatePage = () => {
                               <p className="text-sm text-gray-500">on {issueDate}</p>
                             </div>
                           </div>
-                          <p className="text-gray-700">Spark Community confirms that {userName} successfully participated in this event.</p>
+                          <p className="text-gray-700">{hostedBy} confirms that {userName} successfully participated in this event.</p>
                         </div>
                       </div>
             {/* Event Details Block */}
@@ -205,6 +205,7 @@ const VerifyCertificatePage = () => {
                 <h3 className="text-xl font-semibold text-gray-800">Verification Details</h3>
               </div>
               <p className="text-gray-700 mb-2"><strong>Status:</strong> <span className="text-green-600">Verified</span></p>
+              {/* TODO: Certificate ID is blank if uniqueId is not populated in Sanity. Please ensure uniqueId is set for certificate documents. */}
               <p className="text-gray-700 mb-2"><strong>Certificate ID:</strong> {certificate.uniqueId}</p>
               <p className="text-gray-700"><strong>Issued by:</strong> {hostedBy}</p>
             </div>
@@ -267,39 +268,24 @@ const VerifyCertificatePage = () => {
             </div>
 
             {/* Action Buttons */}
-            <div className="flex flex-col space-y-3">
+            <div className="flex flex-row space-x-3">
               {certificate.certificateFileUrl && (
                 <a
                   href={certificate.certificateFileUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="w-full flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                  className="w-1/2 flex items-center justify-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
                 >
                   <FaDownload className="mr-2" /> Download Certificate
                 </a>
               )}
               <button
-                onClick={handleShareLinkedIn} // Using LinkedIn share for now
-                className="w-full flex items-center justify-center border border-blue-600 text-blue-600 bg-white hover:bg-blue-50 font-bold py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
+                onClick={handleShare}
+                className="w-1/2 flex items-center justify-center border border-blue-600 text-blue-600 bg-white hover:bg-blue-50 font-bold py-3 px-4 rounded-lg shadow-md focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500"
               >
                 <FaShareAlt className="mr-2" /> Share Certificate
               </button>
             </div>
-
-            {/* Social Sharing Links */}
-            <div className="flex justify-center gap-4 mt-4">
-              {socialLinks.map((link) => {
-                if (!link) return null; // Add null check for link
-                const IconComponent = socialIconMap[link.icon];
-                if (!IconComponent) return null; // Don't render if icon not found
-                return (
-                  <a key={link._id} href={link.url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">
-                    <IconComponent className="text-3xl" />
-                  </a>
-                );
-              })}
-
-          </div>
         </div>
       </div>
 
