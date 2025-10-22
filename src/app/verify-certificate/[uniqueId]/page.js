@@ -72,6 +72,7 @@ const VerifyCertificatePage = () => {
 
         if (fetchedCertificate) {
           setCertificate(fetchedCertificate);
+          console.log('Debug: Full certificate object', fetchedCertificate);
         } else {
           setError('Certificate not found or invalid ID.');
         }
