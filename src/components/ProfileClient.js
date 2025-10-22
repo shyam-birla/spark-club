@@ -44,15 +44,15 @@ export default function ProfileClient({ session, profileData }) {
             <div className="container mx-auto px-4">
                 {!profileData ? (
                     // New user state
-                    <div className="text-center py-20">
-                        <h2 className="text-2xl font-semibold text-black">Welcome, {session.user.name}!</h2>
-                        {/* === THE FIX IS HERE === */}
-                        <p className="text-gray-600 mt-2">Let&apos;s set up your SPARK profile.</p>
+                    <div className="text-center py-20 bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                        <h2 className="text-3xl font-bold text-black mb-4">Welcome, {session.user.name}!</h2>
+                        <p className="text-lg text-gray-700 mb-6">Your profile is looking a bit empty. Let&apos;s fill it up to showcase your skills and connect with the SPARK community!</p>
                         <Link href="/profile/edit">
-                            <button className="mt-6 bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-80">
-                                Create Your Profile
+                            <button className="mt-6 bg-orange-600 text-white px-8 py-3 rounded-md font-semibold text-lg hover:bg-orange-700 transition-colors">
+                                Complete Your Profile Now
                             </button>
                         </Link>
+                        <p className="text-sm text-gray-500 mt-4">It only takes a few minutes!</p>
                     </div>
                 ) : (
                     // Existing user state
@@ -93,8 +93,8 @@ export default function ProfileClient({ session, profileData }) {
 
                         {/* --- Right Main Content --- */}
                         <div className="lg:col-span-2">
-                            {profileData.workExperience?.length > 0 && (
-                                <Section title="Work Experience" icon={<FaBriefcase />}>
+                            <Section title="Work Experience" icon={<FaBriefcase />}>
+                                {profileData.workExperience?.length > 0 ? (
                                     <div className="space-y-6">
                                         {profileData.workExperience.map((exp, index) => (
                                             <div key={exp._key || index}>
@@ -105,11 +105,16 @@ export default function ProfileClient({ session, profileData }) {
                                             </div>
                                         ))}
                                     </div>
-                                </Section>
-                            )}
+                                ) : (
+                                    <div className="text-center text-gray-500 py-4">
+                                        <p className="mb-2">No work experience added yet.</p>
+                                        <Link href="/profile/edit" className="text-orange-600 hover:underline">Add Work Experience</Link>
+                                    </div>
+                                )}
+                            </Section>
 
-                            {profileData.education?.length > 0 && (
-                                <Section title="Education" icon={<FaGraduationCap />}>
+                            <Section title="Education" icon={<FaGraduationCap />}>
+                                {profileData.education?.length > 0 ? (
                                      <div className="space-y-6">
                                         {profileData.education.map((edu, index) => (
                                             <div key={edu._key || index}>
@@ -119,11 +124,16 @@ export default function ProfileClient({ session, profileData }) {
                                             </div>
                                         ))}
                                     </div>
-                                </Section>
-                            )}
+                                ) : (
+                                    <div className="text-center text-gray-500 py-4">
+                                        <p className="mb-2">No education details added yet.</p>
+                                        <Link href="/profile/edit" className="text-orange-600 hover:underline">Add Education</Link>
+                                    </div>
+                                )}
+                            </Section>
 
-                            {profileData.externalProjects?.length > 0 && (
-                                <Section title="Personal Projects" icon={<FaProjectDiagram />}>
+                            <Section title="Personal Projects" icon={<FaProjectDiagram />}>
+                                {profileData.externalProjects?.length > 0 ? (
                                     <div className="space-y-6">
                                         {profileData.externalProjects.map((project, index) => (
                                             <div key={project._key || index}>
@@ -141,11 +151,16 @@ export default function ProfileClient({ session, profileData }) {
                                             </div>
                                         ))}
                                     </div>
-                                </Section>
-                            )}
+                                ) : (
+                                    <div className="text-center text-gray-500 py-4">
+                                        <p className="mb-2">No personal projects added yet.</p>
+                                        <Link href="/profile/edit" className="text-orange-600 hover:underline">Add Personal Project</Link>
+                                    </div>
+                                )}
+                            </Section>
                             
-                            {trulyCompleted.length > 0 && (
-                                <Section title="Completed Roadmaps" icon={<FaCertificate />}>
+                            <Section title="Completed Roadmaps" icon={<FaCertificate />}>
+                                {trulyCompleted.length > 0 ? (
                                     <div className="space-y-4">
                                         {trulyCompleted.map(progress => (
                                             <div key={progress.roadmap._id}>
@@ -154,11 +169,16 @@ export default function ProfileClient({ session, profileData }) {
                                             </div>
                                         ))}
                                     </div>
-                                </Section>
-                            )}
+                                ) : (
+                                    <div className="text-center text-gray-500 py-4">
+                                        <p className="mb-2">No completed roadmaps yet.</p>
+                                        <Link href="/learn" className="text-orange-600 hover:underline">Explore Roadmaps</Link>
+                                    </div>
+                                )}
+                            </Section>
 
-                            {profileData.projects?.length > 0 && (
-                                 <Section title="SPARK Projects" icon={<FaLightbulb />}>
+                            <Section title="Projects" icon={<FaLightbulb />}>
+                                {profileData.projects?.length > 0 ? (
                                      <div className="space-y-4">
                                         {profileData.projects.map(p => (
                                             <div key={p._id}>
@@ -166,8 +186,13 @@ export default function ProfileClient({ session, profileData }) {
                                             </div>
                                         ))}
                                     </div>
-                                </Section>
-                            )}
+                                ) : (
+                                    <div className="text-center text-gray-500 py-4">
+                                        <p className="mb-2">No projects added yet.</p>
+                                        <Link href="/projects" className="text-orange-600 hover:underline">Explore Projects</Link>
+                                    </div>
+                                )}
+                            </Section>
                         </div>
                     </div>
                 )}

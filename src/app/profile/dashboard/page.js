@@ -4,7 +4,7 @@ import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { client } from '../../../../sanity/lib/client'; // Import Sanity client
 import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa'; // Import icons
-import UserCertificatesDisplay from '../../../components/UserCertificatesDisplay';
+
 
 async function getUserRegistrations() {
   const session = await getServerSession(authOptions);
@@ -158,10 +158,7 @@ export default async function DashboardPage() {
         )}
       </div>
 
-      {/* User Certificates Display */}
-      <div className="mt-12">
-        <UserCertificatesDisplay />
-      </div>
+
     </main>
   );
 }
