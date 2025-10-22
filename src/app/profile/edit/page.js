@@ -48,7 +48,7 @@ export default function EditProfilePage() {
             client.fetch(query, { email: userEmail }).then(data => {
                 if (data) {
                     setFormData({
-                        userName: data.userName || session.user.name,
+                        userName: data.userName || session?.user?.name || '',
                         tagline: data.tagline || '',
                         bio: data.bio || '',
                         linkedinUrl: data.linkedinUrl || '',
@@ -62,7 +62,7 @@ export default function EditProfilePage() {
                         setPreviewImage(data.userImage.url);
                     }
                 } else {
-                    setFormData(prev => ({ ...prev, userName: session.user.name }));
+                    setFormData(prev => ({ ...prev, userName: session?.user?.name || '' }));
                     if (session.user.image) {
                         setPreviewImage(session.user.image);
                     }
