@@ -43,7 +43,6 @@ export default function ProfileClient({ session, profileData }) {
         <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
             <div className="container mx-auto px-4">
                 {!profileData ? (
-                    // New user state
                     <div className="text-center py-20 bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
                         <h2 className="text-3xl font-bold text-black mb-4">Welcome, {session.user.name}!</h2>
                         <p className="text-lg text-gray-700 mb-6">Your profile is looking a bit empty. Let&apos;s fill it up to showcase your skills and connect with the SPARK community!</p>
@@ -55,144 +54,41 @@ export default function ProfileClient({ session, profileData }) {
                         <p className="text-sm text-gray-500 mt-4">It only takes a few minutes!</p>
                     </div>
                 ) : (
-                    // Existing user state
                     <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        {/* --- Left Sidebar --- */}
+                        {/* Left Sidebar Skeleton */}
                         <aside className="lg:col-span-1 space-y-6 lg:sticky top-24 self-start">
-                            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-center">
-                                <Image 
-                                    src={profileImageUrl} 
-                                    alt={profileData.userName || session.user.name}
-                                    width={120} 
-                                    height={120} 
-                                    className="rounded-full mx-auto border-4 border-white shadow-lg object-cover"
-                                />
-                                <h1 className="text-2xl font-bold text-black mt-4">{profileData.userName || session.user.name}</h1>
-                                <p className="text-md text-gray-500">{profileData.tagline}</p>
-                                <Link href="/profile/edit">
-                                    <button className="mt-4 w-full bg-gray-100 text-black px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-200">
-                                        Edit Profile
-                                    </button>
-                                </Link>
-                                <Link href="/profile/dashboard">
-                                    <button className="mt-2 w-full bg-gray-100 text-black px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-200">
-                                        My Events
-                                    </button>
-                                </Link>
+                            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm text-center animate-pulse">
+                                <div className="rounded-full mx-auto bg-gray-300 h-24 w-24 mb-4"></div>
+                                <div className="h-6 bg-gray-300 rounded w-3/4 mx-auto mb-2"></div>
+                                <div className="h-4 bg-gray-300 rounded w-1/2 mx-auto"></div>
+                                <div className="h-10 bg-gray-300 rounded w-full mt-4"></div>
                             </div>
-                            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                                <h3 className="font-bold text-lg mb-4">Additional Info</h3>
-                                <p className="text-gray-600 text-sm mb-4 whitespace-pre-wrap">{profileData.bio}</p>
-                                <div className="flex justify-center space-x-4">
-                                    {profileData.githubUrl && <a href={profileData.githubUrl} target="_blank" rel="noopener noreferrer"><FaGithub className="text-2xl text-gray-500 hover:text-black" /></a>}
-                                    {profileData.linkedinUrl && <a href={profileData.linkedinUrl} target="_blank" rel="noopener noreferrer"><FaLinkedin className="text-2xl text-gray-500 hover:text-black" /></a>}
-                                    {profileData.portfolioUrl && <a href={profileData.portfolioUrl} target="_blank" rel="noopener noreferrer"><FaGlobe className="text-2xl text-gray-500 hover:text-black" /></a>}
-                                </div>
+                            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm animate-pulse">
+                                <div className="h-6 bg-gray-300 rounded w-2/3 mb-4"></div>
+                                <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
+                                <div className="h-4 bg-gray-300 rounded w-full mb-2"></div>
+                                <div className="h-4 bg-gray-300 rounded w-1/2"></div>
                             </div>
                         </aside>
 
-                        {/* --- Right Main Content --- */}
-                        <div className="lg:col-span-2">
-                            <Section title="Work Experience" icon={<FaBriefcase />}>
-                                {profileData.workExperience?.length > 0 ? (
-                                    <div className="space-y-6">
-                                        {profileData.workExperience.map((exp, index) => (
-                                            <div key={exp._key || index}>
-                                                <h4 className="font-bold">{exp.title}</h4>
-                                                <p className="font-semibold text-gray-700">{exp.company}</p>
-                                                <p className="text-sm text-gray-500">{formatDate(exp.startDate)} - {formatDate(exp.endDate)}</p>
-                                                {exp.description && <p className="mt-2 text-gray-600 whitespace-pre-wrap">{exp.description}</p>}
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-center text-gray-500 py-4">
-                                        <p className="mb-2">No work experience added yet.</p>
-                                        <Link href="/profile/edit" className="text-orange-600 hover:underline">Add Work Experience</Link>
-                                    </div>
-                                )}
-                            </Section>
-
-                            <Section title="Education" icon={<FaGraduationCap />}>
-                                {profileData.education?.length > 0 ? (
-                                     <div className="space-y-6">
-                                        {profileData.education.map((edu, index) => (
-                                            <div key={edu._key || index}>
-                                                <h4 className="font-bold">{edu.school}</h4>
-                                                <p className="text-gray-700">{edu.degree}</p>
-                                                <p className="text-sm text-gray-500">{formatDate(edu.startDate)} - {formatDate(edu.endDate)}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-center text-gray-500 py-4">
-                                        <p className="mb-2">No education details added yet.</p>
-                                        <Link href="/profile/edit" className="text-orange-600 hover:underline">Add Education</Link>
-                                    </div>
-                                )}
-                            </Section>
-
-                            <Section title="Personal Projects" icon={<FaProjectDiagram />}>
-                                {profileData.externalProjects?.length > 0 ? (
-                                    <div className="space-y-6">
-                                        {profileData.externalProjects.map((project, index) => (
-                                            <div key={project._key || index}>
-                                                <a href={project.projectUrl} target="_blank" rel="noopener noreferrer" className="font-bold text-orange-600 hover:underline">{project.title}</a>
-                                                <p className="mt-1 text-gray-600 whitespace-pre-wrap">{project.description}</p>
-                                                {project.technologies && project.technologies.length > 0 && (
-                                                    <div className="mt-3 flex flex-wrap gap-2">
-                                                        {project.technologies.map(tech => (
-                                                            tech && (
-                                                                <span key={tech._id} className="bg-gray-200 text-gray-800 rounded-full px-3 py-1 text-xs font-semibold">{tech.name}</span>
-                                                            )
-                                                        ))}
-                                                    </div>
-                                                )}
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-center text-gray-500 py-4">
-                                        <p className="mb-2">No personal projects added yet.</p>
-                                        <Link href="/profile/edit" className="text-orange-600 hover:underline">Add Personal Project</Link>
-                                    </div>
-                                )}
-                            </Section>
-                            
-                            <Section title="Completed Roadmaps" icon={<FaCertificate />}>
-                                {trulyCompleted.length > 0 ? (
-                                    <div className="space-y-4">
-                                        {trulyCompleted.map(progress => (
-                                            <div key={progress.roadmap._id}>
-                                                <Link href={`/certificates/${progress.roadmap.slug}`} className="font-bold hover:underline text-orange-600">{progress.roadmap.title}</Link>
-                                                <p className="text-xs text-gray-500">Completed on: {formatDate(progress.lastUpdated)}</p>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-center text-gray-500 py-4">
-                                        <p className="mb-2">No completed roadmaps yet.</p>
-                                        <Link href="/learn" className="text-orange-600 hover:underline">Explore Roadmaps</Link>
-                                    </div>
-                                )}
-                            </Section>
-
-                            <Section title="Projects" icon={<FaLightbulb />}>
-                                {profileData.projects?.length > 0 ? (
-                                     <div className="space-y-4">
-                                        {profileData.projects.map(p => (
-                                            <div key={p._id}>
-                                                <Link href={`/projects/${p.slug.current}`} className="font-bold hover:underline">{p.title}</Link>
-                                            </div>
-                                        ))}
-                                    </div>
-                                ) : (
-                                    <div className="text-center text-gray-500 py-4">
-                                        <p className="mb-2">No projects added yet.</p>
-                                        <Link href="/projects" className="text-orange-600 hover:underline">Explore Projects</Link>
-                                    </div>
-                                )}
-                            </Section>
+                        {/* Right Main Content Skeleton */}
+                        <div className="lg:col-span-2 space-y-8">
+                            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm animate-pulse">
+                                <div className="h-8 bg-gray-300 rounded w-1/3 mb-6"></div>
+                                <div className="space-y-4">
+                                    <div className="h-4 bg-gray-300 rounded w-full"></div>
+                                    <div className="h-4 bg-gray-300 rounded w-5/6"></div>
+                                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                                </div>
+                            </div>
+                            <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm animate-pulse">
+                                <div className="h-8 bg-gray-300 rounded w-1/3 mb-6"></div>
+                                <div className="space-y-4">
+                                    <div className="h-4 bg-gray-300 rounded w-full"></div>
+                                    <div className="h-4 bg-gray-300 rounded w-5/6"></div>
+                                    <div className="h-4 bg-gray-300 rounded w-3/4"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 )}
