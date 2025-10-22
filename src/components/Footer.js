@@ -11,8 +11,8 @@ const socialIconMap = {
   whatsapp: FaWhatsapp
 };
 
-const Footer = async () => {
-  const socialLinks = await client.fetch('*[_type == "socialLink"]');
+const fetchedSocialLinks = await client.fetch('*[_type == "socialLink"]');
+  const socialLinks = fetchedSocialLinks || []; // Ensure it's an array
 
   return (
     <footer className="bg-gray-100/50 backdrop-blur-sm text-gray-600 border-t border-gray-200 mt-auto">
@@ -43,6 +43,7 @@ const Footer = async () => {
               <h3 className="text-black font-semibold mb-4 tracking-wider uppercase">Connect</h3>
               <div className="flex items-center justify-center md:justify-start gap-4 mb-4">
                 {socialLinks.map((link) => {
+                  if (!link) return null; // Add null check for link
                   const Icon = socialIconMap[link.icon];
                   return (
                     <a key={link._id} href={link.url} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black transition-colors text-2xl">
