@@ -156,7 +156,7 @@ export default async function EventDetailPage({ params }) {
             <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
                 <div className="container mx-auto p-4 text-center text-red-600 bg-white rounded-lg shadow-md py-8">
                     <h1 className="text-3xl font-bold mb-4">ERROR 404: Event Not Found!</h1>
-                    <p className="text-lg mb-4">My apologies, human. It seems the event you're looking for has gone rogue or never existed in this dimension.</p>
+                    <p className="text-lg mb-4">My apologies, human. It seems the event you&apos;re looking for has gone rogue or never existed in this dimension.</p>
                     <p className="text-sm text-gray-700 mt-2">Initiating quantum search protocols... (Just kidding, double-check the URL. If that fails, the event might be a myth!)</p>
                 </div>
             </main>

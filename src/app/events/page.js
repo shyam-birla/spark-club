@@ -33,7 +33,7 @@ export default async function EventsPage() {
     return (
       <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
         <div className="container mx-auto p-4 text-center text-red-600 bg-white rounded-lg shadow-md py-8">
-          <h1 className="text-3xl font-bold mb-4">ERROR 418: I'm a Teapot!</h1>
+          <h1 className="text-3xl font-bold mb-4">ERROR 418: I&apos;m a Teapot!</h1>
           <p className="text-lg mb-4">My apologies, human. It seems I encountered an unexpected exception while fetching event data.</p>
           <p className="text-sm text-gray-700"><strong>Stack Trace (simplified):</strong> {error}</p>
           <p className="text-sm text-gray-700 mt-2">Initiating self-repair protocols... (Just kidding, try a page refresh. If that fails, alert the nearest developer with the above error details!)</p>
