@@ -126,6 +126,9 @@ const VerifyCertificatePage = () => {
   const eventSlug = certificate.event?.slug?.current;
   const hostedBy = certificate.event?.hostedBy && certificate.event.hostedBy.length > 0 ? certificate.event.hostedBy[0]?.name : 'SPARK Community';
 
+  console.log('Debug: certificate.uniqueId', certificate.uniqueId);
+  console.log('Debug: hostedBy', hostedBy);
+
   return (
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
