@@ -283,26 +283,17 @@ const VerifyCertificatePage = () => {
 
             {/* Social Sharing Links */}
             <div className="flex justify-center gap-4 mt-4">
-              <FaLinkedin
-                className="text-blue-700 text-3xl cursor-pointer hover:opacity-80"
-                onClick={handleShareLinkedIn}
-              />
-              <FaWhatsapp
-                className="text-green-500 text-3xl cursor-pointer hover:opacity-80"
-                onClick={handleShareWhatsapp}
-              />
-              <div className="relative">
-                <FaLink
-                  className="text-gray-600 text-3xl cursor-pointer hover:opacity-80"
-                  onClick={handleCopyLink}
-                />
-                {copySuccess && (
-                  <span className="absolute -top-8 left-1/2 -translate-x-1/2 bg-gray-700 text-white text-xs px-2 py-1 rounded-md whitespace-nowrap">
-                    {copySuccess}
-                  </span>
-                )}
-              </div>
-            </div>
+              {socialLinks.map((link) => {
+                if (!link) return null; // Add null check for link
+                const IconComponent = socialIconMap[link.icon];
+                if (!IconComponent) return null; // Don't render if icon not found
+                return (
+                  <a key={link.name} href={link.url} target="_blank" rel="noopener noreferrer" className="text-gray-600 hover:text-gray-800">
+                    <IconComponent className="text-3xl" />
+                  </a>
+                );
+              })}
+
           </div>
         </div>
       </div>
