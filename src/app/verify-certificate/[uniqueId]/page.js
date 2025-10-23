@@ -312,12 +312,12 @@ const VerifyCertificatePage = () => {
         <div className="container mx-auto px-4 flex flex-col md:flex-row justify-between items-center">
           <p>&copy; 2025 Spark Community. All rights reserved.</p>
           <div className="flex space-x-4 mt-4 md:mt-0">
-            {socialLinks.map((link) => {
+            {socialLinks.map((link, index) => {
               if (!link) return null;
               const IconComponent = socialIconMap[link.icon];
               if (!IconComponent) return null;
               return (
-                <a key={link._id} href={link.url} target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-400">
+                <a key={link._id || index} href={link.url} target="_blank" rel="noopener noreferrer" className="text-white hover:text-gray-400">
                   <IconComponent className="text-2xl" />
                 </a>
               );
