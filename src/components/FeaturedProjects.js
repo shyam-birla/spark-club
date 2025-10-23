@@ -2,9 +2,33 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import CardSkeleton from './CardSkeleton'; // Import CardSkeleton
 
 // 1. Naye props add kiye gaye hain: showTitle, showButton
 const FeaturedProjects = ({ projects = [], showTitle = true, showButton = true }) => {
+  const [itemsToDisplay, setItemsToDisplay] = useState([]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      let limit = projects.length; // Default to all items from prop
+
+      if (width < 768) { // Mobile
+        limit = 2;
+      } else if (width >= 768 && width < 1024) { // Laptop (md breakpoint)
+        limit = 3;
+      } else { // Large Desktop (lg breakpoint and above)
+        limit = 3;
+      }
+      setItemsToDisplay(projects.slice(0, limit));
+    };
+
+    handleResize(); // Set initial state
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [projects]); // Depend on 'projects' prop
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -32,17 +56,17 @@ const FeaturedProjects = ({ projects = [], showTitle = true, showButton = true }
         )}
         
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-8 text-left"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {projects.map((project) => (
+          {itemsToDisplay.map((project) => (
             <motion.div key={project.slug} variants={cardVariants}>
               <Link href={`/projects/${project.slug}`}>
                 <div className="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden transition-shadow duration-300 hover:shadow-xl hover:scale-[1.03] transform cursor-pointer h-full flex flex-col">
-                  <div className="relative w-full h-72">
+                  <div className="relative w-full h-40 md:h-72">
                     {project.cardImageUrl && (
                       <Image
                         src={project.cardImageUrl}
@@ -52,12 +76,12 @@ const FeaturedProjects = ({ projects = [], showTitle = true, showButton = true }
                       />
                     )}
                   </div>
-                  <div className="p-2 flex-grow">
-                    <h3 className="text-lg font-semibold text-black">{project.title}</h3>
+                  <div className="p-1 flex-grow">
+                    <h3 className="text-sm md:text-lg font-semibold text-black">{project.title}</h3>
                     {project.tags && project.tags.length > 0 && (
-                      <div className="flex flex-wrap gap-2 mt-4">
+                      <div className="flex flex-wrap gap-1 mt-2 md:gap-2 md:mt-4">
                         {project.tags.map((tag) => (
-                          <span key={tag} className="bg-gray-200 text-gray-800 px-2 py-1 rounded-full text-sm">
+                          <span key={tag} className="bg-gray-200 text-gray-800 px-1 py-0.5 rounded-full text-xs md:text-sm">
                             {tag}
                           </span>
                         ))}
@@ -74,9 +98,9 @@ const FeaturedProjects = ({ projects = [], showTitle = true, showButton = true }
         {showButton && (
             <div className="mt-16">
             <Link href="/projects">
-                <button className="bg-black text-white px-8 py-3 rounded-md font-semibold text-lg hover:opacity-80 transition-opacity">
-                View All Projects →
-                </button>
+            <button className="bg-black text-white px-4 py-2 rounded-md font-semibold text-sm hover:opacity-80 transition-opacity transform hover:scale-105 md:px-8 md:py-3 md:text-lg">
+              View All Projects
+            </button>
             </Link>
             </div>
         )}

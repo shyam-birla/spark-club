@@ -26,7 +26,7 @@ const EventCard = ({ event }) => {
   return (
     <Link href={`/events/${event.slug}`}>
       <div className="bg-white rounded-lg overflow-hidden transition-all duration-300 cursor-pointer h-full flex flex-col border border-gray-200 hover:shadow-xl hover:scale-105 transform">
-        <div className="relative w-full h-72">
+        <div className="relative w-full h-40 md:h-72">
           <Image
             src={event.imageUrl || '/placeholder.png'}
             alt={event.title}
@@ -35,14 +35,14 @@ const EventCard = ({ event }) => {
             unoptimized={!event.imageUrl}
           />
         </div>
-        <div className="p-2 flex-grow flex flex-col">
+        <div className="p-1 flex-grow flex flex-col">
           {event.registrationStatus && (
-            <span className={`text-xs font-bold px-2.5 py-1 rounded-full self-start ${getStatusClass(event.registrationStatus)}`}>
+            <span className={`text-xs font-bold px-2 py-0.5 rounded-full self-start ${getStatusClass(event.registrationStatus)}`}>
               {event.registrationStatus === 'comingSoon' ? 'Coming Soon' : event.registrationStatus.charAt(0).toUpperCase() + event.registrationStatus.slice(1)}
             </span>
           )}
-          <h3 className="text-lg font-bold text-black mt-2">{event.title}</h3>
-          <p className="text-gray-600 text-sm mt-1 flex-grow">{formattedDate}</p>
+          <h3 className="text-sm md:text-lg font-bold text-black mt-1 md:mt-2">{event.title}</h3>
+          <p className="text-xs md:text-sm text-gray-600 mt-0.5 md:mt-1 flex-grow">{formattedDate}</p>
         </div>
       </div>
     </Link>

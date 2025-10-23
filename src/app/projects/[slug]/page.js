@@ -2,6 +2,7 @@ import { client } from '../../../../sanity/lib/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import PortableTextComponent from '@/components/PortableTextComponent';
+import { FaGithub, FaExternalLinkAlt, FaCheckCircle, FaHourglassHalf, FaCodeBranch, FaUsers, FaInfoCircle } from 'react-icons/fa';
 
 // Yeh Next.js ko batata hai ki kaun kaun se project pages hain
 export async function generateStaticParams() {
@@ -40,22 +41,22 @@ export default async function ProjectDetailPage({ params }) {
   }
 
   return (
-    <main className="bg-gray-50/50 backdrop-blur-sm py-20">
+    <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20">
           <div className="container mx-auto px-4">
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
               <aside className="lg:col-span-1 space-y-6 lg:sticky top-24 self-start">
                 {project.mainImageUrl && (
-                  <div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg">
-                    <Image src={project.mainImageUrl} alt={project.title} fill className="object-cover" />
+                  <div className="relative w-full aspect-video md:aspect-square rounded-2xl overflow-hidden shadow-lg">
+                    <Image src={project.mainImageUrl} alt={project.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 33vw" />
                   </div>
                 )}
                 {project.technologies && project.technologies.length > 0 && (
                   <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h3 className="font-bold text-lg mb-4 text-black">Technologies Used</h3>
-                    <div className="flex flex-wrap gap-4">
+                    <h3 className="font-bold text-lg mb-4 text-black flex items-center gap-2"><FaCodeBranch className="text-orange-500" /> Technologies Used</h3>
+                    <div className="flex flex-wrap gap-3">
                       {project.technologies.map(tech => (
                         <div key={tech._id} className="flex items-center gap-2 bg-gray-100 p-2 pr-3 rounded-md border border-gray-200">
-                          {tech.logoUrl && <Image src={tech.logoUrl} alt={tech.name} width={20} height={20} />}
+                          {tech.logoUrl && <Image src={tech.logoUrl} alt={tech.name} width={20} height={20} className="object-contain" />}
                           <span className="font-semibold text-sm">{tech.name}</span>
                         </div>
                       ))}
@@ -64,7 +65,7 @@ export default async function ProjectDetailPage({ params }) {
                 )}
                 {project.teamMembers && project.teamMembers.length > 0 && (
                   <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                    <h3 className="font-bold text-lg mb-4 text-black">Meet the Team</h3>
+                    <h3 className="font-bold text-lg mb-4 text-black flex items-center gap-2"><FaUsers className="text-blue-500" /> Meet the Team</h3>
                     <div className="grid grid-cols-2 gap-4">
                       {project.teamMembers.map(member => (
                         <div key={member._id} className="text-center">
@@ -81,23 +82,24 @@ export default async function ProjectDetailPage({ params }) {
               <div className="lg:col-span-2 space-y-8">
                 <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
                   {project.status && (
-                    <span className={`inline-block px-3 py-1 text-sm font-bold rounded-full mb-4 ${project.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                    <span className={`inline-flex items-center gap-1 px-3 py-1 text-sm font-bold rounded-full mb-4 ${project.status === 'completed' ? 'bg-green-100 text-green-800' : 'bg-yellow-100 text-yellow-800'}`}>
+                      {project.status === 'completed' ? <FaCheckCircle /> : <FaHourglassHalf />}
                       {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
                     </span>
                   )}
-                  <h1 className="text-4xl md:text-6xl font-bold text-black">{project.title}</h1>
-                  <div className="flex gap-4 mt-8 mb-4">
+                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-black">{project.title}</h1>
+                  <div className="flex flex-wrap gap-3 mt-6 mb-4">
                     {project.githubUrl && (
                       <Link href={project.githubUrl} target="_blank">
-                        <button className="bg-gray-800 text-white px-6 py-3 rounded-md font-semibold text-lg hover:bg-black transition-colors">
-                          View on GitHub →
+                        <button className="bg-gray-800 text-white px-4 py-2 rounded-md font-semibold text-sm hover:bg-black transition-colors flex items-center gap-2">
+                          <FaGithub /> View on GitHub
                         </button>
                       </Link>
                     )}
                     {project.liveUrl && (
                       <Link href={project.liveUrl} target="_blank">
-                        <button className="bg-orange-500 text-white px-6 py-3 rounded-md font-semibold text-lg hover:bg-orange-600 transition-opacity">
-                          Live Demo 🚀
+                        <button className="bg-orange-500 text-white px-4 py-2 rounded-md font-semibold text-sm hover:bg-orange-600 transition-opacity flex items-center gap-2">
+                          <FaExternalLinkAlt /> Live Demo
                         </button>
                       </Link>
                     )}
@@ -106,8 +108,8 @@ export default async function ProjectDetailPage({ params }) {
     
                 {project.description && (
                   <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                    <h2 className="text-2xl font-bold text-black mb-6">About this Project</h2>
-                    <div className="prose max-w-none text-lg leading-relaxed">
+                    <h2 className="text-xl md:text-2xl font-bold text-black mb-4 flex items-center gap-2"><FaInfoCircle className="text-gray-500" /> About this Project</h2>
+                    <div className="prose max-w-none text-base leading-relaxed md:text-lg">
                       <PortableTextComponent value={project.description} />
                     </div>
                   </section>

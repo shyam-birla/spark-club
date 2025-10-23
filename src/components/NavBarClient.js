@@ -7,14 +7,14 @@ import { usePathname } from 'next/navigation';
 import { signIn, signOut } from 'next-auth/react';
 import { navLinks } from '../constants/navLinks';
 
-const NavMenu = ({ isMobile }) => {
+const NavMenu = ({ isMobile, setIsOpen }) => {
   const pathname = usePathname();
   return (
     <nav className={`font-medium ${isMobile ? 'flex flex-col items-center gap-6 py-8' : 'hidden md:flex items-center gap-6'}`}>
       {navLinks.map((link) => {
         const isActive = pathname.startsWith(link.href);
         return (
-          <Link key={link.label} href={link.href} className={`transition-colors ${isActive ? 'text-black' : 'text-gray-500 hover:text-black'}`} aria-current={isActive ? 'page' : undefined}>
+          <Link key={link.label} href={link.href} onClick={() => setIsOpen(false)} className={`transition-colors ${isActive ? 'text-black' : 'text-gray-500 hover:text-black'}`} aria-current={isActive ? 'page' : undefined}>
             {link.label}
           </Link>
         );
@@ -103,7 +103,7 @@ export default function NavBarClient({ session, profileImageUrl }) {
 
       {isOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 max-h-screen overflow-y-auto">
-          <NavMenu isMobile />
+          <NavMenu isMobile setIsOpen={setIsOpen} />
           <AuthButtons session={session} profileImageUrl={profileImageUrl} isMobile />
         </div>
       )}

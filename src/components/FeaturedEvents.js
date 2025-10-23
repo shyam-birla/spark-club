@@ -2,8 +2,31 @@
 import Link from 'next/link';
 import EventCard from './EventCard';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 const FeaturedEvents = ({ events }) => {
+  const [itemsToDisplay, setItemsToDisplay] = useState([]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      let limit = events.length; // Default to all items from prop
+
+      if (width < 768) { // Mobile
+        limit = 2;
+      } else if (width >= 768 && width < 1024) { // Laptop (md breakpoint)
+        limit = 3;
+      } else { // Large Desktop (lg breakpoint and above)
+        limit = 3;
+      }
+      setItemsToDisplay(events.slice(0, limit));
+    };
+
+    handleResize(); // Set initial state
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [events]); // Depend on 'events' prop
+
   if (!events || events.length === 0) return null;
 
   const containerVariants = { /* ...variants... */ };
@@ -23,13 +46,13 @@ const FeaturedEvents = ({ events }) => {
         
         {/* === YAHAN BADLAV KIYA GAYA HAI === */}
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-8"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {events.map(event => (
+          {itemsToDisplay.map(event => (
             <motion.div key={event._id} variants={cardVariants}>
               <EventCard event={event} />
             </motion.div>

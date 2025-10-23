@@ -17,12 +17,12 @@ const StatsSection = ({ stats }) => {
         {/* === YAHAN HEADING ADD KI GAYI HAI === */}
         <h2 className="text-3xl font-bold text-black mb-12"> - Community Stats - </h2>
         
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-3 gap-4 md:gap-8">
           {statsItems.map((item, index) => (
             <div key={index} className="flex flex-col items-center">
-              <div className="text-4xl text-orange-400 mb-2">{item.icon}</div>
-              <p className="text-5xl font-bold">{item.value}+</p>
-              <p className="text-gray-600 mt-2">{item.label}</p>
+              <div className="text-2xl md:text-4xl text-orange-400 mb-1 md:mb-2">{item.icon}</div>
+              <p className="text-3xl md:text-5xl font-bold">{item.value}+</p>
+              <p className="text-xs md:text-base text-gray-600 mt-1 md:mt-2">{item.label}</p>
             </div>
           ))}
         </div>

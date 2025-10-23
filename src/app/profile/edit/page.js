@@ -191,7 +191,7 @@ export default function EditProfilePage() {
     }
 
     return (
-        <main className="container mx-auto px-4 py-12 md:py-20">
+        <main className="container mx-auto px-4 py-12 md:py-20 bg-white">
             <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl border border-gray-200 shadow-md">
                 <h1 className="text-3xl font-bold mb-6">Edit Your Profile</h1>
                 

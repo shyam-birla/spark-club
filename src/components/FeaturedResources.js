@@ -2,8 +2,31 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
 
 const FeaturedResources = ({ resources = [], isRoadmap = false }) => {
+  const [itemsToDisplay, setItemsToDisplay] = useState([]);
+
+  useEffect(() => {
+    const handleResize = () => {
+      const width = window.innerWidth;
+      let limit = resources.length; // Default to all items from prop
+
+      if (width < 768) { // Mobile
+        limit = 2;
+      } else if (width >= 768 && width < 1024) { // Laptop (md breakpoint)
+        limit = 3;
+      } else { // Large Desktop (lg breakpoint and above)
+        limit = 3;
+      }
+      setItemsToDisplay(resources.slice(0, limit));
+    };
+
+    handleResize(); // Set initial state
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, [resources]); // Depend on 'resources' prop
+
   const containerVariants = {
     hidden: { opacity: 0 },
     visible: {
@@ -24,18 +47,18 @@ const FeaturedResources = ({ resources = [], isRoadmap = false }) => {
         <p className="text-gray-600 mt-2 mb-12">{isRoadmap ? 'Start your learning journey with our curated paths.' : 'Check out these useful resources.'}</p>
         
         <motion.div 
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left"
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 md:gap-8 text-left"
           variants={containerVariants}
           initial="hidden"
           whileInView="visible"
           viewport={{ once: true }}
         >
-          {resources.map((item) => (
+          {itemsToDisplay.map((item) => (
             <motion.div key={item._id || item._key} variants={cardVariants}>
               <Link href={isRoadmap ? `/resources/${item.slug}` : item.url} target={isRoadmap ? '_self' : '_blank'} rel="noopener noreferrer" className="block h-full">
                 {/* --- CARD FIX: Corners, shadow, aur hover effects add kiye gaye hain --- */}
                 <div className="bg-gray-50 border border-gray-200 rounded-lg overflow-hidden h-full transform transition-all duration-300 hover:shadow-xl hover:scale-[1.03]">
-                  <div className="relative w-full h-48">
+                  <div className="relative w-full h-32 md:h-48">
                     {(isRoadmap ? item.coverImageUrl : item.icon) ? (
                       <Image
                         src={isRoadmap ? item.coverImageUrl : item.icon}
@@ -47,9 +70,9 @@ const FeaturedResources = ({ resources = [], isRoadmap = false }) => {
                       <div className="w-full h-full bg-gray-200"></div>
                     )}
                   </div>
-                  <div className="p-6">
-                    <h3 className="text-xl font-semibold text-black">{item.title}</h3>
-                    <p className="text-gray-600 text-sm line-clamp-3 mt-2">{item.description}</p>
+                  <div className="p-3 md:p-6">
+                    <h3 className="text-sm md:text-xl font-semibold text-black">{item.title}</h3>
+                    <p className="text-xs md:text-sm text-gray-600 line-clamp-3 mt-1 md:mt-2">{item.description}</p>
                   </div>
                 </div>
               </Link>
@@ -57,10 +80,10 @@ const FeaturedResources = ({ resources = [], isRoadmap = false }) => {
           ))}
         </motion.div>
 
-        <div className="mt-16">
+        <div className="mt-8 md:mt-16">
           <Link href="/resources">
             {/* --- BUTTON FIX: Text ko white kiya gaya hai aur baaki styling add ki hai --- */}
-            <button className="bg-black text-white px-8 py-3 rounded-md font-semibold text-lg hover:opacity-80 transition-opacity">
+            <button className="bg-black text-white px-4 py-2 rounded-md font-semibold text-sm hover:opacity-80 transition-opacity md:px-8 md:py-3 md:text-lg">
               View All →
             </button>
           </Link>
