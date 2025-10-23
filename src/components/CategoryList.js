@@ -48,7 +48,7 @@ export default function CategoryList({ categories }) {
                 return (
                     <section key={category._id}>
                         <h2 className="text-3xl font-bold text-black border-b pb-4 mb-8 flex items-center gap-3"><FaClipboardList className="text-green-500" /> {category.title}</h2>
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {displayedRoadmaps.map((roadmap) => (
                                 <RoadmapCard key={roadmap._id} roadmap={roadmap} />
                             ))}
