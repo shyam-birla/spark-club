@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { client } from '../../../../sanity/lib/client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaCheckCircle, FaVideo, FaFileAlt, FaLink, FaGraduationCap, FaFileArchive, FaRoadmap, FaTools, FaListAlt, FaBook, FaPlay, FaRedo } from 'react-icons/fa';
+import { FaCheckCircle, FaVideo, FaFileAlt, FaLink, FaGraduationCap, FaFileArchive, FaMap, FaTools, FaListAlt, FaBook, FaPlay, FaRedo } from 'react-icons/fa';
 import ResourceCard from '@/components/ResourceCard';
 
 const ResourceIcon = ({ type }) => {
@@ -104,7 +104,7 @@ export default function RoadmapDetailPage() {
             <div className="container mx-auto px-4 py-12 md:py-20">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                     <div className="lg:col-span-2">
-                        <h1 className="text-4xl md:text-5xl font-bold text-black flex items-center gap-3"><FaRoadmap className="text-yellow-600" /> {roadmap.title}</h1>
+                        <h1 className="text-4xl md:text-5xl font-bold text-black flex items-center gap-3"><FaMap className="text-yellow-600" /> {roadmap.title}</h1>
                         <p className="text-lg text-gray-600 mt-4">{roadmap.subtitle}</p>
                         <div className="text-sm text-gray-700 mt-6 flex items-center gap-4">
                             <span>Est. {totalHours} hours to complete</span>
