@@ -17,6 +17,7 @@ import HostedBy from '@/components/HostedBy';
 import SocialShare from '@/components/SocialShare';
 import DynamicCountdownTimer from '@/components/DynamicCountdownTimer';
 import EventFeedbackForm from '@/components/EventFeedbackForm';
+import Carousel from '@/components/Carousel';
 const RelatedEvents = dynamic(() => import('@/components/RelatedEvents'), {
     loading: () => <div className="h-40 w-full animate-pulse bg-gray-200 rounded-md"></div>
 });
@@ -226,50 +227,160 @@ export default async function EventDetailPage({ params }) {
 
                 
 
-                        {event.description && (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><div className="prose max-w-none text-base leading-relaxed"><PortableTextComponent value={event.description} /></div></section>)}
+                                                {event.description && (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><div className="prose max-w-none text-base leading-relaxed"><PortableTextComponent value={event.description} /></div></section>)}
 
-                        {event.mainEventRecording && getYouTubeEmbedUrl(event.mainEventRecording) && (
-                            <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                                <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaVideo /> Event Recording</h2>
-                                <div className="relative w-full" style={{paddingBottom: "56.25%"}}>
-                                    <iframe
-                                        className="absolute top-0 left-0 w-full h-full"
-                                        src={getYouTubeEmbedUrl(event.mainEventRecording)}
-                                        title="Event Recording"
-                                        frameBorder="0"
-                                        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                                        allowFullScreen
-                                        loading="lazy"
-                                    ></iframe>
-                                </div>
-                            </section>
-                        )}
+                
+
                         
-                        {event.schedule && event.schedule.length > 0 && <EventSchedule schedule={event.schedule} />}
 
-                        {event.speakers && event.speakers.length > 0 && (
-                            <section className="bg-white p-4 md:p-8 rounded-xl border border-gray-200 shadow-sm">
-                                <h2 className="text-2xl font-bold text-black mb-4 md:mb-6 flex items-center gap-3"><FaMicrophone /> Speakers</h2>
-                                <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-                                    {event.speakers.map(speaker => (
-                                        <div key={speaker._id} className="text-center">
-                                            {speaker.imageUrl && <Image src={speaker.imageUrl} alt={speaker.name} width={60} height={60} className="w-[60px] h-[60px] md:w-[100px] md:h-[100px] rounded-full mx-auto mb-2 object-cover" />}
-                                            <h3 className="text-sm md:text-lg font-bold text-black">{speaker.name}</h3>
-                                            <p className="text-xs md:text-sm text-gray-600">{speaker.role}</p>
-                                        </div>
-                                    ))}
-                                </div>
-                            </section>
-                        )}
+                
+
+                                                {event.speakers && event.speakers.length > 0 && (
+
+                
+
+                                                    <section className="bg-white p-4 md:p-8 rounded-xl border border-gray-200 shadow-sm">
+
+                
+
+                                                        <h2 className="text-2xl font-bold text-black mb-4 md:mb-6 flex items-center gap-3"><FaMicrophone /> Speakers</h2>
+
+                
+
+                                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+                
+
+                                                            {event.speakers.map(speaker => (
+
+                
+
+                                                                <div key={speaker._id} className="text-center">
+
+                
+
+                                                                    {speaker.imageUrl && <Image src={speaker.imageUrl} alt={speaker.name} width={60} height={60} className="w-[60px] h-[60px] md:w-[100px] md:h-[100px] rounded-full mx-auto mb-2 object-cover" />}
+
+                
+
+                                                                    <h3 className="text-sm md:text-lg font-bold text-black">{speaker.name}</h3>
+
+                
+
+                                                                    <p className="text-xs md:text-sm text-gray-600">{speaker.role}</p>
+
+                
+
+                                                                </div>
+
+                
+
+                                                            ))}
+
+                
+
+                                                        </div>
+
+                
+
+                                                    </section>
+
+                
+
+                                                )}
+
+                
+
+                        
+
+                
+
+                                                {event.mainEventRecording && getYouTubeEmbedUrl(event.mainEventRecording) && (
+
+                
+
+                                                    <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+
+                
+
+                                                        <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaVideo /> Event Recording</h2>
+
+                
+
+                                                        <div className="relative w-full" style={{paddingBottom: "56.25%"}}>
+
+                
+
+                                                            <iframe
+
+                
+
+                                                                className="absolute top-0 left-0 w-full h-full"
+
+                
+
+                                                                src={getYouTubeEmbedUrl(event.mainEventRecording)}
+
+                
+
+                                                                title="Event Recording"
+
+                
+
+                                                                frameBorder="0"
+
+                
+
+                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+
+                
+
+                                                                allowFullScreen
+
+                
+
+                                                                loading="lazy"
+
+                
+
+                                                            ></iframe>
+
+                
+
+                                                        </div>
+
+                
+
+                                                    </section>
+
+                
+
+                                                )}
+
+                
+
+                                                
+
+                
+
+                                                {event.schedule && event.schedule.length > 0 && <EventSchedule schedule={event.schedule} />}
+
+                
+
+                        
+
+                
+
+                                                
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
-                            {!isUpcoming && event.gallery && event.gallery.length > 0 && (
+                            {event.gallery && event.gallery.length > 0 && (
                                 <ImageGalleryWithLightbox gallery={event.gallery} />
                             )}
-                            {!isUpcoming && event.youtubeLinks && event.youtubeLinks.length > 0 && (
+                            {event.youtubeLinks && event.youtubeLinks.length > 0 && (
                                 <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
                                     <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaPlayCircle /> Event Videos</h2>
-                                    <div className="grid grid-cols-1 gap-4">
+                                    <Carousel itemsPerPage={1}>
                                         {event.youtubeLinks.map((videoUrl, index) => {
                                             const embedUrl = getYouTubeEmbedUrl(videoUrl);
                                             if (!embedUrl) return null;
@@ -288,7 +399,7 @@ export default async function EventDetailPage({ params }) {
                                                 </div>
                                             );
                                         })}
-                                    </div>
+                                    </Carousel>
                                 </section>
                             )}
                         </div>
