@@ -83,8 +83,10 @@ export async function POST(request) {
       errorCorrectionLevel: 'M',
       margin: 1,
     });
+    console.log('Debug: qrCodeDataUrl', qrCodeDataUrl);
 
     // 4. Prepare HTML for Puppeteer
+    console.log('Debug: certificateTemplate.htmlContent', certificateTemplate.htmlContent);
     let fullHtml = `
       <html>
       <head>
@@ -98,6 +100,7 @@ export async function POST(request) {
       </body>
       </html>
     `;
+    console.log('Debug: fullHtml BEFORE replacements', fullHtml);
 
     // Replace placeholders
     fullHtml = fullHtml.replace(/{{userName}}/g, userProfile.userName || '');
@@ -105,6 +108,7 @@ export async function POST(request) {
     fullHtml = fullHtml.replace(/{{issueDate}}/g, new Date().toLocaleDateString('en-IN') || ''); // Indian date format
     fullHtml = fullHtml.replace(/{{verificationUrl}}/g, verificationUrl || '');
     fullHtml = fullHtml.replace(/{{qrCodeImage}}/g, `<img src="${qrCodeDataUrl}" alt="QR Code" style="width: 100px; height: 100px;" />`);
+    console.log('Debug: fullHtml AFTER replacements', fullHtml);
 
     // 5. Generate PDF using Puppeteer (Asli Code for Vercel)
     const executablePath = await chromium.executablePath(process.env.CHROMIUM_PATH);
@@ -116,6 +120,7 @@ export async function POST(request) {
     });
 
     const page = await browser.newPage();
+    console.log('Full HTML content for Puppeteer:', fullHtml);
     await page.setContent(fullHtml, { waitUntil: 'networkidle0' });
 
     const pdfBuffer = await page.pdf({
@@ -132,8 +137,13 @@ export async function POST(request) {
       contentType: 'application/pdf',
     });
 
-    // 7. Create Certificate Document in Sanity
-    await writeClient.create({
+    // 7. Create or Update Certificate Document in Sanity
+    const existingCertificate = await client.fetch(
+      `*[_type == "certificate" && event._ref == $eventId && userProfile._ref == $userId][0]`,
+      { eventId, userId }
+    );
+
+    const certificateData = {
       _type: 'certificate',
       title: `${event.title} - Certificate for ${userProfile.userName}`,
       uniqueId: uniqueId,
@@ -149,7 +159,15 @@ export async function POST(request) {
       },
       verificationUrl: verificationUrl,
       certificateTemplate: { _type: 'reference', _ref: templateId },
-    });
+    };
+
+    if (existingCertificate) {
+      await writeClient.patch(existingCertificate._id).set(certificateData).commit();
+      console.log(`Updated existing certificate for ${userProfile.userName} for event ${event.title}`);
+    } else {
+      await writeClient.create(certificateData);
+      console.log(`Created new certificate for ${userProfile.userName} for event ${event.title}`);
+    }
 
       generatedCertificates.push({
         userId,
