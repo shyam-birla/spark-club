@@ -12,27 +12,27 @@ export default function HostedBy({ hosts, className = '' }) {
 
       {hosts && hosts.length > 0 ? (
 
-                                <Carousel itemsPerPage={1}>
+                                <Carousel itemsPerPage={1} buttonSizeClass="p-0.5 text-xs">
 
                                   {hosts.map((host, index) => (
 
                                     <div key={index} className="flex flex-col items-center">
 
-                                                    <Image
+                                                                                <Image
 
-                                                      src={host.logoUrl}
+                                                                                  src={host.logoUrl}
 
-                                                      alt={host.name}
+                                                                                  alt={host.name}
 
-                                                      width={40}
+                                                                                  width={60}
 
-                                                      height={40}
+                                                                                  height={60}
 
-                                                      className="object-contain mb-2"
+                                                                                  className="rounded-full object-contain mb-2"
 
-                                                    />
+                                                                                />
 
-                                      <p className="text-sm text-center font-semibold text-gray-700">{host.name}</p>
+                                      <p className="text-xs text-center font-semibold text-gray-700">{host.name}</p>
 
                                     </div>
 

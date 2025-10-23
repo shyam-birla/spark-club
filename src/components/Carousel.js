@@ -2,7 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 
-const Carousel = ({ children, itemsPerPage = 1, className = '' }) => {
+const Carousel = ({ children, itemsPerPage = 1, className = '', buttonSizeClass = 'p-1 text-sm' }) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [isMobile, setIsMobile] = useState(false);
 
@@ -29,16 +29,12 @@ const Carousel = ({ children, itemsPerPage = 1, className = '' }) => {
     setActiveIndex((prevIndex) => (prevIndex - itemsPerPage + totalItems) % totalItems);
   };
 
-  const visibleChildren = isMobile
-    ? React.Children.toArray(children).slice(activeIndex, activeIndex + itemsPerPage)
-    : children; // On desktop, show all items
-
   return (
     <div className={`relative ${className}`}>
       {totalItems > itemsPerPage && (
         <button
           onClick={goToPrev}
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-200 p-1 rounded-full shadow-md hover:bg-gray-300 z-10 text-sm"
+          className={`absolute left-0 top-1/2 -translate-y-1/2 bg-gray-200 rounded-full shadow-md hover:bg-gray-300 z-10 ${buttonSizeClass}`}
         >
           <FaChevronLeft />
         </button>
@@ -49,11 +45,20 @@ const Carousel = ({ children, itemsPerPage = 1, className = '' }) => {
       {totalItems > itemsPerPage && (
         <button
           onClick={goToNext}
-          className="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-200 p-1 rounded-full shadow-md hover:bg-gray-300 z-10 text-sm"
+          className={`absolute right-0 top-1/2 -translate-y-1/2 bg-gray-200 rounded-full shadow-md hover:bg-gray-300 z-10 ${buttonSizeClass}`}
         >
           <FaChevronRight />
         </button>
       )}
+      <div className="flex justify-center items-center gap-2 mt-4">
+        {Array.from({ length: totalItems }).map((_, idx) => (
+          <button
+            key={idx}
+            onClick={() => setActiveIndex(idx)}
+            className={`h-1.5 w-1.5 rounded-full ${idx === activeIndex ? 'bg-gray-800' : 'bg-gray-400'}`}
+          />
+        ))}
+      </div>
     </div>
   );
 };

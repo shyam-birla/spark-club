@@ -28,11 +28,13 @@ export default function RegistrationStatus({ event, isAlreadyRegistered }) {
     // Agar external link hai aur registration open hai
     if (event.registrationLink && event.registrationStatus === 'open') {
         return (
-            <Link href={event.registrationLink} target="_blank" rel="noopener noreferrer">
-                <button className="w-full bg-black text-white px-4 py-2 rounded-md font-semibold text-base md:px-6 md:py-3 md:text-lg hover:opacity-80 transition-opacity">
-                    Register Now
-                </button>
-            </Link>
+            <div className="flex justify-center">
+                <Link href={event.registrationLink} target="_blank" rel="noopener noreferrer">
+                    <button className="bg-black text-white px-4 py-2 rounded-md font-semibold text-base md:px-6 md:py-3 md:text-lg hover:opacity-80 transition-opacity">
+                        Register Now
+                    </button>
+                </Link>
+            </div>
         );
     }
 
