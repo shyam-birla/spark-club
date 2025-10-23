@@ -16,9 +16,9 @@ const RoadmapCard = ({ roadmap }) => (
                     <div className="w-full h-full bg-gray-200 flex items-center justify-center"><span className="text-gray-500">No Image</span></div>
                 )}
             </div>
-            <div className="p-6">
-                <h3 className="text-xl font-bold text-black mb-2 group-hover:text-orange-600 transition-colors flex items-center gap-2"><FaBookOpen className="text-blue-500" />{roadmap.title}</h3>
-                <p className="text-gray-600 text-sm line-clamp-3">{roadmap.description}</p>
+            <div className="p-3">
+                <h3 className="text-base font-bold text-black mb-0.5 group-hover:text-orange-600 transition-colors flex items-center gap-2"><FaBookOpen className="text-blue-500" />{roadmap.title}</h3>
+                <p className="text-xs text-gray-600 line-clamp-3">{roadmap.description}</p>
             </div>
         </div>
     </Link>
