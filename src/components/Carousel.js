@@ -38,7 +38,7 @@ const Carousel = ({ children, itemsPerPage = 1, className = '' }) => {
       {totalItems > itemsPerPage && (
         <button
           onClick={goToPrev}
-          className="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-200 p-2 rounded-full shadow-md hover:bg-gray-300 z-10"
+          className="absolute left-0 top-1/2 -translate-y-1/2 bg-gray-200 p-1 rounded-full shadow-md hover:bg-gray-300 z-10 text-sm"
         >
           <FaChevronLeft />
         </button>
@@ -49,7 +49,7 @@ const Carousel = ({ children, itemsPerPage = 1, className = '' }) => {
       {totalItems > itemsPerPage && (
         <button
           onClick={goToNext}
-          className="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-200 p-2 rounded-full shadow-md hover:bg-gray-300 z-10"
+          className="absolute right-0 top-1/2 -translate-y-1/2 bg-gray-200 p-1 rounded-full shadow-md hover:bg-gray-300 z-10 text-sm"
         >
           <FaChevronRight />
         </button>

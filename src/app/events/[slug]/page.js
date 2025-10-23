@@ -373,13 +373,13 @@ export default async function EventDetailPage({ params }) {
 
                                                 
 
-                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                        <div className="grid grid-cols-2 gap-4 lg:grid-cols-2 lg:gap-8">
                             {event.gallery && event.gallery.length > 0 && (
                                 <ImageGalleryWithLightbox gallery={event.gallery} />
                             )}
                             {event.youtubeLinks && event.youtubeLinks.length > 0 && (
                                 <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                                    <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaPlayCircle /> Event Videos</h2>
+                                    <h2 className="text-lg font-bold text-black mb-6 flex items-center gap-3"><FaPlayCircle /> Videos</h2>
                                     <Carousel itemsPerPage={1}>
                                         {event.youtubeLinks.map((videoUrl, index) => {
                                             const embedUrl = getYouTubeEmbedUrl(videoUrl);

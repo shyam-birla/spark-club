@@ -4,6 +4,7 @@ import { client } from '../../sanity/lib/client';
 import { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { FaLink } from 'react-icons/fa';
 
 const RelatedEvents = ({ currentEventId, categories }) => {
   const [relatedEvents, setRelatedEvents] = useState([]);
@@ -30,7 +31,7 @@ const RelatedEvents = ({ currentEventId, categories }) => {
 
   return (
     <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm mt-8">
-      <h2 className="text-2xl font-bold text-black mb-6">Related Events</h2>
+      <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaLink /> Related Events</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {relatedEvents.map(event => (
           <Link key={event._id} href={`/events/${event.slug.current}`}>
