@@ -138,10 +138,21 @@ export async function POST(request) {
     });
 
     // 7. Create or Update Certificate Document in Sanity
-    const existingCertificate = await client.fetch(
-      `*[_type == "certificate" && event._ref == $eventId && userProfile._ref == $userId][0]`,
+    // Query for all existing certificates for this event and user
+    const existingCertificates = await client.fetch(
+      `*[_type == "certificate" && event._ref == $eventId && userProfile._ref == $userId]`,
       { eventId, userId }
     );
+
+    // Delete all existing certificates for this user and event
+    if (existingCertificates.length > 0) {
+      const transaction = writeClient.transaction();
+      existingCertificates.forEach(cert => {
+        transaction.delete(cert._id);
+      });
+      await transaction.commit();
+      console.log(`Deleted ${existingCertificates.length} old certificates for ${userProfile.userName} for event ${event.title}`);
+    }
 
     const certificateData = {
       _type: 'certificate',
@@ -161,13 +172,8 @@ export async function POST(request) {
       certificateTemplate: { _type: 'reference', _ref: templateId },
     };
 
-    if (existingCertificate) {
-      await writeClient.patch(existingCertificate._id).set(certificateData).commit();
-      console.log(`Updated existing certificate for ${userProfile.userName} for event ${event.title}`);
-    } else {
-      await writeClient.create(certificateData);
-      console.log(`Created new certificate for ${userProfile.userName} for event ${event.title}`);
-    }
+    await writeClient.create(certificateData);
+    console.log(`Created new certificate for ${userProfile.userName} for event ${event.title}`);
 
       generatedCertificates.push({
         userId,
