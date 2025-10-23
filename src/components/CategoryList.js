@@ -9,16 +9,16 @@ import { FaClipboardList, FaBookOpen, FaChevronDown, FaChevronUp } from 'react-i
 const RoadmapCard = ({ roadmap }) => (
     <Link href={`/resources/${roadmap.slug}`} className="block h-full">
         <div className="bg-white rounded-lg border border-gray-200 overflow-hidden h-full transform transition-all duration-300 hover:shadow-xl hover:scale-[1.03] group">
-            <div className="relative w-full h-32">
+            <div className="relative w-full h-32 sm:h-48">
                 {roadmap.coverImageUrl ? (
                     <Image src={roadmap.coverImageUrl} alt={`${roadmap.title} cover image`} fill className="object-cover" />
                 ) : (
                     <div className="w-full h-full bg-gray-200 flex items-center justify-center"><span className="text-gray-500">No Image</span></div>
                 )}
             </div>
-            <div className="p-2">
-                <h3 className="text-sm font-bold text-black mb-0 group-hover:text-orange-600 transition-colors flex items-center gap-2"><FaBookOpen className="text-blue-500" />{roadmap.title}</h3>
-                <p className="text-[0.65rem] text-gray-600 line-clamp-3">{roadmap.description}</p>
+            <div className="p-2 sm:p-6">
+                <h3 className="text-sm sm:text-xl font-bold text-black mb-0 sm:mb-2 group-hover:text-orange-600 transition-colors flex items-center gap-2"><FaBookOpen className="text-blue-500" />{roadmap.title}</h3>
+                <p className="text-xs sm:text-sm text-gray-600 line-clamp-3">{roadmap.description}</p>
             </div>
         </div>
     </Link>
