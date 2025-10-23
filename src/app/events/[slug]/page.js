@@ -5,7 +5,8 @@ import PortableTextComponent from '@/components/PortableTextComponent';
 import RegistrationStatus from '@/components/RegistrationStatus';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote, FaMicrophone, FaTags, FaVideo, FaCommentDots, FaPlayCircle } from 'react-icons/fa';
+import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote, FaMicrophone, FaTags, FaVideo, FaCommentDots, FaPlayCircle, FaHome } from 'react-icons/fa';
+import Breadcrumbs from '@/components/Breadcrumbs';
 import Attendees from '@/components/Attendees';
 import AddToCalendar from '@/components/AddToCalendar';
 import dynamic from 'next/dynamic';
@@ -181,9 +182,16 @@ export default async function EventDetailPage({ params }) {
         ? (feedbackData.reduce((sum, fb) => sum + fb.rating, 0) / feedbackCount).toFixed(1)
         : 0;
 
+    const breadcrumbs = [
+        { label: 'Home', href: '/', icon: 'FaHome' },
+        { label: 'Events', href: '/events', icon: 'FaCalendar' },
+        { label: event.title },
+    ];
+
     return (
         <main className="bg-gray-50/50 backdrop-blur-sm py-10 md:py-20">
             <div className="container mx-auto px-4">
+                <Breadcrumbs items={breadcrumbs} className="mb-4" />
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
                     <aside className="lg:col-span-1 space-y-4 lg:space-y-6 lg:sticky top-24 self-start">
                         {event.imageUrl && (<div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg"><Image src={event.imageUrl} alt={event.title} fill className="object-cover" priority={true} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" /></div>)}
