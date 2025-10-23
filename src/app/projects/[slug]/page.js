@@ -2,7 +2,8 @@ import { client } from '../../../../sanity/lib/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import PortableTextComponent from '@/components/PortableTextComponent';
-import { FaGithub, FaExternalLinkAlt, FaCheckCircle, FaHourglassHalf, FaCodeBranch, FaUsers, FaInfoCircle, FaCode } from 'react-icons/fa';
+import Breadcrumbs from '@/components/Breadcrumbs';
+import { FaGithub, FaExternalLinkAlt, FaCheckCircle, FaHourglassHalf, FaCodeBranch, FaUsers, FaInfoCircle, FaCode, FaHome, FaProjectDiagram } from 'react-icons/fa';
 
 // Yeh Next.js ko batata hai ki kaun kaun se project pages hain
 export async function generateStaticParams() {
@@ -40,9 +41,16 @@ export default async function ProjectDetailPage({ params }) {
     return <div>Project not found.</div>;
   }
 
+  const breadcrumbs = [
+    { label: 'Home', href: '/', icon: 'FaHome' },
+    { label: 'Projects', href: '/projects', icon: 'FaProjectDiagram' },
+    { label: project.title },
+  ];
+
   return (
     <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20">
           <div className="container mx-auto px-4">
+            <Breadcrumbs items={breadcrumbs} className="mb-4" />
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
               <aside className="lg:col-span-1 space-y-6 lg:sticky top-24 self-start">
                 {project.mainImageUrl && (

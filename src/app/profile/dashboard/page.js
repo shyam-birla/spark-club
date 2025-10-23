@@ -3,7 +3,9 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { client } from '../../../../sanity/lib/client'; // Import Sanity client
-import { FaCalendarAlt, FaMapMarkerAlt, FaTachometerAlt, FaInfoCircle, FaArrowRight, FaExternalLinkAlt, FaFilePdf, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa'; // Import icons
+import { FaCalendarAlt, FaMapMarkerAlt, FaTachometerAlt, FaInfoCircle, FaArrowRight, FaExternalLinkAlt, FaFilePdf, FaCheckCircle, FaExclamationTriangle, FaHome } from 'react-icons/fa'; // Import icons
+import Breadcrumbs from '@/components/Breadcrumbs';
+
 
 
 async function getUserRegistrations() {
@@ -100,6 +102,10 @@ export default async function DashboardPage() {
   return (
     <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
       <div className="container mx-auto p-4">
+        <Breadcrumbs items={[
+          { label: 'Home', href: '/', icon: 'FaHome' },
+          { label: 'Dashboard', icon: 'FaTachometerAlt' },
+        ]} className="mb-4" />
         <h1 className="text-3xl font-bold mb-6 text-black flex items-center gap-3"><FaTachometerAlt className="text-blue-500" /> My Events</h1>
 
         {registrations.length === 0 ? (
@@ -134,7 +140,7 @@ export default async function DashboardPage() {
                   </Link>
                 )}
                 {reg.certificate && (
-                  <div className="mt-4 flex flex-col space-y-2">
+                  <div className="mt-4 flex flex-row flex-wrap gap-2">
                     {reg.certificate.certificateFileUrl && (
                       <a
                         href={reg.certificate.certificateFileUrl}
