@@ -7,7 +7,7 @@ const MemberCard = ({ member }) => {
     // Card ko light theme ke liye update kiya
     <div className="bg-white rounded-lg text-center transition-all duration-300 shadow-md hover:shadow-xl border border-gray-200">
       <Link href={`/members/${member.slug}`}>
-        <div className="relative w-full h-60">
+        <div className="relative w-full h-48">
           {/* Image component ko naye syntax ke hisaab se update kiya */}
           <Image
             src={member.imageUrl || '/placeholder.png'}
@@ -17,28 +17,28 @@ const MemberCard = ({ member }) => {
           />
         </div>
       </Link>
-      <div className="p-4">
+      <div className="p-2">
         <Link href={`/members/${member.slug}`}>
-          <h3 className="text-xl font-bold text-black">{member.name}</h3>
+          <h3 className="text-lg font-bold text-black">{member.name}</h3>
           {/* Role ka color orange se dark grey kiya */}
-          <p className="text-gray-600">{member.role}</p>
+          <p className="text-gray-600 text-sm">{member.role}</p>
         </Link>
         
         {/* Naya Feature: Social Media Icons */}
-        <div className="flex justify-center gap-4 mt-4">
+        <div className="flex justify-center gap-3 mt-2">
           {member.linkedinUrl && (
             <a href={member.linkedinUrl} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
-              <FaLinkedin size={24} />
+              <FaLinkedin size={20} />
             </a>
           )}
           {member.githubUrl && (
             <a href={member.githubUrl} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
-              <FaGithub size={24} />
+              <FaGithub size={20} />
             </a>
           )}
           {member.instagramUrl && (
             <a href={member.instagramUrl} target="_blank" rel="noopener noreferrer" className="text-gray-500 hover:text-black">
-              <FaInstagram size={24} />
+              <FaInstagram size={20} />
             </a>
           )}
         </div>

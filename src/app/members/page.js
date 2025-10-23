@@ -39,7 +39,7 @@ export default async function MembersPage() {
                     <section key={team._id}>
                         {/* Team ka naam heading ki tarah dikhega */}
                         <h2 className="text-3xl font-bold mb-8 text-center flex items-center justify-center gap-3"><FaClipboardList className="text-teal-500" /> {team.title}</h2>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
+                        <div className="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                             {/* Us team ke sabhi members yahan dikhenge */}
                             {team.members.map((member) => (
                                 <MemberCard key={member._id} member={member} />
