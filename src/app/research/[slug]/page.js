@@ -2,7 +2,7 @@ import { client, urlFor } from '../../../../sanity/lib/client';
 import Link from 'next/link';
 import Image from 'next/image';
 import PortableTextComponent from '@/components/PortableTextComponent';
-import { FaDownload, FaExternalLinkAlt, FaGithub, FaUserFriends } from 'react-icons/fa';
+import { FaDownload, FaExternalLinkAlt, FaGithub, FaUserFriends, FaChalkboardTeacher, FaFileAlt, FaCheckCircle, FaHourglassHalf } from 'react-icons/fa';
 
 // This function tells Next.js which pages to pre-build
 export async function generateStaticParams() {
@@ -91,7 +91,7 @@ export default async function ResearchDetailPage({ params }) {
             )}
             {project.mentors && project.mentors.length > 0 && (
               <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
-                <h3 className="font-bold text-lg mb-4 text-black">Mentors</h3>
+                <h3 className="font-bold text-lg mb-4 text-black flex items-center gap-2"><FaChalkboardTeacher /> Mentors</h3>
                 <div className="space-y-4">
                   {project.mentors.map(mentor => (
                     <div key={mentor._id} className="flex items-center gap-4">
@@ -115,7 +115,8 @@ export default async function ResearchDetailPage({ params }) {
               </span>
               <h1 className="text-4xl md:text-5xl font-bold text-black">{project.title}</h1>
               {project.status && (
-                <p className={`mt-4 font-semibold ${project.status === 'published' ? 'text-green-600' : 'text-blue-600'}`}>
+                <p className={`mt-4 font-semibold flex items-center gap-2 ${project.status === 'published' ? 'text-green-600' : 'text-blue-600'}`}>
+                    {project.status === 'published' ? <FaCheckCircle /> : <FaHourglassHalf />}
                     Status: {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
                 </p>
               )}
@@ -123,7 +124,7 @@ export default async function ResearchDetailPage({ params }) {
 
             {project.description && (
               <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                <h2 className="text-2xl font-bold text-black mb-6">Abstract</h2>
+                <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-2"><FaFileAlt /> Abstract</h2>
                 <div className="prose max-w-none text-lg leading-relaxed">
                   <PortableTextComponent value={project.description} />
                 </div>

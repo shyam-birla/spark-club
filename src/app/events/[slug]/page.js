@@ -5,7 +5,7 @@ import PortableTextComponent from '@/components/PortableTextComponent';
 import RegistrationStatus from '@/components/RegistrationStatus';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote, FaMicrophone } from 'react-icons/fa';
+import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote, FaMicrophone, FaTags, FaVideo, FaCommentDots, FaPlayCircle } from 'react-icons/fa';
 import Attendees from '@/components/Attendees';
 import AddToCalendar from '@/components/AddToCalendar';
 import dynamic from 'next/dynamic';
@@ -196,7 +196,8 @@ export default async function EventDetailPage({ params }) {
                             <div>
                                 <h1 className="text-4xl md:text-5xl font-bold text-black">{event.title}</h1>
                                 {event.categories && (
-                                    <div className="flex flex-wrap gap-2 mt-2">
+                                    <div className="flex flex-wrap gap-2 mt-2 items-center">
+                                        <FaTags className="text-gray-500" />
                                         {event.categories.map((category) => (
                                             <span key={category.title} className="bg-orange-100 text-orange-800 text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">
                                                 {category.title}
@@ -227,7 +228,7 @@ export default async function EventDetailPage({ params }) {
 
                         {event.mainEventRecording && getYouTubeEmbedUrl(event.mainEventRecording) && (
                             <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                                <h2 className="text-2xl font-bold text-black mb-6">Event Recording</h2>
+                                <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaVideo /> Event Recording</h2>
                                 <div className="relative w-full" style={{paddingBottom: "56.25%"}}>
                                     <iframe
                                         className="absolute top-0 left-0 w-full h-full"
@@ -265,7 +266,7 @@ export default async function EventDetailPage({ params }) {
                             )}
                             {!isUpcoming && event.youtubeLinks && event.youtubeLinks.length > 0 && (
                                 <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                                    <h2 className="text-2xl font-bold text-black mb-6">Event Videos</h2>
+                                    <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaPlayCircle /> Event Videos</h2>
                                     <div className="grid grid-cols-1 gap-4">
                                         {event.youtubeLinks.map((videoUrl, index) => {
                                             const embedUrl = getYouTubeEmbedUrl(videoUrl);
@@ -294,7 +295,7 @@ export default async function EventDetailPage({ params }) {
 
                         {!isUpcoming && session?.user && (
                             <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                                <h2 className="text-2xl font-bold text-black mb-6">Feedback</h2>
+                                <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaCommentDots /> Feedback</h2>
                                 {event.hasSubmittedFeedback ? (
                                     <p>You have already submitted feedback for this event. Thank you!</p>
                                 ) : (

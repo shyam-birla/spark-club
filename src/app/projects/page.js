@@ -1,5 +1,6 @@
 import FeaturedProjects from '@/components/FeaturedProjects';
 import { client } from '../../../sanity/lib/client';
+import { FaCodeBranch } from 'react-icons/fa';
 
 const projectsQuery = `*[_type == "project"] | order(displayOrder asc) {
   _id,
@@ -17,7 +18,7 @@ export default async function ProjectsPage() {
     // === YAHAN BADLAV KIYA GAYA HAI ===
     <main className="bg-gray-50/50 backdrop-blur-sm py-20">
       <div className="container mx-auto px-4">
-        <h1 className="text-4xl font-bold mb-8 text-black text-center">Projects</h1>
+        <h1 className="text-4xl font-bold mb-8 text-black text-center flex items-center justify-center gap-3"><FaCodeBranch className="text-green-500" /> Projects</h1>
         <p className="text-gray-600 mb-12 text-center">Explore our ongoing and past projects.</p>
         
         <FeaturedProjects projects={projects} />
@@ -25,3 +26,4 @@ export default async function ProjectsPage() {
     </main>
   );
 }
+

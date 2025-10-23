@@ -1,6 +1,7 @@
 // src/components/EventCard.js
 import Link from 'next/link';
 import Image from 'next/image';
+import { FaCalendar } from 'react-icons/fa';
 
 const EventCard = ({ event }) => {
   const formattedDate = new Date(event.eventDate).toLocaleDateString('en-US', {
@@ -42,7 +43,7 @@ const EventCard = ({ event }) => {
             </span>
           )}
           <h3 className="text-sm md:text-lg font-bold text-black mt-1 md:mt-2">{event.title}</h3>
-          <p className="text-xs md:text-sm text-gray-600 mt-0.5 md:mt-1 flex-grow">{formattedDate}</p>
+          <p className="text-xs md:text-sm text-gray-600 mt-0.5 md:mt-1 flex items-center"><FaCalendar className="mr-1" />{formattedDate}</p>
         </div>
       </div>
     </Link>

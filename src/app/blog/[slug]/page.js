@@ -1,6 +1,7 @@
 import { client } from '../../../../sanity/lib/client';
 import PortableTextComponent from '@/components/PortableTextComponent';
 import Image from 'next/image';
+import { FaUser, FaCalendar } from 'react-icons/fa';
 
 export async function generateStaticParams() {
   const slugs = await client.fetch(`*[_type == "blogPost" && defined(slug.current)]{ "slug": slug.current }`);
@@ -50,8 +51,8 @@ export default async function BlogPostPage({ params }) {
             />
           )}
           <div>
-            <p className="font-semibold text-black">{post.author?.name || 'Anonymous'}</p>
-            <p className="text-gray-600 text-sm">{formattedDate}</p>
+            <p className="font-semibold text-black flex items-center gap-2"><FaUser className="text-gray-500" /> {post.author?.name || 'Anonymous'}</p>
+            <p className="text-gray-600 text-sm flex items-center gap-2"><FaCalendar className="text-gray-500" /> {formattedDate}</p>
           </div>
         </div>
 

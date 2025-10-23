@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
+import { FaClipboardList, FaBookOpen, FaChevronDown, FaChevronUp } from 'react-icons/fa';
 
 // Roadmap Card component ko is file mein bhi define karna hoga
 const RoadmapCard = ({ roadmap }) => (
@@ -16,7 +17,7 @@ const RoadmapCard = ({ roadmap }) => (
                 )}
             </div>
             <div className="p-6">
-                <h3 className="text-xl font-bold text-black mb-2 group-hover:text-orange-600 transition-colors">{roadmap.title}</h3>
+                <h3 className="text-xl font-bold text-black mb-2 group-hover:text-orange-600 transition-colors flex items-center gap-2"><FaBookOpen className="text-blue-500" />{roadmap.title}</h3>
                 <p className="text-gray-600 text-sm line-clamp-3">{roadmap.description}</p>
             </div>
         </div>
@@ -46,7 +47,7 @@ export default function CategoryList({ categories }) {
                 
                 return (
                     <section key={category._id}>
-                        <h2 className="text-3xl font-bold text-black border-b pb-4 mb-8">{category.title}</h2>
+                        <h2 className="text-3xl font-bold text-black border-b pb-4 mb-8 flex items-center gap-3"><FaClipboardList className="text-green-500" /> {category.title}</h2>
                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             {displayedRoadmaps.map((roadmap) => (
                                 <RoadmapCard key={roadmap._id} roadmap={roadmap} />
@@ -58,9 +59,9 @@ export default function CategoryList({ categories }) {
                             <div className="text-center mt-8">
                                 <button 
                                     onClick={() => toggleCategory(category._id)}
-                                    className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-80 transition-opacity"
+                                    className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-80 transition-opacity flex items-center justify-center gap-2"
                                 >
-                                    {isExpanded ? 'Show Less' : 'Show More'}
+                                    {isExpanded ? <>Show Less <FaChevronUp /></> : <>Show More <FaChevronDown /></>}
                                 </button>
                             </div>
                         )}

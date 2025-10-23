@@ -1,5 +1,6 @@
 import { client } from '../../../sanity/lib/client';
 import BlogPostCard from '@/components/BlogPostCard';
+import { FaBlog } from 'react-icons/fa';
 
 const postsQuery = `*[_type == "blogPost"] | order(publishedAt desc){
   _id,
@@ -17,7 +18,7 @@ export default async function BlogPage() {
     <main className="bg-white/40 backdrop-blur-sm py-20">
       <div className="container mx-auto px-4">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-2 text-black">The SPARK Blog</h1>
+          <h1 className="text-4xl font-bold mb-2 text-black flex items-center justify-center gap-3"><FaBlog className="text-blue-500" /> The SPARK Blog</h1>
           <p className="text-gray-600 mb-12">Insights, tutorials, and updates from the club.</p>
         </div>
         

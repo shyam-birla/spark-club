@@ -1,5 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
+import { FaCalendar } from 'react-icons/fa';
 
 const BlogPostCard = ({ post }) => {
   const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
@@ -25,7 +26,7 @@ const BlogPostCard = ({ post }) => {
         <div className="p-4 flex-grow flex flex-col">
           {/* Text ko light theme ke liye update kiya */}
           <h3 className="text-xl font-bold text-black flex-grow">{post.title}</h3>
-          <p className="text-gray-600 text-sm mt-2">{formattedDate}</p>
+          <p className="text-gray-600 text-sm mt-2 flex items-center"><FaCalendar className="mr-1" />{formattedDate}</p>
         </div>
       </div>
     </Link>

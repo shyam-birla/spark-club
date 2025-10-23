@@ -6,7 +6,7 @@ import { useSession } from 'next-auth/react';
 import { client } from '../../../../sanity/lib/client';
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaCheckCircle, FaVideo, FaFileAlt, FaLink, FaGraduationCap, FaFileArchive } from 'react-icons/fa';
+import { FaCheckCircle, FaVideo, FaFileAlt, FaLink, FaGraduationCap, FaFileArchive, FaRoadmap, FaTools, FaListAlt, FaBook, FaPlay, FaRedo } from 'react-icons/fa';
 import ResourceCard from '@/components/ResourceCard';
 
 const ResourceIcon = ({ type }) => {
@@ -42,7 +42,7 @@ export default function RoadmapDetailPage() {
                     whatYouWillLearn,
                     skills[]->{ _id, name, "logoUrl": logo.asset->url },
                     "allResourceKeys": modules[].subTopics[].resources[]._key,
-                    modules[]{ _key, title, description, subTopics[]{ _key, title, resources[]{ _key, title, duration, type, "cardImageUrl": cardImage.asset->url, "slug": slug.current, url } } }
+                    modules[]{ _key, title, description, subTopics[]{ _key, title, resources[]{ _key, title, duration, type, "cardImageUrl": coverImage.asset->url, "slug": slug.current, url } } }
                 }`;
                 const roadmapData = await client.fetch(roadmapQuery, { slug });
                 setRoadmap(roadmapData);
@@ -104,7 +104,7 @@ export default function RoadmapDetailPage() {
             <div className="container mx-auto px-4 py-12 md:py-20">
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                     <div className="lg:col-span-2">
-                        <h1 className="text-4xl md:text-5xl font-bold text-black">{roadmap.title}</h1>
+                        <h1 className="text-4xl md:text-5xl font-bold text-black flex items-center gap-3"><FaRoadmap className="text-yellow-600" /> {roadmap.title}</h1>
                         <p className="text-lg text-gray-600 mt-4">{roadmap.subtitle}</p>
                         <div className="text-sm text-gray-700 mt-6 flex items-center gap-4">
                             <span>Est. {totalHours} hours to complete</span>
@@ -120,7 +120,7 @@ export default function RoadmapDetailPage() {
                             </ul>
                         </div>
                         <div className="mt-10">
-                            <h2 className="text-2xl font-bold mb-4">Skills You Will Gain</h2>
+                            <h2 className="text-2xl font-bold mb-4 flex items-center gap-2"><FaTools className="text-brown-500" /> Skills You Will Gain</h2>
                             <div className="flex flex-wrap gap-3">
                                 {roadmap.skills?.map((skill) => (
                                     <span key={skill._id} className="bg-gray-200 text-gray-800 px-3 py-1.5 rounded-full font-medium flex items-center gap-2 text-sm">
@@ -130,13 +130,13 @@ export default function RoadmapDetailPage() {
                             </div>
                         </div>
                         <div className="mt-10">
-                            <h2 className="text-2xl font-bold mb-6">Syllabus</h2>
+                            <h2 className="text-2xl font-bold mb-6 flex items-center gap-2"><FaListAlt className="text-pink-500" /> Syllabus</h2>
                             <div className="space-y-4">
                                 {roadmap.modules?.map((module, index) => (
                                     // === YAHAN BADLAV KIYA GAYA HAI ===
                                     <details key={module._key} className="bg-white rounded-lg border border-gray-200 group">
                                         <summary className="p-5 font-bold text-lg cursor-pointer flex justify-between items-center group-hover:bg-gray-50">
-                                            <span>Module {index + 1}: {module.title}</span><span className="transform transition-transform duration-200 group-open:rotate-180">▼</span>
+                                            <span><FaBook className="inline-block mr-2 text-blue-500" /> Module {index + 1}: {module.title}</span><span className="transform transition-transform duration-200 group-open:rotate-180">▼</span>
                                         </summary>
                                         <div className="p-5 border-t border-gray-200">
                                             <p className="text-gray-600 mb-6">{module.description}</p>
@@ -163,9 +163,9 @@ export default function RoadmapDetailPage() {
                                 <div className="p-6">
                                     <Link href={resumeLink}>
                                         {isStarted ? (
-                                            <button className="w-full bg-white text-black border-2 border-black px-8 py-3 rounded-md font-semibold text-lg hover:bg-gray-100 transition-colors">Resume Learning</button>
+                                            <button className="w-full bg-white text-black border-2 border-black px-8 py-3 rounded-md font-semibold text-lg hover:bg-gray-100 transition-colors flex items-center justify-center gap-2"><FaRedo /> Resume Learning</button>
                                         ) : (
-                                            <button className="w-full bg-black text-white px-8 py-3 rounded-md font-semibold text-lg hover:opacity-80 transition-opacity">Start Learning</button>
+                                            <button className="w-full bg-black text-white px-8 py-3 rounded-md font-semibold text-lg hover:opacity-80 transition-opacity flex items-center justify-center gap-2"><FaPlay /> Start Learning</button>
                                         )}
                                     </Link>
                                 </div>

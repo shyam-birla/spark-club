@@ -4,6 +4,7 @@ import Link from 'next/link';
 import { motion } from 'framer-motion';
 import { useState, useEffect } from 'react';
 import CardSkeleton from './CardSkeleton'; // Import CardSkeleton
+import { FaFlask, FaTag, FaArrowRight } from 'react-icons/fa';
 
 // 1. Naye props add kiye gaye hain: showTitle, showButton
 const FeaturedProjects = ({ projects = [], showTitle = true, showButton = true }) => {
@@ -50,7 +51,7 @@ const FeaturedProjects = ({ projects = [], showTitle = true, showButton = true }
         {/* 2. Title ko conditionally render kiya gaya hai */}
         {showTitle && (
           <>
-            <h2 className="text-3xl font-bold text-black">From Our Lab</h2>
+            <h2 className="text-3xl font-bold text-black flex items-center justify-center gap-2"><FaFlask className="text-orange-500" /> From Our Lab</h2>
             <p className="text-gray-600 mt-2 mb-12">Here&apos;s a glimpse of what we&apos;ve been working on.</p>
           </>
         )}
@@ -81,8 +82,8 @@ const FeaturedProjects = ({ projects = [], showTitle = true, showButton = true }
                     {project.tags && project.tags.length > 0 && (
                       <div className="flex flex-wrap gap-1 mt-2 md:gap-2 md:mt-4">
                         {project.tags.map((tag) => (
-                          <span key={tag} className="bg-gray-200 text-gray-800 px-1 py-0.5 rounded-full text-xs md:text-sm">
-                            {tag}
+                          <span key={tag} className="bg-gray-200 text-gray-800 px-1 py-0.5 rounded-full text-xs md:text-sm flex items-center gap-1">
+                            <FaTag className="text-gray-500" />{tag}
                           </span>
                         ))}
                       </div>
@@ -98,8 +99,8 @@ const FeaturedProjects = ({ projects = [], showTitle = true, showButton = true }
         {showButton && (
             <div className="mt-16">
             <Link href="/projects">
-            <button className="bg-black text-white px-4 py-2 rounded-md font-semibold text-sm hover:opacity-80 transition-opacity transform hover:scale-105 md:px-8 md:py-3 md:text-lg">
-              View All Projects
+            <button className="bg-black text-white px-4 py-2 rounded-md font-semibold text-sm hover:opacity-80 transition-opacity transform hover:scale-105 md:px-8 md:py-3 md:text-lg flex items-center justify-center gap-2">
+              View All Projects <FaArrowRight />
             </button>
             </Link>
             </div>

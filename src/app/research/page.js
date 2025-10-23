@@ -5,6 +5,7 @@ import { client } from '../../../sanity/lib/client';
 import Link from 'next/link';
 import Image from 'next/image';
 import AnimatedSection from '@/components/AnimatedSection';
+import { FaFlask, FaSearch, FaFilter, FaTag, FaExclamationCircle } from 'react-icons/fa';
 
 // Query to fetch all research projects
 const researchProjectsQuery = `*[_type == "researchProject"] | order(status asc, _createdAt desc) {
@@ -26,8 +27,8 @@ const ResearchCard = ({ project }) => (
       )}
       <h3 className="text-xl font-bold text-black mb-2 group-hover:text-orange-600 transition-colors">{project.title}</h3>
       <p className="text-gray-600 text-sm line-clamp-3 flex-grow">{project.summary}</p>
-      <span className="mt-4 inline-block bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1.5 rounded-full self-start">
-        {project.researchArea.replace('-', ' ').toUpperCase()}
+      <span className="mt-4 inline-block bg-gray-100 text-gray-800 text-xs font-medium px-3 py-1.5 rounded-full self-start flex items-center gap-1">
+        <FaTag className="text-gray-500" />{project.researchArea.replace('-', ' ').toUpperCase()}
       </span>
     </div>
   </Link>
@@ -77,8 +78,8 @@ export default function ResearchPage() {
     <main className="bg-gray-50/50 backdrop-blur-sm py-20">
       <div className="container mx-auto px-4">
         <div className="text-center">
-            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-black">
-              Research Wing
+            <h1 className="text-4xl md:text-5xl font-bold mb-4 text-black flex items-center justify-center gap-3">
+              <FaFlask className="text-purple-500" /> Research Wing
             </h1>
             <p className="text-gray-600 mb-12 max-w-3xl mx-auto">
                 Exploring the frontiers of technology. Here you can find our community&apos;s ongoing and completed research projects.
@@ -87,23 +88,29 @@ export default function ResearchPage() {
 
         {/* Filter and Search Controls */}
         <div className="mb-12 flex flex-col md:flex-row gap-4">
-          <input
-            type="text"
-            placeholder="Search projects by title..."
-            className="w-full md:flex-grow p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 transition-shadow"
-            onChange={e => setSearchTerm(e.target.value)}
-          />
-          <select
-            className="w-full md:w-1/4 p-3 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 transition-shadow"
-            onChange={e => setSelectedArea(e.target.value)}
-          >
-            <option value="all">ALL AREAS</option>
-            {researchAreas.slice(1).map(area => (
-              <option key={area} value={area}>
-                {area.replace('-', ' ').toUpperCase()}
-              </option>
-            ))}
-          </select>
+          <div className="relative w-full md:flex-grow">
+            <FaSearch className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <input
+              type="text"
+              placeholder="Search projects by title..."
+              className="w-full p-3 pl-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 transition-shadow"
+              onChange={e => setSearchTerm(e.target.value)}
+            />
+          </div>
+          <div className="relative w-full md:w-1/4">
+            <FaFilter className="absolute left-3 top-1/2 -translate-y-1/2 text-gray-400" />
+            <select
+              className="w-full p-3 pl-10 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 transition-shadow"
+              onChange={e => setSelectedArea(e.target.value)}
+            >
+              <option value="all">ALL AREAS</option>
+              {researchAreas.slice(1).map(area => (
+                <option key={area} value={area}>
+                  {area.replace('-', ' ').toUpperCase()}
+                </option>
+              ))}
+            </select>
+          </div>
         </div>
 
         {/* Projects Grid */}
@@ -118,8 +125,8 @@ export default function ResearchPage() {
                   </AnimatedSection>
                 ))
               ) : (
-                // === YAHAN BADLAV KIYA GAYA HAI ===
-                <div className="col-span-full text-center text-gray-500 bg-white/50 rounded-lg shadow-sm min-h-[300px] flex items-center justify-center">
+                <div className="col-span-full text-center text-gray-500 bg-white/50 rounded-lg shadow-sm min-h-[300px] flex items-center justify-center gap-2">
+                    <FaExclamationCircle className="text-red-500 text-xl" />
                     <p className="text-xl font-medium">No projects found for the selected criteria.</p>
                 </div>
               )}

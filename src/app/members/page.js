@@ -1,5 +1,6 @@
 import { client } from '../../../sanity/lib/client';
 import MemberCard from '@/components/MemberCard';
+import { FaUsers, FaClipboardList } from 'react-icons/fa';
 
 // Query waisi hi rahegi
 const teamsQuery = `*[_type == "team"] | order(orderRank asc) {
@@ -27,7 +28,7 @@ export default async function MembersPage() {
         {/* Content ko center mein rakhne ke liye naya container div */}
         <div className="container mx-auto px-4">
             <div className="text-center">
-                <h1 className="text-4xl font-bold mb-2 text-black">Our Team</h1>
+                <h1 className="text-4xl font-bold mb-2 text-black flex items-center justify-center gap-3"><FaUsers className="text-purple-500" /> Our Team</h1>
                 <p className="text-gray-600 mb-12">The minds behind the innovation.</p>
             </div>
 
@@ -37,7 +38,7 @@ export default async function MembersPage() {
                 team.members && team.members.length > 0 && (
                     <section key={team._id}>
                         {/* Team ka naam heading ki tarah dikhega */}
-                        <h2 className="text-3xl font-bold mb-8 text-center">{team.title}</h2>
+                        <h2 className="text-3xl font-bold mb-8 text-center flex items-center justify-center gap-3"><FaClipboardList className="text-teal-500" /> {team.title}</h2>
                         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
                             {/* Us team ke sabhi members yahan dikhenge */}
                             {team.members.map((member) => (

@@ -1,5 +1,6 @@
 import { client } from '../../../sanity/lib/client';
 import EventCard from '@/components/EventCard';
+import { FaCalendarAlt, FaHourglassHalf, FaHistory } from 'react-icons/fa';
 
 // Nayi query jo categories aur unke upcoming events laayegi
 const categoriesWithEventsQuery = `*[_type == "category"]{
@@ -52,13 +53,13 @@ export default async function EventsPage() {
         {/* Content ko center mein rakhne ke liye naya container div */}
         <div className="container mx-auto px-4">
             <div className="text-center">
-                <h1 className="text-4xl font-bold mb-2 text-black">Events</h1>
+                <h1 className="text-4xl font-bold mb-2 text-black flex items-center justify-center gap-3"><FaCalendarAlt className="text-orange-500" /> Events</h1>
                 <p className="text-gray-600 mb-12">Workshops, meetups, and hackathons hosted by SPARK.</p>
             </div>
 
             {/* Upcoming Events Section */}
             <section className="space-y-12">
-                <h2 className="text-3xl font-bold text-black border-b pb-4">Upcoming Events</h2>
+                <h2 className="text-3xl font-bold text-black border-b pb-4 flex items-center gap-3"><FaHourglassHalf className="text-blue-500" /> Upcoming Events</h2>
                 {categoriesWithEvents.length > 0 ? (
                 categoriesWithEvents.map((category) => (
                     <div key={category._id}>
@@ -77,7 +78,7 @@ export default async function EventsPage() {
 
             {/* Past Events Section */}
             <section className="mt-20">
-                <h2 className="text-3xl font-bold text-black border-b pb-4 mb-8">Past Events</h2>
+                <h2 className="text-3xl font-bold text-black border-b pb-4 mb-8 flex items-center gap-3"><FaHistory className="text-green-500" /> Past Events</h2>
                 {pastEvents.length > 0 ? (
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                     {pastEvents.map((event) => <EventCard key={event._id} event={event} />)}

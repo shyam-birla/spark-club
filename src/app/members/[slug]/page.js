@@ -2,7 +2,7 @@ import { client } from '../../../../sanity/lib/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import PortableTextComponent from '@/components/PortableTextComponent';
-import { FaLinkedin, FaGithub, FaInstagram } from 'react-icons/fa'; // Icons ko import kiya
+import { FaLinkedin, FaGithub, FaInstagram, FaInfoCircle } from 'react-icons/fa'; // Icons ko import kiya
 
 // Naya Function: Yeh Next.js ko batata hai ki kaun kaun se member pages hain
 export async function generateStaticParams() {
@@ -62,7 +62,7 @@ export default async function MemberDetailPage({ params }) {
       </div>
       {member.bio && (
         <div className="mt-12 prose max-w-none text-gray-700 leading-relaxed">
-          <h2 className="text-2xl font-bold mb-4 text-black">About</h2>
+          <h2 className="text-2xl font-bold mb-4 text-black flex items-center gap-2"><FaInfoCircle className="text-blue-500" /> About</h2>
           <PortableTextComponent value={member.bio} />
         </div>
       )}

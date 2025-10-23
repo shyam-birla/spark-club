@@ -1,5 +1,6 @@
 import { client } from '../../../sanity/lib/client';
 import CategoryList from '@/components/CategoryList';
+import { FaRoad } from 'react-icons/fa';
 
 const categoriesWithRoadmapsQuery = `*[_type == "category"] | order(displayOrder asc) {
   _id,
@@ -23,7 +24,7 @@ export default async function ResourcesDiscoveryPage() {
       {/* Content ko center mein rakhne ke liye ek naya container div banaya hai */}
       <div className="container mx-auto px-4">
         <div className="text-center">
-          <h1 className="text-4xl font-bold mb-2 text-black">Learning Roadmaps</h1>
+          <h1 className="text-4xl font-bold mb-2 text-black flex items-center justify-center gap-3"><FaRoad className="text-orange-500" /> Learning Roadmaps</h1>
           <p className="text-gray-600 mb-12 max-w-2xl mx-auto">
               Your step-by-step guide to mastering new skills. Browse our curated learning paths below, organized by category.
           </p>

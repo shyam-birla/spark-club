@@ -2,7 +2,7 @@ import { client } from '../../../../sanity/lib/client';
 import Image from 'next/image';
 import Link from 'next/link';
 import PortableTextComponent from '@/components/PortableTextComponent';
-import { FaGithub, FaExternalLinkAlt, FaCheckCircle, FaHourglassHalf, FaCodeBranch, FaUsers, FaInfoCircle } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaCheckCircle, FaHourglassHalf, FaCodeBranch, FaUsers, FaInfoCircle, FaCode } from 'react-icons/fa';
 
 // Yeh Next.js ko batata hai ki kaun kaun se project pages hain
 export async function generateStaticParams() {
@@ -87,7 +87,7 @@ export default async function ProjectDetailPage({ params }) {
                       {project.status.charAt(0).toUpperCase() + project.status.slice(1)}
                     </span>
                   )}
-                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-black">{project.title}</h1>
+                  <h1 className="text-3xl md:text-4xl lg:text-6xl font-bold text-black flex items-center gap-3"><FaCode className="text-purple-500" /> {project.title}</h1>
                   <div className="flex flex-wrap gap-3 mt-6 mb-4">
                     {project.githubUrl && (
                       <Link href={project.githubUrl} target="_blank">

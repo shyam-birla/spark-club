@@ -14,7 +14,7 @@ const NavMenu = ({ isMobile, setIsOpen }) => {
       {navLinks.map((link) => {
         const isActive = pathname.startsWith(link.href);
         return (
-          <Link key={link.label} href={link.href} onClick={() => setIsOpen(false)} className={`transition-colors ${isActive ? 'text-black' : 'text-gray-500 hover:text-black'}`} aria-current={isActive ? 'page' : undefined}>
+          <Link key={link.label} href={link.href} onClick={() => isMobile && setIsOpen(false)} className={`transition-colors ${isActive ? 'text-black' : 'text-gray-500 hover:text-black'}`} aria-current={isActive ? 'page' : undefined}>
             {link.label}
           </Link>
         );
