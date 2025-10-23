@@ -29,8 +29,8 @@ export default function RegistrationStatus({ event, isAlreadyRegistered }) {
     if (event.registrationLink && event.registrationStatus === 'open') {
         return (
             <Link href={event.registrationLink} target="_blank" rel="noopener noreferrer">
-                <button className="w-full bg-black text-white px-6 py-3 rounded-md font-semibold text-lg hover:opacity-80 transition-opacity">
-                    Register Here (External Link)
+                <button className="w-full bg-black text-white px-4 py-2 rounded-md font-semibold text-base md:px-6 md:py-3 md:text-lg hover:opacity-80 transition-opacity">
+                    Register Now
                 </button>
             </Link>
         );

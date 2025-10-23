@@ -196,7 +196,7 @@ export default async function EventDetailPage({ params }) {
                     <div className="lg:col-span-3 space-y-8">
                         <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
                             <div>
-                                <h1 className="text-4xl md:text-5xl font-bold text-black">{event.title}</h1>
+                                <h1 className="text-3xl md:text-5xl font-bold text-black">{event.title}</h1>
                                 {event.categories && (
                                     <div className="flex flex-wrap gap-2 mt-2 items-center">
                                         <FaTags className="text-gray-500" />
@@ -226,7 +226,7 @@ export default async function EventDetailPage({ params }) {
 
                 
 
-                        {event.description && (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><div className="prose max-w-none text-lg leading-relaxed"><PortableTextComponent value={event.description} /></div></section>)}
+                        {event.description && (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><div className="prose max-w-none text-base leading-relaxed"><PortableTextComponent value={event.description} /></div></section>)}
 
                         {event.mainEventRecording && getYouTubeEmbedUrl(event.mainEventRecording) && (
                             <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
@@ -248,14 +248,14 @@ export default async function EventDetailPage({ params }) {
                         {event.schedule && event.schedule.length > 0 && <EventSchedule schedule={event.schedule} />}
 
                         {event.speakers && event.speakers.length > 0 && (
-                            <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                                <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaMicrophone /> Speakers</h2>
+                            <section className="bg-white p-4 md:p-8 rounded-xl border border-gray-200 shadow-sm">
+                                <h2 className="text-2xl font-bold text-black mb-4 md:mb-6 flex items-center gap-3"><FaMicrophone /> Speakers</h2>
                                 <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
                                     {event.speakers.map(speaker => (
                                         <div key={speaker._id} className="text-center">
-                                            {speaker.imageUrl && <Image src={speaker.imageUrl} alt={speaker.name} width={100} height={100} className="rounded-full mx-auto mb-2 object-cover" />}
-                                            <h3 className="font-bold text-black">{speaker.name}</h3>
-                                            <p className="text-sm text-gray-600">{speaker.role}</p>
+                                            {speaker.imageUrl && <Image src={speaker.imageUrl} alt={speaker.name} width={60} height={60} className="w-[60px] h-[60px] md:w-[100px] md:h-[100px] rounded-full mx-auto mb-2 object-cover" />}
+                                            <h3 className="text-sm md:text-lg font-bold text-black">{speaker.name}</h3>
+                                            <p className="text-xs md:text-sm text-gray-600">{speaker.role}</p>
                                         </div>
                                     ))}
                                 </div>

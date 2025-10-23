@@ -18,14 +18,14 @@ export default function SocialShare({ url, title }) {
 
   return (
     <div className="flex items-center gap-4 mt-4">
-      <p className="font-semibold">Share this event:</p>
+      <p className="text-sm md:text-base font-semibold">Share this event:</p>
       <a href={whatsappUrl} data-action="share/whatsapp/share" target="_blank" rel="noopener noreferrer">
-        <WhatsappIcon size={32} round />
+        <WhatsappIcon size={24} round />
       </a>
       <LinkedinShareButton url={url} title={customMessage}>
-        <LinkedinIcon size={32} round />
+        <LinkedinIcon size={24} round />
       </LinkedinShareButton>
-      <button onClick={copyToClipboard} className="flex items-center gap-2 bg-gray-200 hover:bg-gray-300 text-gray-800 font-bold py-2 px-4 rounded-full">
+      <button onClick={copyToClipboard} className="flex items-center gap-1 md:gap-2 bg-gray-200 hover:bg-gray-300 text-gray-800 text-sm md:text-base font-bold py-1 px-2 md:py-2 md:px-4 rounded-full">
         <FaLink />
         {copied ? 'Copied!' : 'Copy Link'}
       </button>
