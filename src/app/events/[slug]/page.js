@@ -181,13 +181,15 @@ export default async function EventDetailPage({ params }) {
         : 0;
 
     return (
-        <main className="bg-gray-50/50 backdrop-blur-sm py-20">
+        <main className="bg-gray-50/50 backdrop-blur-sm py-10 md:py-20">
             <div className="container mx-auto px-4">
                 <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 lg:gap-12">
-                    <aside className="lg:col-span-1 space-y-6 lg:sticky top-24 self-start">
+                    <aside className="lg:col-span-1 space-y-4 lg:space-y-6 lg:sticky top-24 self-start">
                         {event.imageUrl && (<div className="relative w-full aspect-square rounded-2xl overflow-hidden shadow-lg"><Image src={event.imageUrl} alt={event.title} fill className="object-cover" priority={true} sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw" /></div>)}
-                        <HostedBy hosts={event.hostedBy} />
-                        <Collaborators collaborators={event.collaborators} />
+                        <div className="flex flex-row gap-4">
+                            <HostedBy hosts={event.hostedBy} className="w-1/2" />
+                            <Collaborators collaborators={event.collaborators} className="w-1/2" />
+                        </div>
                         <Attendees attendees={event.attendees} total={event.registeredCount} />
                     </aside>
 
