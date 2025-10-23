@@ -3,7 +3,7 @@
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
-import { FaLinkedin, FaGithub, FaGlobe, FaBriefcase, FaGraduationCap, FaCertificate, FaLightbulb, FaProjectDiagram } from 'react-icons/fa';
+import { FaLinkedin, FaGithub, FaGlobe, FaBriefcase, FaGraduationCap, FaCertificate, FaLightbulb, FaProjectDiagram, FaUserCircle, FaEdit, FaCalendarAlt, FaInfoCircle, FaPlusCircle, FaArrowRight } from 'react-icons/fa';
 import { urlFor } from '../../sanity/lib/client';
 
 const Section = ({ title, icon, children }) => (
@@ -53,11 +53,11 @@ export default function ProfileClient({ session, profileData }) {
             <div className="container mx-auto px-4">
                 {!profileData ? (
                     <div className="text-center py-20 bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                        <h2 className="text-3xl font-bold text-black mb-4">Welcome, {session.user.name}!</h2>
+                        <h2 className="text-3xl font-bold text-black mb-4 flex items-center justify-center gap-2"><FaUserCircle className="text-blue-500" /> Welcome, {session.user.name}!</h2>
                         <p className="text-lg text-gray-700 mb-6">Your profile is looking a bit empty. Let&apos;s fill it up to showcase your skills and connect with the SPARK community!</p>
                         <Link href="/profile/edit">
-                            <button className="mt-6 bg-orange-600 text-white px-8 py-3 rounded-md font-semibold text-lg hover:bg-orange-700 transition-colors">
-                                Complete Your Profile Now
+                            <button className="mt-6 bg-orange-600 text-white px-8 py-3 rounded-md font-semibold text-lg hover:bg-orange-700 transition-colors flex items-center justify-center gap-2">
+                                <FaEdit /> Complete Your Profile Now
                             </button>
                         </Link>
                         <p className="text-sm text-gray-500 mt-4">It only takes a few minutes!</p>
@@ -84,11 +84,11 @@ export default function ProfileClient({ session, profileData }) {
                                 <p className="text-sm text-gray-600 mt-1">{profileData?.headline || ''}</p>
                                 <div className="mt-4 flex justify-center gap-3">
                                     <Link href="/profile/edit">
-                                        <button className="bg-orange-600 text-white px-4 py-2 rounded-md">Edit Profile</button>
+                                        <button className="bg-orange-600 text-white px-4 py-2 rounded-md flex items-center gap-2"><FaEdit /> Edit Profile</button>
                                     </Link>
                                     <Link href="/profile/dashboard">
-                                        <button className="bg-gray-100 text-black px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-200">
-                                            My Events
+                                        <button className="bg-gray-100 text-black px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-200 flex items-center gap-2">
+                                            <FaCalendarAlt /> My Events
                                         </button>
                                     </Link>
                                 </div>
@@ -112,9 +112,10 @@ export default function ProfileClient({ session, profileData }) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="text-center text-gray-500 py-4">
+                                    <div className="text-center text-gray-500 py-4 flex flex-col items-center gap-2">
+                                        <FaInfoCircle className="text-blue-500 text-2xl" />
                                         <p className="mb-2">No work experience added yet.</p>
-                                        <Link href="/profile/edit" className="text-orange-600 hover:underline">Add Work Experience</Link>
+                                        <Link href="/profile/edit" className="text-orange-600 hover:underline flex items-center gap-1"><FaPlusCircle /> Add Work Experience</Link>
                                     </div>
                                 )}
                             </Section>
@@ -130,9 +131,10 @@ export default function ProfileClient({ session, profileData }) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="text-center text-gray-500 py-4">
+                                    <div className="text-center text-gray-500 py-4 flex flex-col items-center gap-2">
+                                        <FaInfoCircle className="text-blue-500 text-2xl" />
                                         <p className="mb-2">No education details added yet.</p>
-                                        <Link href="/profile/edit" className="text-orange-600 hover:underline">Add Education</Link>
+                                        <Link href="/profile/edit" className="text-orange-600 hover:underline flex items-center gap-1"><FaPlusCircle /> Add Education</Link>
                                     </div>
                                 )}
                             </Section>
@@ -156,9 +158,10 @@ export default function ProfileClient({ session, profileData }) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="text-center text-gray-500 py-4">
+                                    <div className="text-center text-gray-500 py-4 flex flex-col items-center gap-2">
+                                        <FaInfoCircle className="text-blue-500 text-2xl" />
                                         <p className="mb-2">No personal projects added yet.</p>
-                                        <Link href="/profile/edit" className="text-orange-600 hover:underline">Add Personal Project</Link>
+                                        <Link href="/profile/edit" className="text-orange-600 hover:underline flex items-center gap-1"><FaPlusCircle /> Add Personal Project</Link>
                                     </div>
                                 )}
                             </Section>
@@ -173,9 +176,10 @@ export default function ProfileClient({ session, profileData }) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="text-center text-gray-500 py-4">
+                                    <div className="text-center text-gray-500 py-4 flex flex-col items-center gap-2">
+                                        <FaInfoCircle className="text-blue-500 text-2xl" />
                                         <p className="mb-2">No completed roadmaps yet.</p>
-                                        <Link href="/learn" className="text-orange-600 hover:underline">Explore Roadmaps</Link>
+                                        <Link href="/learn" className="text-orange-600 hover:underline flex items-center gap-1"><FaArrowRight /> Explore Roadmaps</Link>
                                     </div>
                                 )}
                             </Section>
@@ -189,9 +193,10 @@ export default function ProfileClient({ session, profileData }) {
                                         ))}
                                     </div>
                                 ) : (
-                                    <div className="text-center text-gray-500 py-4">
+                                    <div className="text-center text-gray-500 py-4 flex flex-col items-center gap-2">
+                                        <FaInfoCircle className="text-blue-500 text-2xl" />
                                         <p className="mb-2">No projects added yet.</p>
-                                        <Link href="/projects" className="text-orange-600 hover:underline">Explore Projects</Link>
+                                        <Link href="/projects" className="text-orange-600 hover:underline flex items-center gap-1"><FaArrowRight /> Explore Projects</Link>
                                     </div>
                                 )}
                             </Section>

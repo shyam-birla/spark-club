@@ -6,7 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image'; // Import Image
 import { client } from '../../../../sanity/lib/client';
 import PortableTextComponent from '../../../components/PortableTextComponent';
-import { FaDownload, FaShareAlt, FaLinkedin, FaWhatsapp, FaLink, FaCheckCircle, FaInstagram, FaGithub, FaEnvelope } from 'react-icons/fa';
+import { FaDownload, FaShareAlt, FaLinkedin, FaWhatsapp, FaLink, FaCheckCircle, FaInstagram, FaGithub, FaEnvelope, FaHome, FaUserCircle, FaAward, FaCalendarAlt, FaTools, FaExclamationTriangle, FaSearch } from 'react-icons/fa';
 import { format } from 'date-fns';
 
 const VerifyCertificatePage = () => {
@@ -114,7 +114,7 @@ const VerifyCertificatePage = () => {
     return (
       <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
         <div className="container mx-auto p-4 text-center text-red-600 bg-white rounded-lg shadow-md py-8">
-          <h1 className="text-3xl font-bold mb-4">ERROR 500: Internal Server Error (Probably)</h1>
+          <h1 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2"><FaExclamationTriangle className="text-red-500" /> ERROR 500: Internal Server Error (Probably)</h1>
           <p className="text-lg mb-4">My apologies, human. It seems I encountered an unexpected exception while trying to verify this certificate.</p>
           <p className="text-sm text-gray-700"><strong>Stack Trace (simplified):</strong> {error}</p>
           <p className="text-sm text-gray-700 mt-2">Initiating self-repair protocols... (Just kidding, try a page refresh. If that fails, alert the nearest developer with the above error details!)</p>
@@ -127,7 +127,7 @@ const VerifyCertificatePage = () => {
     return (
       <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
         <div className="container mx-auto p-4 text-center text-red-600 bg-white rounded-lg shadow-md py-8">
-          <h1 className="text-3xl font-bold mb-4">ERROR 404: Certificate Not Found!</h1>
+          <h1 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2"><FaSearch className="text-red-500" /> ERROR 404: Certificate Not Found!</h1>
           <p className="text-lg mb-4">My apologies, human. It seems this certificate has gone missing in the digital ether or never existed.</p>
           <p className="text-sm text-gray-700 mt-2">Initiating quantum search protocols... (Just kidding, double-check the ID. If that fails, the certificate might be a myth!)</p>
         </div>
@@ -153,8 +153,8 @@ const VerifyCertificatePage = () => {
     <div className="min-h-screen bg-white">
       <div className="container mx-auto px-4 py-8">
         {/* Breadcrumb */}
-        <div className="mb-6 text-sm text-gray-600">
-          <Link href="/" className="hover:underline">Home</Link> &gt; <a href="/profile" className="hover:underline">Accomplishments</a> &gt; <span className="font-semibold">Certificate Course</span>
+        <div className="mb-6 text-sm text-gray-600 flex items-center gap-2">
+          <FaHome className="text-gray-500" /><Link href="/" className="hover:underline">Home</Link> &gt; <FaUserCircle className="text-gray-500" /><a href="/profile" className="hover:underline">Accomplishments</a> &gt; <span className="font-semibold">Certificate Course</span>
         </div>
 
         <div className="flex flex-col lg:flex-row gap-8">
@@ -190,7 +190,7 @@ const VerifyCertificatePage = () => {
                                                 <div className="w-24 h-24 rounded-full mr-4 bg-gray-200 flex items-center justify-center text-gray-500 text-3xl font-semibold">{userName.charAt(0)}</div>
                                               )}
                                               <div>
-                                                <p className="text-lg font-semibold text-gray-800">Certificate Awarded to <span className="text-2xl font-extrabold text-black">{userName}</span></p>
+                                                <p className="text-lg font-semibold text-gray-800 flex items-center gap-2"><FaAward className="text-yellow-500" /> Certificate Awarded to <span className="text-2xl font-extrabold text-black">{userName}</span></p>
                                                 <p className="text-sm text-gray-500">on {issueDate}</p>
                                               </div>                          </div>
                           <p className="text-gray-700">{hostedBy} confirms that {userName} successfully participated in this event.</p>
@@ -201,7 +201,7 @@ const VerifyCertificatePage = () => {
               <div className="flex items-center mb-4">
                 {/* Placeholder for SPARK Logo */}
                 <Image src="/logo-black.png" alt="SPARK Logo" width={32} height={32} className="mr-3" />
-                <h3 className="text-xl font-semibold text-gray-800">Event Details</h3>
+                <h3 className="text-xl font-semibold text-gray-800 flex items-center gap-2"><FaCalendarAlt className="text-blue-500" /> Event Details</h3>
               </div>
               <p className="text-gray-700 mb-2"><strong>Date:</strong> {eventDates}</p>
               <p className="text-gray-700 mb-2"><strong>Type:</strong> {eventType}</p>
@@ -252,7 +252,7 @@ const VerifyCertificatePage = () => {
             {/* Skills Gained */}
             {certificate.event?.skillsGained && certificate.event.skillsGained.length > 0 && (
               <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200">
-                <h3 className="text-xl font-semibold text-gray-800 mb-4">Skills You Will Gain</h3>
+                <h3 className="text-xl font-semibold text-gray-800 mb-4 flex items-center gap-2"><FaTools className="text-purple-500" /> Skills You Will Gain</h3>
                 <div className="flex flex-wrap gap-2">
                   {certificate.event.skillsGained.map((skill, index) => (
                     <span key={index} className="px-3 py-1 bg-gray-200 text-gray-700 rounded-full text-sm">

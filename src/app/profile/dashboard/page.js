@@ -3,7 +3,7 @@ import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { redirect } from 'next/navigation';
 import Link from 'next/link';
 import { client } from '../../../../sanity/lib/client'; // Import Sanity client
-import { FaCalendarAlt, FaMapMarkerAlt } from 'react-icons/fa'; // Import icons
+import { FaCalendarAlt, FaMapMarkerAlt, FaTachometerAlt, FaInfoCircle, FaArrowRight, FaExternalLinkAlt, FaFilePdf, FaCheckCircle, FaExclamationTriangle } from 'react-icons/fa'; // Import icons
 
 
 async function getUserRegistrations() {
@@ -88,7 +88,7 @@ export default async function DashboardPage() {
     return (
       <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
         <div className="container mx-auto p-4 text-center text-red-600 bg-white rounded-lg shadow-md py-8">
-          <h1 className="text-3xl font-bold mb-4">ERROR 418: I&apos;m a Teapot!</h1>
+          <h1 className="text-3xl font-bold mb-4 flex items-center justify-center gap-2"><FaExclamationTriangle className="text-red-500" /> ERROR 418: I&apos;m a Teapot!</h1>
           <p className="text-lg mb-4">My apologies, human. It seems I encountered an unexpected exception while fetching your event data.</p>
           <p className="text-sm text-gray-700"><strong>Stack Trace (simplified):</strong> {registrations.error}</p>
           <p className="text-sm text-gray-700 mt-2">Initiating self-repair protocols... (Just kidding, try a page refresh. If that fails, alert the nearest developer with the above error details!)</p>
@@ -100,13 +100,14 @@ export default async function DashboardPage() {
   return (
     <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
       <div className="container mx-auto p-4">
-        <h1 className="text-3xl font-bold mb-6 text-black">My Events</h1>
+        <h1 className="text-3xl font-bold mb-6 text-black flex items-center gap-3"><FaTachometerAlt className="text-blue-500" /> My Events</h1>
 
         {registrations.length === 0 ? (
-          <div className="bg-white p-6 rounded-lg shadow-md text-center text-gray-600">
+          <div className="bg-white p-6 rounded-lg shadow-md text-center text-gray-600 flex flex-col items-center gap-4">
+            <FaInfoCircle className="text-blue-500 text-4xl" />
             <p className="text-lg">You haven&apos;t registered for any events yet.</p>
-            <Link href="/events" className="mt-4 inline-block bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700">
-              Browse Events
+            <Link href="/events" className="mt-4 inline-flex items-center gap-2 bg-indigo-600 text-white px-6 py-2 rounded-md hover:bg-indigo-700">
+              Browse Events <FaArrowRight />
             </Link>
           </div>
         ) : (
@@ -128,8 +129,8 @@ export default async function DashboardPage() {
                   </p>
                 )}
                 {reg.event?.slug && (
-                  <Link href={`/events/${reg.event.slug}`} className="mt-3 inline-block text-indigo-600 hover:underline text-sm">
-                    View Event Details
+                  <Link href={`/events/${reg.event.slug}`} className="mt-3 inline-flex items-center gap-2 text-indigo-600 hover:underline text-sm">
+                    View Event Details <FaExternalLinkAlt />
                   </Link>
                 )}
                 {reg.certificate && (
@@ -139,17 +140,17 @@ export default async function DashboardPage() {
                         href={reg.certificate.certificateFileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 gap-2"
                       >
-                        View Certificate
+                        <FaFilePdf /> View Certificate
                       </a>
                     )}
                     {reg.certificate.uniqueId && (
                       <Link
                         href={`/verify-certificate/${reg.certificate.uniqueId}`}
-                        className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500"
+                        className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 gap-2"
                       >
-                        Verify Certificate
+                        <FaCheckCircle /> Verify Certificate
                       </Link>
                     )}
                   </div>
