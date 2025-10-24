@@ -5,6 +5,9 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { client } from '../../../../sanity/lib/client';
 import { v4 as uuidv4 } from 'uuid';
+import { Resend } from 'resend'; // Import Resend
+import { render } from '@react-email/render'; // Import render function
+import CertificateNotification from '@/emails/CertificateNotification'; // Import your email component
 
 // VERCEL-FRIENDLY IMPORTS
 import puppeteer from 'puppeteer-core';
@@ -17,6 +20,8 @@ const writeClient = client.withConfig({
   useCdn: false,
   ignoreBrowserTokenWarning: true,
 });
+
+const resend = new Resend(process.env.RESEND_API_KEY); // Initialize Resend
 
 export async function POST(request) {
   const session = await getServerSession(authOptions);
@@ -47,7 +52,8 @@ export async function POST(request) {
         ),
         client.fetch(
           `*[_type == "profile" && _id == $userId][0]{
-            userName
+            userName,
+            email // Fetch user email
           }`,
           { userId }
         ),
@@ -64,9 +70,9 @@ export async function POST(request) {
         console.warn(`Event with ID ${eventId} not found for user ${userId}. Skipping.`);
         continue; // Skip to next user if event not found
       }
-      if (!userProfile) {
-        console.warn(`User profile with ID ${userId} not found. Skipping.`);
-        continue; // Skip to next user if user profile not found
+      if (!userProfile || !userProfile.email) {
+        console.warn(`User profile with ID ${userId} not found or missing email. Skipping.`);
+        continue; // Skip to next user if user profile not found or email missing
       }
       if (!certificateTemplate) {
         console.warn(`Certificate template with ID ${templateId} not found for user ${userId}. Skipping.`);
@@ -174,6 +180,27 @@ export async function POST(request) {
 
     await writeClient.create(certificateData);
     console.log(`Created new certificate for ${userProfile.userName} for event ${event.title}`);
+
+    // 8. Send Certificate Notification Email
+    const emailHtml = render(
+      <CertificateNotification
+        userName={userProfile.userName}
+        eventName={event.title}
+        certificateUrl={asset.url}
+      />
+    );
+
+    try {
+      await resend.emails.send({
+        from: process.env.EMAIL_FROM,
+        to: userProfile.email,
+        subject: `Your Certificate for ${event.title} from Spark Community!`,
+        html: emailHtml,
+      });
+      console.log(`Certificate notification email sent to ${userProfile.email}`);
+    } catch (emailError) {
+      console.error(`Failed to send certificate email to ${userProfile.email}:`, emailError);
+    }
 
       generatedCertificates.push({
         userId,

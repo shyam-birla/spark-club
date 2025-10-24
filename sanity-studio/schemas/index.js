@@ -29,6 +29,7 @@ import registrationField from './registrationField';
 import eventFeedback from './eventFeedback';
 import certificate from './certificate';
 import certificateTemplate from './certificateTemplate';
+import emailVerification from './emailVerification';
 
 
 export const schemaTypes = [
@@ -62,4 +63,5 @@ export const schemaTypes = [
     eventFeedback,
     certificate,
     certificateTemplate,
+    emailVerification,
 ]

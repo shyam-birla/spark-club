@@ -13,6 +13,7 @@ const AdminCertificateGenerator = () => {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
+  const [existingCertificates, setExistingCertificates] = useState({}); // Stores {userId: true} for users with existing certs
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,6 +35,37 @@ const AdminCertificateGenerator = () => {
     };
     fetchData();
   }, []);
+
+  useEffect(() => {
+    const fetchExistingCertificates = async () => {
+      if (!selectedEvent) {
+        setExistingCertificates({});
+        return;
+      }
+      setLoading(true);
+      try {
+        const certs = await client.fetch(
+          `*[_type == "certificate" && event._ref == $selectedEvent]{
+            userProfile._ref
+          }`,
+          { selectedEvent }
+        );
+        const certsMap = {};
+        certs.forEach(cert => {
+          if (cert.userProfile?._ref) {
+            certsMap[cert.userProfile._ref] = true;
+          }
+        });
+        setExistingCertificates(certsMap);
+      } catch (err) {
+        console.error("Error fetching existing certificates:", err);
+        setError('Failed to fetch existing certificates.');
+      } finally {
+        setLoading(false);
+      }
+    };
+    fetchExistingCertificates();
+  }, [selectedEvent]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -114,11 +146,14 @@ const AdminCertificateGenerator = () => {
             size="5" // Show more options at once
           >
             <option value="">-- Select a User --</option>
-            {users.map((user) => (
-              <option key={user._id} value={user._id}>
-                {user.userName} ({user.email})
-              </option>
-            ))}
+            {users.map((user) => {
+              const hasCert = existingCertificates[user._id];
+              return (
+                <option key={user._id} value={user._id} disabled={hasCert}>
+                  {user.userName} ({user.email}) {hasCert && '[CERTIFIED]'}
+                </option>
+              );
+            })}
           </select>
         </div>
 
