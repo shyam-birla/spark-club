@@ -47,6 +47,7 @@ const project = {
         list: [
           { title: 'Completed', value: 'completed' },
           { title: 'In Progress', value: 'in-progress' },
+          { title: 'Upcoming', value: 'upcoming' },
           { title: 'Archived', value: 'archived' },
         ],
         layout: 'radio',

@@ -171,6 +171,24 @@ const event = {
         },
       ],
     },
+    {
+      name: 'schedule',
+      title: 'Event Schedule',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            { name: 'time', title: 'Time', type: 'string', description: 'e.g., 10:00 AM - 11:00 AM' },
+            { name: 'activity', title: 'Activity', type: 'string' },
+            { name: 'details', title: 'Details', type: 'text', rows: 2, description: 'Optional details about the activity' },
+          ],
+          preview: {
+            select: { title: 'activity', subtitle: 'time' },
+          },
+        },
+      ],
+    },
   ],
 };
 

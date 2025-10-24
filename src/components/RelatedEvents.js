@@ -26,7 +26,12 @@ const RelatedEvents = ({ currentEventId, categories }) => {
   }, [currentEventId, categories]);
 
   if (relatedEvents.length === 0) {
-    return null;
+    return (
+        <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm mt-8">
+            <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaLink /> Related Events</h2>
+            <p className="text-gray-600">No related events found. Perhaps this event is one of a kind! ✨</p>
+        </section>
+    );
   }
 
   return (

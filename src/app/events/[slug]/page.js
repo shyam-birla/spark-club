@@ -5,7 +5,7 @@ import PortableTextComponent from '@/components/PortableTextComponent';
 import RegistrationStatus from '@/components/RegistrationStatus';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote, FaMicrophone, FaTags, FaVideo, FaCommentDots, FaPlayCircle, FaHome } from 'react-icons/fa';
+import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote, FaMicrophone, FaTags, FaVideo, FaCommentDots, FaPlayCircle, FaHome, FaClipboardList } from 'react-icons/fa';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import Attendees from '@/components/Attendees';
 import AddToCalendar from '@/components/AddToCalendar';
@@ -139,8 +139,8 @@ const EventSchedule = ({ schedule }) => (
             {schedule.map((item, index) => (
                 <div key={index} className="relative pl-8">
                     <div className="absolute -left-[7px] top-1 h-3 w-3 bg-orange-500 rounded-full border-2 border-white"></div>
-                    <p className="font-bold text-sm text-orange-600">{item.time}</p>
-                    <h4 className="font-semibold text-lg text-black">{item.activity}</h4>
+                    <p className="font-bold text-sm text-orange-600 flex items-center gap-2"><FaClock className="text-gray-500" />{item.time}</p>
+                    <h4 className="font-semibold text-lg text-black flex items-center gap-2"><FaClipboardList className="text-gray-500" />{item.activity}</h4>
                     {item.details && <p className="text-gray-600">{item.details}</p>}
                 </div>
             ))}
@@ -235,7 +235,7 @@ export default async function EventDetailPage({ params }) {
 
                 
 
-                                                {event.description && (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><div className="prose max-w-none text-base leading-relaxed"><PortableTextComponent value={event.description} /></div></section>)}
+                                                                                                {event.description ? (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><div className="prose max-w-none text-base leading-relaxed"><PortableTextComponent value={event.description} /></div></section>) : (<section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm"><h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaStickyNote /> About this Event</h2><p className="text-gray-600">The details for this event are still under wraps. Check back soon! 🤫</p></section>)}
 
                 
 
@@ -243,59 +243,7 @@ export default async function EventDetailPage({ params }) {
 
                 
 
-                                                {event.speakers && event.speakers.length > 0 && (
-
-                
-
-                                                    <section className="bg-white p-4 md:p-8 rounded-xl border border-gray-200 shadow-sm">
-
-                
-
-                                                        <h2 className="text-2xl font-bold text-black mb-4 md:mb-6 flex items-center gap-3"><FaMicrophone /> Speakers</h2>
-
-                
-
-                                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
-
-                
-
-                                                            {event.speakers.map(speaker => (
-
-                
-
-                                                                <div key={speaker._id} className="text-center">
-
-                
-
-                                                                    {speaker.imageUrl && <Image src={speaker.imageUrl} alt={speaker.name} width={60} height={60} className="w-[60px] h-[60px] md:w-[100px] md:h-[100px] rounded-full mx-auto mb-2 object-cover" />}
-
-                
-
-                                                                    <h3 className="text-sm md:text-lg font-bold text-black">{speaker.name}</h3>
-
-                
-
-                                                                    <p className="text-xs md:text-sm text-gray-600">{speaker.role}</p>
-
-                
-
-                                                                </div>
-
-                
-
-                                                            ))}
-
-                
-
-                                                        </div>
-
-                
-
-                                                    </section>
-
-                
-
-                                                )}
+                                                                                                                                                {event.speakers && event.speakers.length > 0 ? (
 
                 
 
@@ -303,75 +251,519 @@ export default async function EventDetailPage({ params }) {
 
                 
 
-                                                {event.mainEventRecording && getYouTubeEmbedUrl(event.mainEventRecording) && (
+                                                                                                
 
                 
 
-                                                    <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                        
 
                 
 
-                                                        <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaVideo /> Event Recording</h2>
+                                                                                                                
 
                 
 
-                                                        <div className="relative w-full" style={{paddingBottom: "56.25%"}}>
+                        
 
                 
 
-                                                            <iframe
+                                                                                                
 
                 
 
-                                                                className="absolute top-0 left-0 w-full h-full"
+                        
 
                 
 
-                                                                src={getYouTubeEmbedUrl(event.mainEventRecording)}
+                                                                                                                                                    <section className="bg-white p-4 md:p-8 rounded-xl border border-gray-200 shadow-sm">
 
                 
 
-                                                                title="Event Recording"
+                        
 
                 
 
-                                                                frameBorder="0"
+                                                                                                
 
                 
 
-                                                                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                        
 
                 
 
-                                                                allowFullScreen
+                                                                                                                
 
                 
 
-                                                                loading="lazy"
+                        
 
                 
 
-                                                            ></iframe>
+                                                                                                
 
                 
 
-                                                        </div>
+                        
 
                 
 
-                                                    </section>
+                                                                                                                                                        <h2 className="text-2xl font-bold text-black mb-4 md:mb-6 flex items-center gap-3"><FaMicrophone /> Speakers</h2>
 
                 
 
-                                                )}
+                        
 
                 
 
-                                                
+                                                                                                
 
                 
 
-                                                {event.schedule && event.schedule.length > 0 && <EventSchedule schedule={event.schedule} />}
+                        
+
+                
+
+                                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                            {event.speakers.map(speaker => (
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                                <div key={speaker._id} className="text-center">
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                                    {speaker.imageUrl && <Image src={speaker.imageUrl} alt={speaker.name} width={60} height={60} className="w-[60px] h-[60px] md:w-[100px] md:h-[100px] rounded-full mx-auto mb-2 object-cover" />}
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                                    <h3 className="text-sm md:text-lg font-bold text-black">{speaker.name}</h3>
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                                    <p className="text-xs md:text-sm text-gray-600">{speaker.role}</p>
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                                </div>
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                            ))}
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                        </div>
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                    </section>
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                ) : (
+
+                
+
+                        
+
+                
+
+                                                                                                                                                    <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+
+                
+
+                        
+
+                
+
+                                                                                                                                                        <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaMicrophone /> Speakers</h2>
+
+                
+
+                        
+
+                
+
+                                                                                                                                                        <p className="text-gray-600">The speaker lineup is currently being finalized. Get ready for some amazing insights! 🎤</p>
+
+                
+
+                        
+
+                
+
+                                                                                                                                                    </section>
+
+                
+
+                        
+
+                
+
+                                                                                                                                                )}
+
+                
+
+                        
+
+                
+
+                                                                                                
+
+                
+
+                        
+
+                
+
+                                                                                                                                                {event.schedule && event.schedule.length > 0 ? <EventSchedule schedule={event.schedule} /> : (
+
+                
+
+                        
+
+                
+
+                                                                                                                                                    <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+
+                
+
+                        
+
+                
+
+                                                                                                                                                        <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaRegListAlt /> Schedule</h2>
+
+                
+
+                        
+
+                
+
+                                                                                                                                                        <p className="text-gray-600">The event schedule is currently being planned. Stay tuned for exciting updates! 🗓️</p>
+
+                
+
+                        
+
+                
+
+                                                                                                                                                    </section>
+
+                
+
+                        
+
+                
+
+                                                                                                                                                )}
+
+                
+
+                        
+
+                
+
+                                                                                                
 
                 
 
@@ -382,10 +774,16 @@ export default async function EventDetailPage({ params }) {
                                                 
 
                         <div className="grid grid-cols-2 gap-4 lg:grid-cols-2 lg:gap-8">
-                            {event.gallery && event.gallery.length > 0 && (
+                                                        {event.gallery && event.gallery.length > 0 ? (
                                 <ImageGalleryWithLightbox gallery={event.gallery} />
+                            ) : (
+                                <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm text-center">
+                                    <h2 className="text-2xl font-bold text-black mb-4">Photos</h2>
+                                    <p className="text-gray-600">Looks like our photographer was camera-shy. 📸</p>
+                                    <p className="text-gray-500">No photos available for this event right now.</p>
+                                </section>
                             )}
-                            {event.youtubeLinks && event.youtubeLinks.length > 0 && (
+                                                        {event.youtubeLinks && event.youtubeLinks.length > 0 ? (
                                 <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
                                     <h2 className="text-lg font-bold text-black mb-6 flex items-center gap-3"><FaPlayCircle /> Videos</h2>
                                     <Carousel itemsPerPage={1}>
@@ -409,21 +807,31 @@ export default async function EventDetailPage({ params }) {
                                         })}
                                     </Carousel>
                                 </section>
+                            ) : (
+                                <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm text-center">
+                                    <h2 className="text-2xl font-bold text-black mb-4">Videos</h2>
+                                    <p className="text-gray-600">Our videographer is currently on a secret mission. 🕵️‍♂️</p>
+                                    <p className="text-gray-500">No videos available for this event. Please check back later!</p>
+                                </section>
                             )}
                         </div>
 
                         <RelatedEvents currentEventId={event._id} categories={event.categories} />
 
-                        {!isUpcoming && session?.user && (
-                            <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
-                                <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaCommentDots /> Feedback</h2>
-                                {event.hasSubmittedFeedback ? (
+                                                <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                            <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaCommentDots /> Feedback</h2>
+                            {!isUpcoming && session?.user ? (
+                                event.hasSubmittedFeedback ? (
                                     <p>You have already submitted feedback for this event. Thank you!</p>
                                 ) : (
                                     <EventFeedbackForm eventId={event._id} userEmail={session.user.email} />
-                                )}
-                            </section>
-                        )}
+                                )
+                            ) : (
+                                <div className="text-center text-gray-600">
+                                    <p>Feedback form will be available after the event.</p>
+                                </div>
+                            )}
+                        </section>
                     </div>
                 </div>
             </div>
