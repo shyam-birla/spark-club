@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FaChevronRight, FaHome, FaCalendarAlt, FaTachometerAlt, FaProjectDiagram, FaBook, FaCodeBranch, FaRoad, FaFlask, FaCalendar, FaUser, FaBlog, FaInfoCircle, FaUsers, FaEnvelope } from 'react-icons/fa';
+import { FaChevronRight, FaHome, FaCalendarAlt, FaTachometerAlt, FaProjectDiagram, FaBook, FaCodeBranch, FaRoad, FaFlask, FaCalendar, FaUser, FaBlog, FaInfoCircle, FaUsers, FaEnvelope, FaCheckCircle, FaExclamationCircle, FaAward, FaTools, FaExclamationTriangle, FaSearch, FaUserCircle, FaDownload, FaShareAlt, FaLinkedin, FaWhatsapp, FaInstagram, FaGithub } from 'react-icons/fa';
 
 const IconMap = {
   FaHome,
@@ -18,6 +18,19 @@ const IconMap = {
   FaInfoCircle,
   FaUsers,
   FaEnvelope,
+  FaCheckCircle,
+  FaExclamationCircle,
+  FaAward,
+  FaTools,
+  FaExclamationTriangle,
+  FaSearch,
+  FaUserCircle,
+  FaDownload,
+  FaShareAlt,
+  FaLinkedin,
+  FaWhatsapp,
+  FaInstagram,
+  FaGithub,
 };
 
 const Breadcrumbs = ({ items }) => {
