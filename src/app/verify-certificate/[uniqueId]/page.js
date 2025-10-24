@@ -40,6 +40,7 @@ const VerifyCertificatePage = () => {
           client.fetch(
             `*[_type == "certificate" && uniqueId == $uniqueId][0]{
               _id,
+              uniqueId,
               title,
               issueDate,
               verificationUrl,
