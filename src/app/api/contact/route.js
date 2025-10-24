@@ -12,12 +12,15 @@ const client = createClient({
 
 export async function POST(request) {
   try {
-    const { name, email, subject, message } = await request.json();
+    const { name, mobileNo, email, university, state, subject, message } = await request.json();
     
     await client.create({
       _type: 'contactSubmission',
       name: name,
+      mobileNo: mobileNo,
       email: email,
+      university: university,
+      state: state,
       subject: subject,
       message: message,
       read: false,

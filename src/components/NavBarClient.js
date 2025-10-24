@@ -89,7 +89,7 @@ export default function NavBarClient({ session, profileImageUrl }) {
 
       <NavMenu />
 
-      <AuthButtons session={session} profileImageUrl={profileImageUrl} />
+      <AuthButtons session={session} profileImageUrl={profileImageUrl} setIsOpen={setIsOpen} />
 
       <div className="md:hidden text-black">
         <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu" aria-expanded={isOpen}>
@@ -104,7 +104,7 @@ export default function NavBarClient({ session, profileImageUrl }) {
       {isOpen && (
         <div className="md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 max-h-screen overflow-y-auto">
           <NavMenu isMobile setIsOpen={setIsOpen} />
-          <AuthButtons session={session} profileImageUrl={profileImageUrl} isMobile />
+          <AuthButtons session={session} profileImageUrl={profileImageUrl} isMobile setIsOpen={setIsOpen} />
         </div>
       )}
     </header>

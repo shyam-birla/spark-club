@@ -17,6 +17,24 @@ const contactSubmission = {
       readOnly: true,
     },
     {
+      name: 'mobileNo',
+      title: 'Mobile Number',
+      type: 'string',
+      readOnly: true,
+    },
+    {
+      name: 'university',
+      title: 'University/College/Institute',
+      type: 'string',
+      readOnly: true,
+    },
+    {
+      name: 'state',
+      title: 'State',
+      type: 'string',
+      readOnly: true,
+    },
+    {
       name: 'subject',
       title: 'Subject',
       type: 'string',

@@ -2,6 +2,20 @@ import ContactForm from "@/components/ContactForm";
 import Link from "next/link";
 import { client } from "../../../sanity/lib/client";
 import Breadcrumbs from '@/components/Breadcrumbs';
+import { FaFacebook, FaTwitter, FaInstagram, FaLinkedin, FaGithub, FaYoutube, FaGlobe, FaGoogle, FaWhatsapp } from 'react-icons/fa';
+
+const getSocialIcon = (name) => {
+  const lowerCaseName = name.toLowerCase();
+  if (lowerCaseName.includes('facebook')) return <FaFacebook />;
+  if (lowerCaseName.includes('twitter')) return <FaTwitter />;
+  if (lowerCaseName.includes('instagram')) return <FaInstagram />;
+  if (lowerCaseName.includes('linkedin')) return <FaLinkedin />;
+  if (lowerCaseName.includes('github')) return <FaGithub />;
+  if (lowerCaseName.includes('youtube')) return <FaYoutube />;
+  if (lowerCaseName.includes('gmail') || lowerCaseName.includes('google')) return <FaGoogle />;
+  if (lowerCaseName.includes('whatsapp')) return <FaWhatsapp />;
+  return <FaGlobe />;
+};
 
 const SocialLink = ({ href, children }) => (
   <Link href={href} target="_blank" className="text-gray-500 hover:text-black transition-colors">
@@ -19,7 +33,6 @@ export default async function ContactPage() {
   const socialLinks = await client.fetch(socialLinksQuery);
 
   return (
-    // === YAHAN BADLAV KIYA GAYA HAI ===
     <main className="bg-gray-50/50 backdrop-blur-sm py-20">
       <div className="container mx-auto px-4">
         <Breadcrumbs items={[{ label: 'Home', href: '/', icon: 'FaHome' }, { label: 'Contact', icon: 'FaEnvelope' }]} className="mb-4" />
@@ -37,7 +50,7 @@ export default async function ContactPage() {
           <div className="flex justify-center items-center gap-6 text-2xl">
             {socialLinks.map((link) => (
               <SocialLink key={link._id} href={link.url}>
-                {link.name}
+                {getSocialIcon(link.name)}
               </SocialLink>
             ))}
           </div>
