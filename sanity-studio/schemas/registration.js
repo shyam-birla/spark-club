@@ -54,7 +54,15 @@ const registration = {
               type: 'object',
               fields: [
                 { name: 'key', title: 'Field Name', type: 'string' },
-                { name: 'value', title: 'Field Value', type: 'string' },
+                {
+                  name: 'value',
+                  title: 'Field Value',
+                  type: 'array',
+                  of: [
+                    { type: 'string' },
+                    { type: 'file' },
+                  ],
+                },
               ],
             },
           ],
