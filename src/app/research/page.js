@@ -6,6 +6,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import AnimatedSection from '@/components/AnimatedSection';
 import { FaFlask, FaSearch, FaFilter, FaTag, FaExclamationCircle } from 'react-icons/fa';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 // Query to fetch all research projects
 const researchProjectsQuery = `*[_type == "researchProject"] | order(status asc, _createdAt desc) {
@@ -77,6 +78,7 @@ export default function ResearchPage() {
   return (
     <main className="bg-gray-50/50 backdrop-blur-sm py-20">
       <div className="container mx-auto px-4">
+        <Breadcrumbs items={[{ label: 'Home', href: '/', icon: 'FaHome' }, { label: 'Research', icon: 'FaFlask' }]} className="mb-4" />
         <div className="text-center">
             <h1 className="text-4xl md:text-5xl font-bold mb-4 text-black flex items-center justify-center gap-3">
               <FaFlask className="text-purple-500" /> Research Wing

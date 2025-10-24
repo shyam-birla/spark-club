@@ -1,6 +1,7 @@
 import { client } from '../../../sanity/lib/client';
 import EventCard from '@/components/EventCard';
 import { FaCalendarAlt, FaHourglassHalf, FaHistory } from 'react-icons/fa';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 // Nayi query jo categories aur unke upcoming events laayegi
 const categoriesWithEventsQuery = `*[_type == "category"]{
@@ -52,6 +53,7 @@ export default async function EventsPage() {
     <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20">
         {/* Content ko center mein rakhne ke liye naya container div */}
         <div className="container mx-auto px-4">
+            <Breadcrumbs items={[{ label: 'Home', href: '/', icon: 'FaHome' }, { label: 'Events', icon: 'FaCalendarAlt' }]} className="mb-4" />
             <div className="text-center">
                 <h1 className="text-4xl font-bold mb-2 text-black flex items-center justify-center gap-3"><FaCalendarAlt className="text-orange-500" /> Events</h1>
                 <p className="text-gray-600 mb-12">Workshops, meetups, and hackathons hosted by SPARK.</p>

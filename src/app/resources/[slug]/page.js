@@ -8,6 +8,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import { FaCheckCircle, FaVideo, FaFileAlt, FaLink, FaGraduationCap, FaFileArchive, FaMap, FaTools, FaListAlt, FaBook, FaPlay, FaRedo } from 'react-icons/fa';
 import ResourceCard from '@/components/ResourceCard';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 const ResourceIcon = ({ type }) => {
     switch (type) {
@@ -102,6 +103,7 @@ export default function RoadmapDetailPage() {
     return (
         <main className="bg-gray-50">
             <div className="container mx-auto px-4 py-12 md:py-20">
+                <Breadcrumbs items={[{ label: 'Home', href: '/', icon: 'FaHome' }, { label: 'Resources', href: '/resources', icon: 'FaRoad' }, { label: roadmap.title }]} className="mb-4" />
                 <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
                     <div className="lg:col-span-2">
                         <h1 className="text-4xl md:text-5xl font-bold text-black flex items-center gap-3"><FaMap className="text-yellow-600" /> {roadmap.title}</h1>
