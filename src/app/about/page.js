@@ -1,6 +1,7 @@
 import { client } from '../../../sanity/lib/client';
 import PortableTextComponent from '@/components/PortableTextComponent';
 import Image from 'next/image';
+import Breadcrumbs from '@/components/Breadcrumbs';
 
 // Query to fetch the single 'aboutPage' document
 const aboutPageQuery = `*[_type == "aboutPage"][0]{
@@ -43,6 +44,7 @@ export default async function AboutPage() {
     // === YAHAN BADLAV KIYA GAYA HAI ===
     <main className="bg-gray-50/50 backdrop-blur-sm py-20">
       <div className="container mx-auto px-4">
+        <Breadcrumbs items={[{ label: 'Home', href: '/', icon: 'FaHome' }, { label: 'About', icon: 'FaInfoCircle' }]} className="mb-4" />
         <div className="max-w-4xl mx-auto text-center">
           <h1 className="text-5xl font-bold text-black mb-8">{about.title}</h1>
         </div>

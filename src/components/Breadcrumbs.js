@@ -1,7 +1,7 @@
 'use client';
 
 import Link from 'next/link';
-import { FaChevronRight, FaHome, FaCalendarAlt, FaTachometerAlt, FaProjectDiagram, FaBook } from 'react-icons/fa';
+import { FaChevronRight, FaHome, FaCalendarAlt, FaTachometerAlt, FaProjectDiagram, FaBook, FaCodeBranch, FaRoad, FaFlask, FaCalendar, FaUser, FaBlog, FaInfoCircle, FaUsers, FaEnvelope } from 'react-icons/fa';
 
 const IconMap = {
   FaHome,
@@ -9,6 +9,15 @@ const IconMap = {
   FaTachometerAlt,
   FaProjectDiagram,
   FaBook,
+  FaCodeBranch,
+  FaRoad,
+  FaFlask,
+  FaCalendar,
+  FaUser,
+  FaBlog,
+  FaInfoCircle,
+  FaUsers,
+  FaEnvelope,
 };
 
 const Breadcrumbs = ({ items }) => {
