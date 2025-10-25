@@ -25,7 +25,7 @@ const NavMenu = ({ isMobile, setIsOpen }) => {
   };
 
   return (
-    <nav className={`font-medium ${isMobile ? 'flex flex-col items-end gap-6 px-6 py-8' : 'hidden md:flex items-center gap-6'}`}>
+    <nav className={`font-normal text-sm ${isMobile ? 'flex flex-col items-end gap-4 px-6 py-8' : 'hidden md:flex items-center gap-6'}`}>
       {navLinks.map((link) => {
         const isActive = pathname.startsWith(link.href);
         const Icon = IconComponents[link.icon];
@@ -41,7 +41,7 @@ const NavMenu = ({ isMobile, setIsOpen }) => {
 };
 
 const AuthButtons = ({ session, profileImageUrl, isMobile, setIsOpen }) => (
-  <div className={`${isMobile ? 'flex flex-col items-end gap-4 px-6 mt-6' : 'hidden md:flex items-center gap-4'}`}>
+  <div className={`${isMobile ? 'flex flex-col items-end gap-4 px-6 mt-4' : 'hidden md:flex items-center gap-4'}`}>
     {!session?.user ? (
       <button onClick={() => signIn()} className="bg-black text-white px-5 py-2 rounded-md font-bold hover:opacity-80 transition-opacity">
         Login
@@ -56,7 +56,7 @@ const AuthButtons = ({ session, profileImageUrl, isMobile, setIsOpen }) => (
             Hi, {session.user.name.split(' ')[0]}
           </span>
         </Link>
-        <button onClick={() => signOut()} className="bg-gray-200 text-black px-4 py-2 rounded-md font-bold text-sm hover:bg-gray-300 transition-colors">
+        <button onClick={() => signOut()} className="bg-gray-200 text-black px-3 py-1 rounded-md font-bold text-sm hover:bg-gray-300 transition-colors">
           Logout
         </button>
       </>

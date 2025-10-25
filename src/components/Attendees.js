@@ -30,9 +30,17 @@ export default function Attendees({ attendees, total }) {
     );
   }
 
-  const displayedAttendees = attendees.slice(0, 12);
-  const firstAttendeeName = attendees[0]?.name;
+  const sortedAttendees = [...attendees].sort((a, b) => {
+    if (a.imageUrl && !b.imageUrl) return -1;
+    if (!a.imageUrl && b.imageUrl) return 1;
+    return 0;
+  });
+
+  const displayedAttendees = sortedAttendees.slice(0, 12);
   const othersCount = total - displayedAttendees.length;
+
+  const firstAttendeeName = sortedAttendees[0]?.name;
+  const secondAttendeeName = sortedAttendees[1]?.name;
 
   return (
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
@@ -59,7 +67,8 @@ export default function Attendees({ attendees, total }) {
         {firstAttendeeName && (
             <p className="text-sm text-gray-600 mt-4">
                 Joined by <strong className="text-black">{firstAttendeeName}</strong>
-                {total > 1 && ` and ${total - 1} other${total - 1 > 1 ? 's' : ''}`}
+                {secondAttendeeName && <>, <strong className="text-black">{secondAttendeeName}</strong></>}
+                {total > 2 && ` and ${total - 2} other${total - 2 > 1 ? 's' : ''}`}
             </p>
         )}
     </div>

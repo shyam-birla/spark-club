@@ -59,7 +59,22 @@ const registration = {
                   title: 'Field Value',
                   type: 'array',
                   of: [
-                    { type: 'string' },
+                    {
+                      type: 'object',
+                      name: 'stringValue',
+                      fields: [
+                        {
+                          name: 'value',
+                          type: 'string',
+                          title: 'Value',
+                        },
+                      ],
+                      preview: {
+                        select: {
+                          title: 'value',
+                        },
+                      },
+                    },
                     { type: 'file' },
                   ],
                 },
