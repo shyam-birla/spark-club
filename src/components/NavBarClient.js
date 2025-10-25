@@ -23,7 +23,7 @@ const NavMenu = ({ isMobile, setIsOpen }) => {
   );
 };
 
-const AuthButtons = ({ session, profileImageUrl, isMobile }) => (
+const AuthButtons = ({ session, profileImageUrl, isMobile, setIsOpen }) => (
   <div className={`${isMobile ? 'flex flex-col items-center gap-4 mt-6' : 'hidden md:flex items-center gap-4'}`}>
     {!session?.user ? (
       <button onClick={() => signIn()} className="bg-black text-white px-5 py-2 rounded-md font-bold hover:opacity-80 transition-opacity">
@@ -31,7 +31,7 @@ const AuthButtons = ({ session, profileImageUrl, isMobile }) => (
       </button>
     ) : (
       <>
-        <Link href="/profile" className="flex items-center gap-2 group cursor-pointer">
+        <Link href="/profile" className="flex items-center gap-2 group cursor-pointer" onClick={() => isMobile && setIsOpen(false)}>
           {profileImageUrl && (
             <Image src={profileImageUrl} alt={session.user.name} width={isMobile ? 32 : 40} height={isMobile ? 32 : 40} className="rounded-full" />
           )}
