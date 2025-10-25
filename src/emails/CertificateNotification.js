@@ -2,11 +2,12 @@ import * as React from 'react';
 
 const CertificateNotification = ({ userName, eventName, certificateUrl }) => (
   <html lang="en">
+    {/* eslint-disable-next-line @next/next/no-head-element */}
     <head>
       <meta charSet="UTF-8" />
       <meta name="viewport" content="width=device-width, initial-scale=1.0" />
       <title>Your Certificate from Spark Community!</title>
-      <style>
+      <style dangerouslySetInnerHTML={{__html: `
         body {
           font-family: 'Helvetica Neue', 'Helvetica', 'Arial', sans-serif;
           background-color: #f4f4f4;
@@ -69,7 +70,7 @@ const CertificateNotification = ({ userName, eventName, certificateUrl }) => (
           color: #ff6600;
           text-decoration: none;
         }
-      </style>
+      `}} />
     </head>
     <body>
       <div class="container">
