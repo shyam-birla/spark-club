@@ -1,6 +1,6 @@
 import Link from 'next/link';
 import Image from 'next/image';
-import { FaLinkedin, FaGithub, FaInstagram, FaWhatsapp } from 'react-icons/fa';
+import { FaLinkedin, FaGithub, FaInstagram, FaWhatsapp, FaFacebook, FaTwitter, FaYoutube } from 'react-icons/fa';
 import { client } from '../../sanity/lib/client';
 import { navLinks } from '../constants/navLinks';
 
@@ -8,7 +8,10 @@ const socialIconMap = {
   linkedin: FaLinkedin,
   github: FaGithub,
   instagram: FaInstagram,
-  whatsapp: FaWhatsapp
+  whatsapp: FaWhatsapp,
+  facebook: FaFacebook,
+  twitter: FaTwitter,
+  youtube: FaYoutube
 };
 
 const Footer = async () => {

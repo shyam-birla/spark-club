@@ -6,15 +6,32 @@ import { useState, useEffect, useCallback } from 'react';
 import { usePathname } from 'next/navigation';
 import { signIn, signOut } from 'next-auth/react';
 import { navLinks } from '../constants/navLinks';
+import { FaHome, FaCodeBranch, FaBook, FaCalendarAlt, FaFlask, FaInfoCircle, FaUsers, FaCog, FaNewspaper, FaEnvelope } from 'react-icons/fa';
 
 const NavMenu = ({ isMobile, setIsOpen }) => {
   const pathname = usePathname();
+
+  const IconComponents = {
+    FaHome,
+    FaCodeBranch,
+    FaBook,
+    FaCalendarAlt,
+    FaFlask,
+    FaInfoCircle,
+    FaUsers,
+    FaCog,
+    FaNewspaper,
+    FaEnvelope,
+  };
+
   return (
-    <nav className={`font-medium ${isMobile ? 'flex flex-col items-center gap-6 py-8' : 'hidden md:flex items-center gap-6'}`}>
+    <nav className={`font-medium ${isMobile ? 'flex flex-col items-end gap-6 px-6 py-8' : 'hidden md:flex items-center gap-6'}`}>
       {navLinks.map((link) => {
         const isActive = pathname.startsWith(link.href);
+        const Icon = IconComponents[link.icon];
         return (
-          <Link key={link.label} href={link.href} onClick={() => isMobile && setIsOpen(false)} className={`transition-colors ${isActive ? 'text-black' : 'text-gray-500 hover:text-black'}`} aria-current={isActive ? 'page' : undefined}>
+          <Link key={link.label} href={link.href} onClick={() => isMobile && setIsOpen(false)} className={`flex items-center gap-2 transition-colors ${isActive ? 'text-black' : 'text-gray-500 hover:text-black'}`} aria-current={isActive ? 'page' : undefined}>
+            {Icon && <Icon className="text-lg" />}
             {link.label}
           </Link>
         );
@@ -24,7 +41,7 @@ const NavMenu = ({ isMobile, setIsOpen }) => {
 };
 
 const AuthButtons = ({ session, profileImageUrl, isMobile, setIsOpen }) => (
-  <div className={`${isMobile ? 'flex flex-col items-center gap-4 mt-6' : 'hidden md:flex items-center gap-4'}`}>
+  <div className={`${isMobile ? 'flex flex-col items-end gap-4 px-6 mt-6' : 'hidden md:flex items-center gap-4'}`}>
     {!session?.user ? (
       <button onClick={() => signIn()} className="bg-black text-white px-5 py-2 rounded-md font-bold hover:opacity-80 transition-opacity">
         Login
@@ -87,9 +104,10 @@ export default function NavBarClient({ session, profileImageUrl }) {
         <Image src="/logo-black.png" alt="SPARK! Club Logo" width={40} height={40} className="object-contain" priority={true} />
       </Link>
 
-      <NavMenu />
-
-      <AuthButtons session={session} profileImageUrl={profileImageUrl} setIsOpen={setIsOpen} />
+      <div className="flex items-center gap-4">
+        <NavMenu />
+        <AuthButtons session={session} profileImageUrl={profileImageUrl} setIsOpen={setIsOpen} />
+      </div>
 
       <div className="md:hidden text-black">
         <button onClick={() => setIsOpen(!isOpen)} aria-label="Toggle menu" aria-expanded={isOpen}>
@@ -102,7 +120,7 @@ export default function NavBarClient({ session, profileImageUrl }) {
       </div>
 
       {isOpen && (
-        <div className="md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 max-h-screen overflow-y-auto">
+        <div className="md:hidden absolute top-full left-0 w-full bg-white/95 backdrop-blur-sm border-b border-gray-200 max-h-screen overflow-y-auto flex flex-col items-end">
           <NavMenu isMobile setIsOpen={setIsOpen} />
           <AuthButtons session={session} profileImageUrl={profileImageUrl} isMobile setIsOpen={setIsOpen} />
         </div>
