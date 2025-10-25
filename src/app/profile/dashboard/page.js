@@ -140,13 +140,13 @@ export default async function DashboardPage() {
                   </Link>
                 )}
                 {reg.certificate && (
-                  <div className="mt-4 flex flex-row flex-wrap gap-2">
+                  <div className="mt-4 grid grid-cols-2 gap-2">
                     {reg.certificate.certificateFileUrl && (
                       <a
                         href={reg.certificate.certificateFileUrl}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 gap-2"
+                        className="items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 gap-2"
                       >
                         <FaFilePdf /> View Certificate
                       </a>
@@ -154,7 +154,7 @@ export default async function DashboardPage() {
                     {reg.certificate.uniqueId && (
                       <Link
                         href={`/verify-certificate/${reg.certificate.uniqueId}`}
-                        className="inline-flex items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 gap-2"
+                        className="items-center justify-center px-3 py-1.5 border border-transparent text-sm font-medium rounded-md text-green-700 bg-green-100 hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-green-500 gap-2"
                       >
                         <FaCheckCircle /> Verify Certificate
                       </Link>

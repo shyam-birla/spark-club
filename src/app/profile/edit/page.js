@@ -4,7 +4,7 @@ import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { client } from '../../../../sanity/lib/client';
-import { FaPlus, FaTrash, FaCamera } from 'react-icons/fa';
+import { FaPlus, FaTrash, FaCamera, FaUser, FaTag, FaInfoCircle, FaGithub, FaLinkedin, FaLink, FaBuilding, FaGraduationCap, FaBriefcase, FaProjectDiagram } from 'react-icons/fa';
 import Image from 'next/image';
 
 export default function EditProfilePage() {
@@ -192,7 +192,8 @@ export default function EditProfilePage() {
 
     return (
         <main className="container mx-auto px-4 py-12 md:py-20 bg-white">
-            <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl border border-gray-200 shadow-md">
+            <title>Edit Profile | Spark Community</title>
+            <div className="max-w-2xl mx-auto bg-white p-8 rounded-xl border border-gray-200 shadow-lg">
                 <h1 className="text-3xl font-bold mb-6">Edit Your Profile</h1>
                 
                 <form onSubmit={handleSubmit} className="space-y-8">
@@ -211,7 +212,7 @@ export default function EditProfilePage() {
                                 />
                             </div>
                             <div>
-                                <label htmlFor="profileImage" className="cursor-pointer bg-gray-100 text-black px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-200">
+                                <label htmlFor="profileImage" className="cursor-pointer bg-gradient-to-r from-blue-500 to-purple-600 text-white px-5 py-2.5 rounded-lg font-semibold text-sm shadow-md hover:from-blue-600 hover:to-purple-700 transition-all duration-300 ease-in-out flex items-center">
                                     <FaCamera className="inline-block mr-2" />
                                     {isUploading ? 'Uploading...' : 'Change Picture'}
                                 </label>
@@ -228,72 +229,102 @@ export default function EditProfilePage() {
                             </div>
                         </div>
 
-                        <div>
-                            <label htmlFor="userName" className="block text-sm font-medium text-gray-700">Full Name</label>
-                            <input type="text" name="userName" id="userName" value={formData.userName} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" required />
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <FaUser className="text-gray-400" />
+                            </div>
+                            <input type="text" name="userName" id="userName" value={formData.userName} onChange={handleChange} className="mt-1 block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm" required />
                         </div>
-                        <div>
-                            <label htmlFor="tagline" className="block text-sm font-medium text-gray-700">Tagline</label>
-                            <input type="text" name="tagline" id="tagline" value={formData.tagline} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" placeholder="e.g., Aspiring Full-Stack Developer" />
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <FaTag className="text-gray-400" />
+                            </div>
+                            <input type="text" name="tagline" id="tagline" value={formData.tagline} onChange={handleChange} className="mt-1 block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm" placeholder="e.g., Aspiring Full-Stack Developer" />
                         </div>
-                        <div>
-                            <label htmlFor="bio" className="block text-sm font-medium text-gray-700">About Me / Bio</label>
-                            <textarea name="bio" id="bio" rows="4" value={formData.bio} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"></textarea>
+                        <div className="relative">
+                            <div className="absolute top-3 left-3 pointer-events-none">
+                                <FaInfoCircle className="text-gray-400" />
+                            </div>
+                            <textarea name="bio" id="bio" rows="4" value={formData.bio} onChange={handleChange} className="mt-1 block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm"></textarea>
                         </div>
-                        <div>
-                            <label htmlFor="githubUrl" className="block text-sm font-medium text-gray-700">GitHub Profile URL</label>
-                            <input type="url" name="githubUrl" id="githubUrl" value={formData.githubUrl} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" placeholder="https://github.com/username" />
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <FaGithub className="text-gray-400" />
+                            </div>
+                            <input type="url" name="githubUrl" id="githubUrl" value={formData.githubUrl} onChange={handleChange} className="mt-1 block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm" placeholder="https://github.com/username" />
                         </div>
-                        <div>
-                            <label htmlFor="linkedinUrl" className="block text-sm font-medium text-gray-700">LinkedIn Profile URL</label>
-                            <input type="url" name="linkedinUrl" id="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" placeholder="https://linkedin.com/in/username" />
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <FaLinkedin className="text-gray-400" />
+                            </div>
+                            <input type="url" name="linkedinUrl" id="linkedinUrl" value={formData.linkedinUrl} onChange={handleChange} className="mt-1 block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm" placeholder="https://linkedin.com/in/username" />
                         </div>
-                        <div>
-                            <label htmlFor="portfolioUrl" className="block text-sm font-medium text-gray-700">Personal Portfolio URL</label>
-                            <input type="url" name="portfolioUrl" id="portfolioUrl" value={formData.portfolioUrl} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" placeholder="https://my-website.com" />
+                        <div className="relative">
+                            <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                                <FaLink className="text-gray-400" />
+                            </div>
+                            <input type="url" name="portfolioUrl" id="portfolioUrl" value={formData.portfolioUrl} onChange={handleChange} className="mt-1 block w-full pl-10 px-3 py-2 border border-gray-300 rounded-md shadow-sm" placeholder="https://my-website.com" />
                         </div>
                     </div>
 
                     <div className="space-y-4">
-                        <h2 className="text-xl font-semibold border-b pb-2">Education</h2>
+                        <h2 className="text-xl font-semibold border-b pb-3 flex items-center gap-3"><FaGraduationCap /> Education</h2>
                         {formData.education.map((edu, index) => (
-                            <div key={edu._key || index} className="p-4 border rounded-md space-y-3 relative">
-                                <button type="button" onClick={() => removeArrayItem(index, 'education')} className="absolute top-2 right-2 text-red-500 hover:text-red-700"><FaTrash /></button>
-                                <input name="school" placeholder="School/University" value={edu.school} onChange={(e) => handleArrayChange(index, e, 'education')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
-                                <input name="degree" placeholder="Degree" value={edu.degree} onChange={(e) => handleArrayChange(index, e, 'education')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
-                                <div className="flex gap-4">
+                            <div key={edu._key || index} className="p-4 border rounded-lg space-y-4 relative bg-gray-50">
+                                <button type="button" onClick={() => removeArrayItem(index, 'education')} className="absolute top-3 right-3 text-white bg-gradient-to-r from-red-500 to-orange-500 rounded-full p-2 hover:scale-110 transition-transform"><FaTrash /></button>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><FaBuilding className="text-gray-400" /></div>
+                                    <input name="school" placeholder="School/University" value={edu.school} onChange={(e) => handleArrayChange(index, e, 'education')} className="w-full mt-1 block pl-10 px-3 py-2 border border-gray-300 rounded-md" />
+                                </div>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><FaGraduationCap className="text-gray-400" /></div>
+                                    <input name="degree" placeholder="Degree" value={edu.degree} onChange={(e) => handleArrayChange(index, e, 'education')} className="w-full mt-1 block pl-10 px-3 py-2 border border-gray-300 rounded-md" />
+                                </div>
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <input type="month" name="startDate" value={edu.startDate} onChange={(e) => handleArrayChange(index, e, 'education')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
                                     <input type="month" name="endDate" value={edu.endDate} onChange={(e) => handleArrayChange(index, e, 'education')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
                                 </div>
                             </div>
                         ))}
-                        <button type="button" onClick={() => addArrayItem('education')} className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"><FaPlus /> Add Education</button>
+                        <button type="button" onClick={() => addArrayItem('education')} className="flex items-center gap-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg px-4 py-2 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 ease-in-out"><FaPlus /> Add Education</button>
                     </div>
 
                     <div className="space-y-4">
-                        <h2 className="text-xl font-semibold border-b pb-2">Work Experience</h2>
+                        <h2 className="text-xl font-semibold border-b pb-3 flex items-center gap-3"><FaBriefcase /> Work Experience</h2>
                         {formData.workExperience.map((work, index) => (
-                             <div key={work._key || index} className="p-4 border rounded-md space-y-3 relative">
-                                <button type="button" onClick={() => removeArrayItem(index, 'workExperience')} className="absolute top-2 right-2 text-red-500 hover:text-red-700"><FaTrash /></button>
-                                <input name="company" placeholder="Company" value={work.company} onChange={(e) => handleArrayChange(index, e, 'workExperience')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
-                                <input name="title" placeholder="Job Title" value={work.title} onChange={(e) => handleArrayChange(index, e, 'workExperience')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
+                             <div key={work._key || index} className="p-4 border rounded-lg space-y-4 relative bg-gray-50">
+                                <button type="button" onClick={() => removeArrayItem(index, 'workExperience')} className="absolute top-3 right-3 text-white bg-gradient-to-r from-red-500 to-orange-500 rounded-full p-2 hover:scale-110 transition-transform"><FaTrash /></button>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><FaBuilding className="text-gray-400" /></div>
+                                    <input name="company" placeholder="Company" value={work.company} onChange={(e) => handleArrayChange(index, e, 'workExperience')} className="w-full mt-1 block pl-10 px-3 py-2 border border-gray-300 rounded-md" />
+                                </div>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><FaBriefcase className="text-gray-400" /></div>
+                                    <input name="title" placeholder="Job Title" value={work.title} onChange={(e) => handleArrayChange(index, e, 'workExperience')} className="w-full mt-1 block pl-10 px-3 py-2 border border-gray-300 rounded-md" />
+                                </div>
                                 <textarea name="description" placeholder="Description of your role" value={work.description} onChange={(e) => handleArrayChange(index, e, 'workExperience')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
-                                <div className="flex gap-4">
+                                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                                     <input type="month" name="startDate" value={work.startDate} onChange={(e) => handleArrayChange(index, e, 'workExperience')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
                                     <input type="month" name="endDate" value={work.endDate} onChange={(e) => handleArrayChange(index, e, 'workExperience')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
                                 </div>
                             </div>
                         ))}
-                        <button type="button" onClick={() => addArrayItem('workExperience')} className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"><FaPlus /> Add Work Experience</button>
+                        <button type="button" onClick={() => addArrayItem('workExperience')} className="flex items-center gap-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg px-4 py-2 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 ease-in-out"><FaPlus /> Add Work Experience</button>
                     </div>
 
                     <div className="space-y-4">
-                        <h2 className="text-xl font-semibold border-b pb-2">Personal Projects</h2>
+                        <h2 className="text-xl font-semibold border-b pb-3 flex items-center gap-3"><FaProjectDiagram /> Personal Projects</h2>
                         {formData.externalProjects.map((proj, index) => (
-                            <div key={proj._key || index} className="p-4 border rounded-md space-y-3 relative">
-                                <button type="button" onClick={() => removeArrayItem(index, 'externalProjects')} className="absolute top-2 right-2 text-red-500 hover:text-red-700"><FaTrash /></button>
-                                <input name="title" placeholder="Project Title" value={proj.title} onChange={(e) => handleArrayChange(index, e, 'externalProjects')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
-                                <input name="projectUrl" placeholder="Project URL (GitHub/Live)" value={proj.projectUrl} onChange={(e) => handleArrayChange(index, e, 'externalProjects')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
+                            <div key={proj._key || index} className="p-4 border rounded-lg space-y-4 relative bg-gray-50">
+                                <button type="button" onClick={() => removeArrayItem(index, 'externalProjects')} className="absolute top-3 right-3 text-white bg-gradient-to-r from-red-500 to-orange-500 rounded-full p-2 hover:scale-110 transition-transform"><FaTrash /></button>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><FaProjectDiagram className="text-gray-400" /></div>
+                                    <input name="title" placeholder="Project Title" value={proj.title} onChange={(e) => handleArrayChange(index, e, 'externalProjects')} className="w-full mt-1 block pl-10 px-3 py-2 border border-gray-300 rounded-md" />
+                                </div>
+                                <div className="relative">
+                                    <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"><FaLink className="text-gray-400" /></div>
+                                    <input name="projectUrl" placeholder="Project URL (GitHub/Live)" value={proj.projectUrl} onChange={(e) => handleArrayChange(index, e, 'externalProjects')} className="w-full mt-1 block pl-10 px-3 py-2 border border-gray-300 rounded-md" />
+                                </div>
                                 <textarea name="description" placeholder="Short description" value={proj.description} onChange={(e) => handleArrayChange(index, e, 'externalProjects')} className="w-full mt-1 block px-3 py-2 border border-gray-300 rounded-md" />
                                 
                                 <div>
@@ -314,11 +345,11 @@ export default function EditProfilePage() {
                                 </div>
                             </div>
                         ))}
-                        <button type="button" onClick={() => addArrayItem('externalProjects')} className="flex items-center gap-2 text-sm font-medium text-blue-600 hover:text-blue-800"><FaPlus /> Add Personal Project</button>
+                        <button type="button" onClick={() => addArrayItem('externalProjects')} className="flex items-center gap-2 text-sm font-medium text-white bg-gradient-to-r from-blue-500 to-purple-600 rounded-lg px-4 py-2 hover:from-blue-600 hover:to-purple-700 transition-all duration-300 ease-in-out"><FaPlus /> Add Personal Project</button>
                     </div>
 
                     <div className="text-right">
-                        <button type="submit" disabled={saving || isUploading} className="bg-black text-white px-6 py-2 rounded-md font-semibold hover:opacity-80 disabled:bg-gray-400">
+                        <button type="submit" disabled={saving || isUploading} className="bg-gradient-to-r from-green-500 to-teal-500 text-white px-8 py-3 rounded-lg font-semibold hover:from-green-600 hover:to-teal-600 transition-all duration-300 ease-in-out disabled:bg-gray-400 disabled:from-gray-400 disabled:to-gray-400">
                             {saving ? 'Saving...' : 'Save Changes'}
                         </button>
                     </div>

@@ -39,10 +39,10 @@ export default function Attendees({ attendees, total }) {
         <h3 className="font-bold text-lg mb-4 flex items-center gap-2"><FaUsers /> <span className="text-2xl font-extrabold text-black">{total}+</span> Attendees are coming in this event</h3>
         
         <div className="flex flex-wrap -space-x-2">
-            {displayedAttendees.map(attendee => (
+            {displayedAttendees.map((attendee, index) => (
                 attendee.imageUrl ? (
                     <Image
-                        key={attendee._key}
+                        key={attendee._id || attendee._key || index}
                         src={attendee.imageUrl}
                         alt={attendee.name || 'Attendee'}
                         width={40}

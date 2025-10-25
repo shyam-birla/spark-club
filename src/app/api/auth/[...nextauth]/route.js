@@ -22,18 +22,36 @@ export const authOptions = {
   pages: {
     signIn: '/login', // Hum NextAuth ko bata rahe hain ki login ke liye is URL ka page dikhao
   },
+  session: {
+    strategy: 'jwt',
+    maxAge: 30 * 24 * 60 * 60, // 30 days
+  },
   callbacks: {
+    async jwt({ token, user, account, profile }) {
+      // Persist the OAuth access_token and the user id to the token right after signin
+      if (account) {
+        token.accessToken = account.access_token;
+        token.id = user.id;
+      }
+      // Add user role to the token
+      if (user) {
+        const userProfile = await client.fetch(
+          `*[_type == "profile" && userEmail == $email][0]`,
+          { email: user.email }
+        );
+        token.role = userProfile?.role || 'member';
+      }
+      return token;
+    },
     async session({ session, token }) {
-      // Fetch user's role from Sanity
-      const userProfile = await client.fetch(
-        `*[_type == "profile" && userEmail == $email][0]`,
-        { email: session.user.email }
-      );
-      session.user.role = userProfile?.role || 'member';
+      // Send properties to the client, like an access_token and user id from a provider.
+      session.accessToken = token.accessToken;
+      session.user.id = token.id;
+      session.user.role = token.role; // Add role from token to session
       return session;
     },
   },
-  // --- END OF CHANGE ---
+  debug: true, // Enable debug messages in the console
 };
 
 const handler = NextAuth(authOptions);

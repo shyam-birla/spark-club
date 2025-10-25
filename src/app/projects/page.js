@@ -23,7 +23,7 @@ export default async function ProjectsPage() {
     <section className="mb-12">
       <h2 className="text-3xl font-bold text-black mb-6 border-b-2 border-green-500 pb-2">{title}</h2>
       {projectsList.length > 0 ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
+        <div className="grid grid-cols-2 md:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-8">
           {projectsList.map((project) => (
             <ProjectCard key={project._id} project={project} />
           ))}
@@ -42,15 +42,15 @@ export default async function ProjectsPage() {
         <p className="text-gray-600 mb-12 text-center">Explore our ongoing and past projects.</p>
         
         {renderProjectSection(
-          'Upcoming Projects',
-          upcomingProjects,
-          'No upcoming projects at the moment. Stay tuned for exciting new initiatives!'
-        )}
-
-        {renderProjectSection(
           'In Progress Projects',
           inProgressProjects,
           'No projects currently in progress. Check back later for updates!'
+        )}
+
+        {renderProjectSection(
+          'Upcoming Projects',
+          upcomingProjects,
+          'No upcoming projects at the moment. Stay tuned for exciting new initiatives!'
         )}
 
         {renderProjectSection(
