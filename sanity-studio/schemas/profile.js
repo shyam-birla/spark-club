@@ -1,16 +1,25 @@
 // schemas/profile.js
 const profile = {
-    name: 'profile',
-    title: 'User Profile',
-    type: 'document',
-    fields: [
-        { 
+    name: 'profile',
+    title: 'User Profile',
+    type: 'document',
+    fields: [
+        {
+            name: 'uniqueProfileId',
+            title: 'Unique Profile ID',
+            type: 'slug',
+            options: {
+                source: 'userName',
+                maxLength: 96,
+            },
+            validation: Rule => Rule.required(),
+        },
+        {
             name: 'userEmail', 
             title: 'User Email', 
             type: 'string', 
             validation: Rule => Rule.required().email() 
-        },
-        { 
+        },        { 
             name: 'userName', 
             title: 'Full Name (for Certificate)', 
             type: 'string' 

@@ -44,7 +44,7 @@ const WhatWeDoSection = () => {
   return (
     // === YAHAN BADLAV KIYA GAYA HAI ===
     // Background ko semi-transparent aur blurred kiya gaya hai
-    <section className="bg-white/50 backdrop-blur-sm py-10 md:py-20 px-4">
+    <section className="bg-white/80 backdrop-blur-sm py-10 md:py-20 px-4">
       <div className="container mx-auto text-center">
         <h2 className="text-2xl md:text-3xl font-bold text-black mb-8 md:mb-12">What We Do</h2>
         

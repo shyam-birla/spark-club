@@ -25,7 +25,7 @@ const blogPost = {
       name: 'author',
       title: 'Author',
       type: 'reference', // Doosre schema se link karne ke liye
-      to: {type: 'member'}, // 'member' schema se link karega
+      to: {type: 'person'}, // 'person' schema se link karega
       validation: (Rule) => Rule.required(),
     },
     {
@@ -47,6 +47,20 @@ const blogPost = {
       title: 'Body',
       type: 'blockContent', // Rich text editor ke liye
       validation: (Rule) => Rule.required(),
+    },
+    {
+      name: 'approvalStatus',
+      title: 'Approval Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Draft', value: 'draft' },
+          { title: 'Pending Approval', value: 'pending_approval' },
+          { title: 'Published', value: 'published' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'published',
     },
   ],
 

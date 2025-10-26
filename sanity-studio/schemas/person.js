@@ -24,6 +24,29 @@ const person = {
         hotspot: true,
       },
     },
+    {
+      name: 'linkedinUrl',
+      title: 'LinkedIn URL',
+      type: 'url',
+      validation: (Rule) => Rule.uri({ scheme: ['http', 'https'] }),
+    },
+    {
+      name: 'githubUrl',
+      title: 'GitHub URL',
+      type: 'url',
+      validation: (Rule) => Rule.uri({ scheme: ['http', 'https'] }),
+    },
+    {
+      name: 'instagramUrl',
+      title: 'Instagram URL',
+      type: 'url',
+      validation: (Rule) => Rule.uri({ scheme: ['http', 'https'] }),
+    },
+    {
+      name: 'whatsappNo',
+      title: 'WhatsApp Number',
+      type: 'string',
+    },
   ],
 };
 

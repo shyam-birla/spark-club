@@ -1,5 +1,6 @@
 'use client';
 
+import { useState } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { motion } from 'framer-motion';
@@ -43,10 +44,19 @@ const getInitials = (name) => {
 };
 
 export default function ProfileClient({ session, profileData }) {
+    const [copied, setCopied] = useState(false); // State for copy feedback
     const trulyCompleted = profileData?.completedRoadmaps?.filter(p => p.completedCount === p.roadmap.totalResources) || [];
     const userDisplayName = profileData?.userName || session?.user?.name || 'User';
     const initials = getInitials(userDisplayName);
     const profileImageUrl = profileData?.userImage ? urlFor(profileData.userImage).width(120).height(120).url() : null; // Set to null if no custom image
+
+    const handleCopy = () => {
+        if (profileData?.uniqueProfileId) {
+            navigator.clipboard.writeText(profileData.uniqueProfileId);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000); // Reset copied state after 2 seconds
+        }
+    };
 
     return (
         <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20 min-h-screen">
@@ -82,6 +92,17 @@ export default function ProfileClient({ session, profileData }) {
                                 )}
                                 <h1 className="text-2xl font-bold text-black mt-4">{userDisplayName}</h1>
                                 <p className="text-sm text-gray-600 mt-1">{profileData?.headline || ''}</p>
+                                {profileData?.uniqueProfileId && (
+                                    <div className="mt-3 flex items-center justify-center gap-2 bg-gray-100 p-2 rounded-md">
+                                        <span className="text-sm font-mono text-gray-700">ID: {profileData.uniqueProfileId}</span>
+                                        <button
+                                            onClick={handleCopy}
+                                            className="bg-blue-500 text-white px-3 py-1 rounded-md text-xs hover:bg-blue-600 transition-colors"
+                                        >
+                                            {copied ? 'Copied!' : 'Copy'}
+                                        </button>
+                                    </div>
+                                )}
                                 <div className="mt-4 flex justify-center gap-3">
                                     <Link href="/profile/edit">
                                         <button className="bg-orange-600 text-white px-4 py-2 rounded-md flex items-center gap-2"><FaEdit /> Edit Profile</button>

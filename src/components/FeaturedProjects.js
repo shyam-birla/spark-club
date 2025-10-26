@@ -45,7 +45,7 @@ const FeaturedProjects = ({ projects = [], showTitle = true, showButton = true }
 
   return (
     // Background ko bhi consistent rakha gaya hai
-    <section className="bg-grey/40 backdrop-blur-sm py-20 px-4">
+    <section className="bg-white/80 backdrop-blur-sm py-20 px-4">
       <div className="container mx-auto text-center">
         
         {/* 2. Title ko conditionally render kiya gaya hai */}

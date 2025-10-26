@@ -12,6 +12,7 @@ async function getFullUserProfile(email) {
 
     const query = `*[_type == "profile" && userEmail == $email][0]{
         ...,
+        uniqueProfileId,
         // Projects authored by user
         "projects": *[_type == "project" && references(^._id)]{
             ...,

@@ -38,7 +38,82 @@ const project = {
       },
       validation: (Rule) => Rule.required(),
     },
-    // 'authors' field ko yahan se hata diya gaya hai.
+    {
+      name: 'projectType',
+      title: 'Project Type',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Solo Project', value: 'solo' },
+          { title: 'Team Project', value: 'team' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'team',
+    },
+    {
+      name: 'soloContributor',
+      title: 'Solo Contributor',
+      type: 'object',
+      fields: [
+        {
+          name: 'profileRef',
+          title: 'Contributor Profile',
+          type: 'reference',
+          to: [{ type: 'profile' }],
+        },
+        {
+          name: 'projectRole',
+          title: 'Role in Project',
+          type: 'string',
+        },
+      ],
+      hidden: ({ parent }) => parent?.projectType !== 'solo',
+    },
+    {
+      name: 'teamMembers',
+      title: 'Team Members',
+      type: 'array',
+      of: [
+        {
+          type: 'object',
+          fields: [
+            {
+              name: 'profileRef',
+              title: 'Member Profile',
+              type: 'reference',
+              to: [{ type: 'profile' }],
+            },
+            {
+              name: 'projectRole',
+              title: 'Role in Project',
+              type: 'string',
+            },
+            {
+              name: 'isTeamLead',
+              title: 'Team Lead',
+              type: 'boolean',
+              initialValue: false,
+            },
+          ],
+          preview: {
+            select: {
+              title: 'profileRef.name',
+              subtitle: 'projectRole',
+              isTeamLead: 'isTeamLead',
+            },
+            prepare({ title, subtitle, isTeamLead }) {
+              return {
+                title: `${title}${isTeamLead ? ' (Lead)' : ''}`,
+                subtitle,
+              };
+            },
+          },
+        },
+      ],
+      hidden: ({ parent }) => parent?.projectType !== 'team',
+    },
+
     {
       name: 'status',
       title: 'Status',
@@ -67,6 +142,13 @@ const project = {
       type: 'image',
       options: { hotspot: true },
       description: 'This image appears on the project card in the list of all projects. Should be a poster-style image.'
+    },
+    {
+      name: 'galleryImages',
+      title: 'Project Gallery Images',
+      type: 'array',
+      of: [{ type: 'image', options: { hotspot: true } }],
+      description: 'Additional images for the project detail page gallery.'
     },
     {
       name: 'description',
@@ -108,14 +190,19 @@ const project = {
       title: 'Live Demo URL',
       type: 'url',
     },
-    
-    // --- TEAM MEMBERS FIELD UPDATED TO REFERENCE 'member' ---
     {
-      name: 'teamMembers',
-      title: 'Team Members',
-      type: 'array',
-      // Ab yeh 'member' schema se data lega
-      of: [{ type: 'reference', to: { type: 'member' } }], 
+      name: 'approvalStatus',
+      title: 'Approval Status',
+      type: 'string',
+      options: {
+        list: [
+          { title: 'Draft', value: 'draft' },
+          { title: 'Pending Approval', value: 'pending_approval' },
+          { title: 'Published', value: 'published' },
+        ],
+        layout: 'radio',
+      },
+      initialValue: 'published',
     },
   ],
   orderings: [

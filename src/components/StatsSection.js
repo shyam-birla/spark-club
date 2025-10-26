@@ -12,7 +12,7 @@ const StatsSection = ({ stats }) => {
   ];
 
   return (
-    <section className="bg-gray-50/50 backdrop-blur-sm pt-20 pb-10 text-black">
+    <section className="bg-white/80 backdrop-blur-sm pt-20 pb-10 text-black">
       <div className="container mx-auto px-4 text-center">
         {/* === YAHAN HEADING ADD KI GAYI HAI === */}
         <h2 className="text-3xl font-bold text-black mb-12"> - Community Stats - </h2>

@@ -13,11 +13,20 @@ const postQuery = `*[_type == "blogPost" && slug.current == $slug][0]{
   title,
   "imageUrl": coverImage.asset->url,
   publishedAt,
+  description, // Added description to the query
   author->{
     name,
     "authorImageUrl": image.asset->url
   },
   body
+}`;
+
+const relatedPostsQuery = `*[_type == "blogPost" && _id != $currentPostId && approvalStatus == "published"] | order(publishedAt desc) [0...3]{
+  _id,
+  title,
+  "slug": slug.current,
+  "imageUrl": coverImage.asset->url,
+  publishedAt
 }`;
 
 export default async function BlogPostPage({ params }) {
@@ -28,6 +37,8 @@ export default async function BlogPostPage({ params }) {
     return <div>Post not found.</div>;
   }
 
+  const relatedPosts = await client.fetch(relatedPostsQuery, { currentPostId: post._id });
+
   const formattedDate = new Date(post.publishedAt).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -36,7 +47,7 @@ export default async function BlogPostPage({ params }) {
 
   return (
     // Main tag mein background style add kiya
-    <main className="bg-white/40 backdrop-blur-sm py-20">
+    <main className="bg-white/80 backdrop-blur-sm py-20">
       <article className="container mx-auto px-4 max-w-3xl">
         <h1 className="text-4xl md:text-5xl font-bold mb-4 text-black">{post.title}</h1>
         
@@ -70,6 +81,17 @@ export default async function BlogPostPage({ params }) {
         <div className="prose lg:prose-xl max-w-none leading-relaxed">
           <PortableTextComponent value={post.body} />
         </div>
+
+        {relatedPosts.length > 0 && (
+          <section className="mt-16 pt-8 border-t border-gray-200">
+            <h2 className="text-2xl font-bold text-black mb-6">More from the Blog</h2>
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              {relatedPosts.map(relatedPost => (
+                <BlogPostCard key={relatedPost._id} post={relatedPost} />
+              ))}
+            </div>
+          </section>
+        )}
       </article>
     </main>
   );

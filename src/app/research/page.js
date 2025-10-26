@@ -7,9 +7,10 @@ import Image from 'next/image';
 import AnimatedSection from '@/components/AnimatedSection';
 import { FaFlask, FaSearch, FaFilter, FaTag, FaExclamationCircle } from 'react-icons/fa';
 import Breadcrumbs from '@/components/Breadcrumbs';
+import CallToAction from '@/components/CallToAction';
 
 // Query to fetch all research projects
-const researchProjectsQuery = `*[_type == "researchProject"] | order(status asc, _createdAt desc) {
+const researchProjectsQuery = `*[_type == "researchProject" && approvalStatus == "published"] | order(status asc, _createdAt desc) {
   _id,
   title,
   "slug": slug.current,
@@ -41,6 +42,7 @@ export default function ResearchPage() {
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState('');
   const [selectedArea, setSelectedArea] = useState('all');
+  const [sortOrder, setSortOrder] = useState('newest');
 
   useEffect(() => {
     const fetchProjects = async () => {
@@ -70,13 +72,27 @@ export default function ResearchPage() {
       filtered = filtered.filter(project => project.researchArea === selectedArea);
     }
 
+    // Apply sorting
+    filtered.sort((a, b) => {
+      if (sortOrder === 'newest') {
+        return new Date(b._createdAt) - new Date(a._createdAt); // Assuming _createdAt exists
+      } else if (sortOrder === 'oldest') {
+        return new Date(a._createdAt) - new Date(b._createdAt);
+      } else if (sortOrder === 'a-z') {
+        return a.title.localeCompare(b.title);
+      } else if (sortOrder === 'z-a') {
+        return b.title.localeCompare(a.title);
+      }
+      return 0;
+    });
+
     setFilteredProjects(filtered);
-  }, [searchTerm, selectedArea, projects]);
+  }, [searchTerm, selectedArea, sortOrder, projects]);
 
   const researchAreas = ['all', 'ai-ml', 'blockchain-web3', 'cybersecurity', 'iot', 'dsai', 'other'];
 
   return (
-    <main className="bg-gray-50/50 backdrop-blur-sm py-20">
+    <main className="bg-white/80 backdrop-blur-sm py-20">
       <div className="container mx-auto px-4">
         <Breadcrumbs items={[{ label: 'Home', href: '/', icon: 'FaHome' }, { label: 'Research', icon: 'FaFlask' }]} className="mb-4" />
         <div className="text-center">
@@ -87,6 +103,13 @@ export default function ResearchPage() {
                 Exploring the frontiers of technology. Here you can find our community&apos;s ongoing and completed research projects.
             </p>
         </div>
+
+        <CallToAction
+          title="Have a Research Idea?"
+          description="We are always looking for new and exciting research projects to work on. If you have an idea, we would love to hear it!"
+          buttonText="Submit Your Research Project"
+          buttonLink="/research/new"
+        />
 
         {/* Filter and Search Controls */}
         <div className="mb-12 flex flex-col md:flex-row gap-4">
@@ -111,6 +134,19 @@ export default function ResearchPage() {
                   {area.replace('-', ' ').toUpperCase()}
                 </option>
               ))}
+            </select>
+          </div>
+          {/* Sort Order Dropdown */}
+          <div className="relative w-full md:w-1/4">
+            <select
+              className="w-full p-3 px-4 border border-gray-300 rounded-lg shadow-sm focus:ring-2 focus:ring-orange-500 transition-shadow"
+              value={sortOrder}
+              onChange={e => setSortOrder(e.target.value)}
+            >
+              <option value="newest">Sort by: Newest</option>
+              <option value="oldest">Sort by: Oldest</option>
+              <option value="a-z">Sort by: A-Z</option>
+              <option value="z-a">Sort by: Z-A</option>
             </select>
           </div>
         </div>

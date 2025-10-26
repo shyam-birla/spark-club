@@ -3,7 +3,8 @@ import Image from 'next/image';
 import Link from 'next/link';
 import PortableTextComponent from '@/components/PortableTextComponent';
 import Breadcrumbs from '@/components/Breadcrumbs';
-import { FaGithub, FaExternalLinkAlt, FaCheckCircle, FaHourglassHalf, FaCodeBranch, FaUsers, FaInfoCircle, FaCode, FaHome, FaProjectDiagram } from 'react-icons/fa';
+import ImageGalleryWithLightbox from '@/components/ImageGalleryWithLightbox'; // Import the gallery component
+import { FaGithub, FaExternalLinkAlt, FaCheckCircle, FaHourglassHalf, FaCodeBranch, FaUsers, FaInfoCircle, FaCode, FaHome, FaProjectDiagram, FaLinkedin, FaTwitter, FaFacebook } from 'react-icons/fa';
 
 // Yeh Next.js ko batata hai ki kaun kaun se project pages hain
 export async function generateStaticParams() {
@@ -16,6 +17,7 @@ const projectQuery = `*[_type == "project" && slug.current == $slug][0]{
   title,
   description,
   "mainImageUrl": mainImage.asset->url,
+  "galleryImages": galleryImages[].asset->url,
   tags,
   githubUrl,
   liveUrl,
@@ -25,12 +27,34 @@ const projectQuery = `*[_type == "project" && slug.current == $slug][0]{
     name,
     "logoUrl": logo.asset->url
   },
-  teamMembers[]->{
-    _id,
-    name,
-    role,
-    "imageUrl": image.asset->url
-  }
+  teamMembers[]{
+    isTeamLead,
+    projectRole,
+    profileRef->{
+      _id,
+      name,
+      "imageUrl": userImage.asset->url
+    }
+  },
+  soloContributor{
+    projectRole,
+    profileRef->{
+      _id,
+      name,
+      "imageUrl": userImage.asset->url
+    }
+  },
+  projectType
+}`;
+
+const relatedProjectsQuery = `*[_type == "project" && _id != $currentProjectId && count(tags[@in $currentProjectTags]) > 0] | order(_createdAt desc) [0...3]{
+  _id,
+  title,
+  "slug": slug.current,
+  description,
+  "cardImageUrl": cardImage.asset->url,
+  tags,
+  status
 }`;
 
 export default async function ProjectDetailPage({ params }) {
@@ -41,6 +65,10 @@ export default async function ProjectDetailPage({ params }) {
     return <div>Project not found.</div>;
   }
 
+  const relatedProjects = project.tags && project.tags.length > 0
+    ? await client.fetch(relatedProjectsQuery, { currentProjectId: project._id, currentProjectTags: project.tags })
+    : [];
+
   const breadcrumbs = [
     { label: 'Home', href: '/', icon: 'FaHome' },
     { label: 'Projects', href: '/projects', icon: 'FaProjectDiagram' },
@@ -48,16 +76,26 @@ export default async function ProjectDetailPage({ params }) {
   ];
 
   return (
-    <main className="bg-gray-50/50 backdrop-blur-sm py-12 md:py-20">
+    <main className="bg-white/80 backdrop-blur-sm py-12 md:py-20">
           <div className="container mx-auto px-4">
             <Breadcrumbs items={breadcrumbs} className="mb-4" />
+            <div className="mb-8">
+              <Link href="/projects">
+                <button className="bg-gray-200 text-gray-800 px-4 py-2 rounded-md font-semibold text-sm hover:bg-gray-300 transition-colors flex items-center gap-2">
+                  <FaHome /> Back to Projects
+                </button>
+              </Link>
+            </div>
             <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
               <aside className="lg:col-span-1 space-y-6 lg:sticky top-24 self-start">
-                {project.mainImageUrl && (
-                  <div className="relative w-full aspect-video md:aspect-square rounded-2xl overflow-hidden shadow-lg">
-                    <Image src={project.mainImageUrl} alt={project.title} fill className="object-cover" sizes="(max-width: 1024px) 100vw, 33vw" />
-                  </div>
-                )}
+                {project.mainImageUrl || (project.galleryImages && project.galleryImages.length > 0) ? (
+                  <ImageGalleryWithLightbox
+                    images={[
+                      ...(project.mainImageUrl ? [{ src: project.mainImageUrl, alt: project.title }] : []),
+                      ...(project.galleryImages ? project.galleryImages.map(url => ({ src: url, alt: project.title })) : []),
+                    ]}
+                  />
+                ) : null}
                 {project.technologies && project.technologies.length > 0 && (
                   <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                     <h3 className="font-bold text-lg mb-4 text-black flex items-center gap-2"><FaCodeBranch className="text-orange-500" /> Technologies Used</h3>
@@ -71,17 +109,27 @@ export default async function ProjectDetailPage({ params }) {
                     </div>
                   </div>
                 )}
-                {project.teamMembers && project.teamMembers.length > 0 && (
+                {(project.projectType === 'team' && project.teamMembers && project.teamMembers.length > 0) && (
                   <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
                     <h3 className="font-bold text-lg mb-4 text-black flex items-center gap-2"><FaUsers className="text-blue-500" /> Meet the Team</h3>
                     <div className="grid grid-cols-2 gap-4">
                       {project.teamMembers.map(member => (
-                        <div key={member._id} className="text-center">
-                          {member.imageUrl && <Image src={member.imageUrl} alt={member.name} width={80} height={80} className="rounded-full mx-auto mb-2 object-cover" />}
-                          <h4 className="font-bold text-black text-sm">{member.name}</h4>
-                          <p className="text-xs text-gray-600">{member.role}</p>
+                        <div key={member.profileRef._id} className="text-center">
+                          {member.profileRef.imageUrl && <Image src={member.profileRef.imageUrl} alt={member.profileRef.name} width={80} height={80} className="rounded-full mx-auto mb-2 object-cover" />}
+                          <h4 className="font-bold text-black text-sm">{member.profileRef.name}{member.isTeamLead ? ' (Lead)' : ''}</h4>
+                          <p className="text-xs text-gray-600">{member.projectRole}</p>
                         </div>
                       ))}
+                    </div>
+                  </div>
+                )}
+                {(project.projectType === 'solo' && project.soloContributor) && (
+                  <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm">
+                    <h3 className="font-bold text-lg mb-4 text-black flex items-center gap-2"><FaUsers className="text-blue-500" /> Contributor</h3>
+                    <div className="text-center">
+                      {project.soloContributor.profileRef.imageUrl && <Image src={project.soloContributor.profileRef.imageUrl} alt={project.soloContributor.profileRef.name} width={80} height={80} className="rounded-full mx-auto mb-2 object-cover" />}
+                      <h4 className="font-bold text-black text-sm">{project.soloContributor.profileRef.name}</h4>
+                      <p className="text-xs text-gray-600">{project.soloContributor.projectRole}</p>
                     </div>
                   </div>
                 )}
@@ -112,6 +160,24 @@ export default async function ProjectDetailPage({ params }) {
                       </Link>
                     )}
                   </div>
+                  <div className="flex flex-wrap gap-3 mt-4 mb-4">
+                    <h3 className="font-bold text-lg text-black">Share:</h3>
+                    <Link href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(project.title)}`} target="_blank">
+                      <button className="bg-blue-400 text-white px-4 py-2 rounded-md font-semibold text-sm hover:bg-blue-500 transition-colors flex items-center gap-2">
+                        <FaTwitter /> Twitter
+                      </button>
+                    </Link>
+                    <Link href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank">
+                      <button className="bg-blue-700 text-white px-4 py-2 rounded-md font-semibold text-sm hover:bg-blue-800 transition-colors flex items-center gap-2">
+                        <FaFacebook /> Facebook
+                      </button>
+                    </Link>
+                    <Link href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(project.title)}&summary=${encodeURIComponent(project.description)}`} target="_blank">
+                      <button className="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
+                        <FaLinkedin /> LinkedIn
+                      </button>
+                    </Link>
+                  </div>
                 </section>
     
                 {project.description && (
@@ -119,6 +185,17 @@ export default async function ProjectDetailPage({ params }) {
                     <h2 className="text-xl md:text-2xl font-bold text-black mb-4 flex items-center gap-2"><FaInfoCircle className="text-gray-500" /> About this Project</h2>
                     <div className="prose max-w-none text-base leading-relaxed md:text-lg">
                       <PortableTextComponent value={project.description} />
+                    </div>
+                  </section>
+                )}
+
+                {relatedProjects.length > 0 && (
+                  <section className="bg-white p-8 rounded-xl border border-gray-200 shadow-sm">
+                    <h2 className="text-xl md:text-2xl font-bold text-black mb-4 flex items-center gap-2"><FaProjectDiagram className="text-green-500" /> Related Projects</h2>
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                      {relatedProjects.map(relatedProject => (
+                        <ProjectCard key={relatedProject._id} project={relatedProject} />
+                      ))}
                     </div>
                   </section>
                 )}

@@ -3,6 +3,7 @@ import Link from 'next/link';
 import Image from 'next/image';
 import PortableTextComponent from '@/components/PortableTextComponent';
 import { FaDownload, FaExternalLinkAlt, FaGithub, FaUserFriends, FaChalkboardTeacher, FaFileAlt, FaCheckCircle, FaHourglassHalf } from 'react-icons/fa';
+import { ResearchCard } from '@/app/research/page'; // Import ResearchCard
 
 // This function tells Next.js which pages to pre-build
 export async function generateStaticParams() {
@@ -50,6 +51,15 @@ const researchProjectQuery = `*[_type == "researchProject" && slug.current == $s
   }
 }`;
 
+const relatedResearchProjectsQuery = `*[_type == "researchProject" && _id != $currentProjectId && approvalStatus == "published"] | order(_createdAt desc) [0...3]{
+  _id,
+  title,
+  "slug": slug.current,
+  researchArea,
+  "summary": pt::text(description),
+  "imageUrl": posterImage.asset->url
+}`;
+
 const ResourceLink = ({ href, icon, text }) => (
     <a href={href} target="_blank" rel="noopener noreferrer" className="flex items-center gap-3 bg-gray-100 p-4 rounded-lg hover:bg-gray-200 transition-colors font-semibold text-black">
       {icon}
@@ -66,8 +76,10 @@ export default async function ResearchDetailPage({ params }) {
     return <div className="text-center py-20">Research project not found.</div>;
   }
 
+  const relatedResearchProjects = await client.fetch(relatedResearchProjectsQuery, { currentProjectId: project._id });
+
   return (
-    <main className="bg-gray-50/50 backdrop-blur-sm py-20">
+    <main className="bg-white/80 backdrop-blur-sm py-20">
       <div className="container mx-auto px-4">
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
           
@@ -141,6 +153,17 @@ export default async function ResearchDetailPage({ params }) {
                 {project.presentationSlidesUrl && <ResourceLink href={project.presentationSlidesUrl} icon={<FaDownload />} text="Download Presentation Slides" />}
               </div>
             </section>
+
+            {relatedResearchProjects.length > 0 && (
+              <section className="mt-16 pt-8 border-t border-gray-200">
+                <h2 className="text-2xl font-bold text-black mb-6">Related Research Projects</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+                  {relatedResearchProjects.map(relatedProject => (
+                    <ResearchCard key={relatedProject._id} project={relatedProject} />
+                  ))}
+                </div>
+              </section>
+            )}
           </div>
         </div>
       </div>

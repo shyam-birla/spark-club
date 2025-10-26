@@ -1,6 +1,7 @@
 import { Space_Grotesk } from 'next/font/google';
 import "./globals.css";
 import Navbar from "@/components/NavBar";
+import { Toaster } from 'react-hot-toast'; // Import Toaster
 // Footer yahan se hata diya gaya hai
 import DynamicGlobal3DCanvas from '@/components/DynamicGlobal3DCanvas';
 import NextAuthProvider from '@/components/NextAuthProvider';
@@ -39,7 +40,7 @@ export default async function RootLayout({ children }) {
           <div className="relative z-10 flex flex-col min-h-screen">
             <Navbar />
             
-            <main className="flex-grow pt-16">
+            <main className="flex-grow pt-16 bg-white/80 backdrop-blur-sm">
               <ProfileChecker>{children}</ProfileChecker>
             </main>
 
@@ -48,6 +49,7 @@ export default async function RootLayout({ children }) {
         </NextAuthProvider>
         <Analytics />
         <SpeedInsights />
+        <Toaster />
       </body>
     </html>
   );

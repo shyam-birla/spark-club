@@ -2,7 +2,7 @@ import Image from 'next/image';
 
 const TechSection = ({ technologies = [] }) => {
   return (
-    <section className="bg-white/50 backdrop-blur-sm py-16">
+    <section className="bg-white/80 backdrop-blur-sm py-16">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-sm font-bold uppercase text-gray-600 tracking-widest">
           Technologies We Work With

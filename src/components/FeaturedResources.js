@@ -41,7 +41,7 @@ const FeaturedResources = ({ resources = [], isRoadmap = false }) => {
   };
 
   return (
-    <section className="bg-white/50 backdrop-blur-sm py-20 px-4">
+    <section className="bg-white/80 backdrop-blur-sm py-20 px-4">
       <div className="container mx-auto text-center">
         <h2 className="text-3xl font-bold text-black">{isRoadmap ? 'Skill Section' : 'Featured Resources'}</h2>
         <p className="text-gray-600 mt-2 mb-12">{isRoadmap ? 'Start your learning journey with our curated paths.' : 'Check out these useful resources.'}</p>

@@ -8,7 +8,7 @@ const Testimonials = ({ testimonials }) => {
 
   return (
     // 1. Background ko semi-transparent grey kiya gaya hai
-    <section className="py-20 bg-gray-50/50 backdrop-blur-sm">
+    <section className="py-20 bg-white/80 backdrop-blur-sm">
       <div className="container mx-auto px-4 text-center">
         <h2 className="text-3xl font-bold text-black mb-12">What Our Members Say</h2>
         
