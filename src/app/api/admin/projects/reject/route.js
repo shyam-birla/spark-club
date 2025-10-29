@@ -1,7 +1,7 @@
 
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { writeClient } from '../../../../../../sanity/lib/client';
+import { serverWriteClient } from '../../../../../../sanity/lib/client';
 import { NextResponse } from 'next/server';
 
 export async function POST(request) {

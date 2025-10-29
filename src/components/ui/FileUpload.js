@@ -2,6 +2,7 @@
 'use client';
 
 import { FiUploadCloud, FiX } from 'react-icons/fi';
+import Image from 'next/image';
 
 const FileUpload = ({ coverImagePreview, handleCoverImageChange, clearCoverImage, uploadingCoverImage }) => {
   const handleDragOver = (e) => {
@@ -30,7 +31,7 @@ const FileUpload = ({ coverImagePreview, handleCoverImageChange, clearCoverImage
         <div className="flex flex-col items-center justify-center space-y-4 rounded-md border-2 border-dashed border-gray-300 p-12 text-center">
           {coverImagePreview ? (
             <div className="relative">
-              <img src={coverImagePreview} alt="Cover image preview" className="h-48 w-auto rounded-md" />
+              <Image src={coverImagePreview} alt="Cover image preview" width={192} height={192} className="h-48 w-auto rounded-md" />
               <button
                 type="button"
                 onClick={clearCoverImage}

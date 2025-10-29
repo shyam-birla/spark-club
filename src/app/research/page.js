@@ -19,7 +19,7 @@ const researchProjectsQuery = `*[_type == "researchProject" && approvalStatus ==
   "imageUrl": posterImage.asset->url
 }`;
 
-const ResearchCard = ({ project }) => (
+export const ResearchCard = ({ project }) => (
   <Link href={`/research/${project.slug}`}>
     <div className="bg-white p-6 rounded-xl border border-gray-200 shadow-sm hover:shadow-lg transition-all duration-300 h-full flex flex-col group">
       {project.imageUrl && (

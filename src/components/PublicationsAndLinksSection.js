@@ -3,6 +3,7 @@
 
 import { useDropzone } from 'react-dropzone';
 import { useCallback } from 'react';
+import Image from 'next/image';
 
 export default function PublicationsAndLinksSection({ formData, dispatch, errors, posterImagePreview, handleImageChange, clearImage, uploadingPosterImage }) {
 
@@ -58,7 +59,7 @@ export default function PublicationsAndLinksSection({ formData, dispatch, errors
           <div className="space-y-1 text-center">
             {posterImagePreview ? (
               <div className="relative">
-                <img src={posterImagePreview} alt="Poster preview" className="w-48 h-auto rounded-md" />
+                <Image src={posterImagePreview} alt="Poster preview" width={192} height={108} className="w-48 h-auto rounded-md" />
                 <button type="button" onClick={(e) => { e.stopPropagation(); clearImage('posterImage'); }} className="absolute top-0 right-0 bg-red-500 text-white rounded-full p-1 text-xs">&times;</button>
               </div>
             ) : (

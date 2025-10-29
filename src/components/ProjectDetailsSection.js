@@ -195,7 +195,7 @@ const ProjectDetailsSection = ({
                       className="h-4 w-4 text-blue-600 border-gray-300 rounded focus:ring-blue-500"
                     />
                     <label htmlFor={`tech-${tech._id}`} className="ml-2 text-sm text-gray-700 flex items-center cursor-pointer">
-                      {tech.logoUrl && <img src={tech.logoUrl} alt={tech.name} className="w-5 h-5 mr-2 object-contain" />}
+                      {tech.logoUrl && <Image src={tech.logoUrl} alt={tech.name} width={20} height={20} className="w-5 h-5 mr-2 object-contain" />}
                       {tech.name}
                     </label>
                   </div>
@@ -235,7 +235,7 @@ const ProjectDetailsSection = ({
                   <p className="mt-1 text-xs text-gray-500">Upload a logo for the new technology (optional).</p>
                   {newTechnologyLogoPreview && (
                     <div className="mt-2 relative w-fit">
-                      <img src={newTechnologyLogoPreview} alt="Logo Preview" className="max-w-[80px] h-auto rounded-md shadow" />
+                      <Image src={newTechnologyLogoPreview} alt="Logo Preview" width={80} height={80} className="max-w-[80px] h-auto rounded-md shadow" />
                       <button
                         type="button"
                         onClick={clearNewTechnologyLogo}

@@ -154,7 +154,7 @@ export default function MyContentPage() {
           </ul>
         ) : (
           <p className="text-gray-600">
-            You haven't written any blog posts yet. <Link href="/blog/new" className="text-blue-600 hover:underline flex items-center gap-1 inline-flex"><FaPlusCircle /> Start a new one!</Link>
+            You haven&apos;t written any blog posts yet. <Link href="/blog/new" className="text-blue-600 hover:underline flex items-center gap-1 inline-flex"><FaPlusCircle /> Start a new one!</Link>
           </p>
         )}
       </section>
@@ -183,7 +183,7 @@ export default function MyContentPage() {
           </ul>
         ) : (
           <p className="text-gray-600">
-            You haven't created any projects yet. <Link href="/projects/new" className="text-blue-600 hover:underline flex items-center gap-1 inline-flex"><FaPlusCircle /> Start a new one!</Link>
+            You haven&apos;t created any projects yet. <Link href="/projects/new" className="text-blue-600 hover:underline flex items-center gap-1 inline-flex"><FaPlusCircle /> Start a new one!</Link>
           </p>
         )}
       </section>
@@ -212,7 +212,7 @@ export default function MyContentPage() {
           </ul>
         ) : (
           <p className="text-gray-600">
-            You haven't submitted any research projects yet. <Link href="/research/new" className="text-blue-600 hover:underline flex items-center gap-1 inline-flex"><FaPlusCircle /> Submit a new one!</Link>
+            You haven&apos;t submitted any research projects yet. <Link href="/research/new" className="text-blue-600 hover:underline flex items-center gap-1 inline-flex"><FaPlusCircle /> Submit a new one!</Link>
           </p>
         )}
       </section>

@@ -3,6 +3,7 @@
 
 import React from 'react';
 import { IoMdCheckmark } from 'react-icons/io';
+import Image from 'next/image';
 
 const getInitials = (name) => {
   if (!name) return '';
@@ -63,7 +64,7 @@ const [expandedMembers, setExpandedMembers] = React.useState({});
                   <span className="text-xl font-bold text-gray-600">{getInitials(formData.soloContributor.name)}</span>
                 </div>
               ) : (
-                <img src={formData.soloContributor.profileImage} alt={formData.soloContributor.name} className="w-16 h-16 rounded-full" />
+                <Image src={formData.soloContributor.profileImage} alt={formData.soloContributor.name} width={64} height={64} className="w-16 h-16 rounded-full" />
               )}
                 <div>
                   <p><strong>Name:</strong> {formData.soloContributor.name}</p>
@@ -113,7 +114,7 @@ const [expandedMembers, setExpandedMembers] = React.useState({});
                         <span className="text-xl font-bold text-gray-600">{getInitials(member.name)}</span>
                       </div>
                     ) : (
-                      <img src={member.profileImage} alt={member.name} className="w-16 h-16 rounded-full" />
+                      <Image src={member.profileImage} alt={member.name} width={64} height={64} className="w-16 h-16 rounded-full" />
                     )}
                       <div>
                         <p><strong>Name:</strong> {member.name}</p>

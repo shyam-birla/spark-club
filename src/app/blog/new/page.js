@@ -173,7 +173,7 @@ export default function NewBlogPage() {
       setCompletedSections(prev => ({ ...prev, [activeSection]: true }));
       setActiveSection(steps[currentIndex + 1].id);
     }
-  }, [activeSection, steps]);
+  }, [activeSection]);
 
   const handlePrevSection = useCallback(() => {
     const currentIndex = steps.findIndex(step => step.id === activeSection);

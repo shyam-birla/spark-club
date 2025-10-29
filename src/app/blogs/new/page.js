@@ -106,7 +106,7 @@ export default function NewBlogPage() {
     if (!authorProfile) newErrors.author = 'Author is required. Please lookup an author profile.'; // Added
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
-  }, [formData]);
+  }, [formData, authorProfile]);
 
   const handleNextSection = useCallback(() => { // Added
     const sections = ['postDetails', 'media']; // Define sections for blog

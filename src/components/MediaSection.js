@@ -27,7 +27,7 @@ const MediaSection = ({
           <label htmlFor="mainImage" className="block text-sm font-medium text-gray-700 flex items-center">
                         Main Image {validatedFields.mainImage && <IoMdCheckmark className="ml-2 text-green-500" />}
                       </label>
-                      <p className="text-xs text-gray-500 mb-2">This is the primary image displayed at the top of your project's detail page.</p>
+                      <p className="text-xs text-gray-500 mb-2">This is the primary image displayed at the top of your project&apos;s detail page.</p>
                       <div
                         className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                         onDragOver={(e) => e.preventDefault()}
@@ -36,7 +36,7 @@ const MediaSection = ({
                         <div className="space-y-1 text-center">
                           {mainImagePreview ? (
                             <div className="relative mx-auto w-48 h-32 rounded-md overflow-hidden">
-                              <img src={mainImagePreview} alt="Main Image Preview" className="w-full h-full object-cover" />
+                              <Image src={mainImagePreview} alt="Main Image Preview" width={192} height={128} className="w-full h-full object-cover" />
                               <button
                                 type="button"
                                 onClick={() => clearImage('mainImage')}
@@ -97,7 +97,7 @@ const MediaSection = ({
                         <div className="space-y-1 text-center">
                           {cardImagePreview ? (
                             <div className="relative mx-auto w-48 h-32 rounded-md overflow-hidden">
-                              <img src={cardImagePreview} alt="Card Image Preview" className="w-full h-full object-cover" />
+                              <Image src={cardImagePreview} alt="Card Image Preview" width={192} height={128} className="w-full h-full object-cover" />
                               <button
                                 type="button"
                                 onClick={() => clearImage('cardImage')}
@@ -150,7 +150,7 @@ const MediaSection = ({
                         Project Gallery Images
                         {validatedFields.galleryImages && <IoMdCheckmark className="ml-2 text-green-500" />}
                       </label>
-                      <p className="text-xs text-gray-500 mb-2">Add additional images to showcase your project's features and design.</p>
+                      <p className="text-xs text-gray-500 mb-2">Add additional images to showcase your project&apos;s features and design.</p>
                       <div
                         className="mt-1 flex justify-center px-6 pt-5 pb-6 border-2 border-gray-300 border-dashed rounded-md"
                         onDragOver={(e) => e.preventDefault()}
@@ -161,7 +161,7 @@ const MediaSection = ({
                             <div className="grid grid-cols-3 gap-4">
                               {galleryImagesPreview.map((image, index) => (
                                 <div key={index} className="relative w-full h-32 rounded-md overflow-hidden">
-                                  <img src={image} alt={`Gallery Image ${index + 1}`} className="w-full h-full object-cover" />
+                                  <Image src={image} alt={`Gallery Image ${index + 1}`} width={192} height={128} className="w-full h-full object-cover" />
                                   <button
                                     type="button"
                                     onClick={() => clearImage('galleryImages', index)}

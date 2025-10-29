@@ -3,6 +3,7 @@
 
 import { useState, useCallback } from 'react';
 import { useDropzone } from 'react-dropzone';
+import Image from 'next/image';
 
 export default function ImageUpload({ onImageChange }) {
   const [preview, setPreview] = useState(null);
@@ -47,7 +48,7 @@ export default function ImageUpload({ onImageChange }) {
       </div>
       {preview && (
         <div className="mt-4 flex items-center">
-          <img src={preview} alt="Preview" className="w-20 h-20 object-cover rounded-md" />
+          <Image src={preview} alt="Preview" width={80} height={80} className="w-20 h-20 object-cover rounded-md" />
           <button onClick={removeImage} className="ml-4 bg-red-600 text-white px-3 py-1 rounded-md text-sm">Remove</button>
         </div>
       )}

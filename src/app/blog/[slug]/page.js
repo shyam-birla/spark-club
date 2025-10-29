@@ -2,6 +2,7 @@ import { client } from '../../../../sanity/lib/client';
 import PortableTextComponent from '@/components/PortableTextComponent';
 import Image from 'next/image';
 import { FaUser, FaCalendar } from 'react-icons/fa';
+import BlogPostCard from '@/components/BlogPostCard';
 
 export async function generateStaticParams() {
   const slugs = await client.fetch(`*[_type == "blogPost" && defined(slug.current)]{ "slug": slug.current }`);

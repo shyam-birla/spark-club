@@ -1,5 +1,5 @@
 import { NextResponse } from 'next/server';
-import { writeClient } from '../../../../sanity/lib/client'; // Assuming writeClient is configured with a token
+import { serverWriteClient } from '../../../../sanity/lib/client'; // Assuming writeClient is configured with a token
 
 export async function POST(request) {
   try {

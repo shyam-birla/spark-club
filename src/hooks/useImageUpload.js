@@ -17,7 +17,7 @@ const useImageUpload = (imageConfig, dispatch) => {
       }
     }
     setPreviews(initialPreviews);
-  }, []);
+  }, [imageConfig]);
 
   const handleImageChange = useCallback((e, imageKey) => {
     const { updateAction, multiple } = imageConfig[imageKey];

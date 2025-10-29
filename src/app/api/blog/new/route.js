@@ -2,6 +2,8 @@ import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 import { serverWriteClient } from '../../../../../sanity/lib/client';
 import { v4 as uuidv4 } from 'uuid';
+import { htmlToBlocks } from '@portabletext/block-tools';
+import { JSDOM } from 'jsdom';
 
 export async function POST(request) {
   const session = await getServerSession(authOptions);
@@ -51,10 +53,7 @@ export async function POST(request) {
       finalCoverImage = coverImage;
     }
 
-import { htmlToBlocks } from '@portabletext/block-tools';
-import { JSDOM } from 'jsdom';
-
-// ... (rest of the code)
+    // ... (rest of the code)
 
     const htmlContent = body;
     const { document } = new JSDOM(htmlContent).window;

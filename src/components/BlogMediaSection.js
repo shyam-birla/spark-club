@@ -26,7 +26,7 @@ const BlogMediaSection = ({
           {coverImagePreview && (
             <div className="mt-4 relative w-fit">
               <p className="text-sm text-gray-500 mb-2">Cover Image Preview:</p>
-              <img src={coverImagePreview} alt="Cover Image Preview" className="max-w-xs h-auto rounded-md shadow" />
+              <Image src={coverImagePreview} alt="Cover Image Preview" width={300} height={200} className="max-w-xs h-auto rounded-md shadow" />
               <button
                 type="button"
               onClick={clearCoverImage}
