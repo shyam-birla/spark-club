@@ -5,7 +5,7 @@ import PortableTextComponent from '@/components/PortableTextComponent';
 import RegistrationStatus from '@/components/RegistrationStatus';
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote, FaMicrophone, FaTags, FaVideo, FaCommentDots, FaPlayCircle, FaHome, FaClipboardList } from 'react-icons/fa';
+import { FaCalendar, FaClock, FaMapMarkerAlt, FaRegListAlt, FaStickyNote, FaMicrophone, FaTags, FaVideo, FaCommentDots, FaPlayCircle, FaHome, FaClipboardList, FaGithub, FaLinkedin } from 'react-icons/fa';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import Attendees from '@/components/Attendees';
 import AddToCalendar from '@/components/AddToCalendar';
@@ -27,7 +27,7 @@ const RelatedEvents = dynamic(() => import('@/components/RelatedEvents'), {
 const eventQuery = `*[_type == "event" && slug.current == $slug][0]{
     _id, title, eventDate, endDate, description, "imageUrl": coverImage.asset->url, 
     venue{ type, locationName, locationUrl }, registrationLink, registrationStatus, schedule,
-    speakers[]->{ _id, name, role, "imageUrl": image.asset->url },
+    speakers[]->{ _id, name, role, "imageUrl": image.asset->url, linkedinUrl, githubUrl },
     hostedBy[]{
       name,
       "logoUrl": logo.asset->url
@@ -500,6 +500,19 @@ export default async function EventDetailPage({ params }) {
                 
 
                                                                                                                                                                     <p className="text-xs md:text-sm text-gray-600">{speaker.role}</p>
+                                                                                                                                                                    <div className="flex justify-center gap-2 mt-2">
+                                                                                                                                                                        {speaker.githubUrl && (
+                                                                                                                                                                            <a href={speaker.githubUrl} target="_blank" rel="noopener noreferrer">
+                                                                                                                                                                                <FaGithub className="text-gray-600 hover:text-black" />
+                                                                                                                                                                            </a>
+                                                                                                                                                                        )}
+                                                                                                                                                                        {speaker.linkedinUrl && (
+                                                                                                                                                                            <a href={speaker.linkedinUrl} target="_blank" rel="noopener noreferrer">
+                                                                                                                                                                                <FaLinkedin className="text-gray-600 hover:text-blue-600" />
+                                                                                                                                                                            </a>
+                                                                                                                                                                        )}
+                                                                                                                                                                    </div>
+
 
                 
 

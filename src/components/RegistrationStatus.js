@@ -1,23 +1,19 @@
 'use client';
 
-import { useState } from 'react';
 import Link from 'next/link';
 import EventRegistrationWrapper from '@/components/EventRegistrationWrapper';
-import { useRouter } from 'next/navigation'; // 1. useRouter ko import karein
+import { useRouter } from 'next/navigation';
+import toast from 'react-hot-toast';
 
 export default function RegistrationStatus({ event, isAlreadyRegistered }) {
-    const [justRegistered, setJustRegistered] = useState(false);
-    const router = useRouter(); // 2. router ko initialize karein
+    const router = useRouter();
 
     const handleSuccess = () => {
-        // 3. UI ko turant update karein
-        setJustRegistered(true); 
-        // 4. Server se naya data laane ke liye cache ko refresh karein
+        toast.success(' You are successfully registered for this event!');
         router.refresh(); 
     };
 
-    // Agar user pehle se registered hai (server se pata chala) ya abhi-abhi hua hai (client state se)
-    if (isAlreadyRegistered || justRegistered) {
+    if (isAlreadyRegistered) {
         return (
             <div className="text-center p-4 bg-green-100 text-green-800 rounded-md">
                 <p className="font-semibold">✅ You are successfully registered for this event!</p>

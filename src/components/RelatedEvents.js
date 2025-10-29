@@ -39,8 +39,7 @@ const RelatedEvents = ({ currentEventId, categories }) => {
       <h2 className="text-2xl font-bold text-black mb-6 flex items-center gap-3"><FaLink /> Related Events</h2>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
         {relatedEvents.map(event => (
-          <Link key={event._id} href={`/events/${event.slug.current}`}>
-            <a className="group">
+          <Link key={event._id} href={`/events/${event.slug.current}`} className="group">
               <div className="relative w-full h-48 rounded-lg overflow-hidden">
                 <Image
                   src={event.imageUrl}
@@ -50,7 +49,6 @@ const RelatedEvents = ({ currentEventId, categories }) => {
                 />
               </div>
               <h3 className="text-lg font-bold text-black mt-4 group-hover:text-orange-600">{event.title}</h3>
-            </a>
           </Link>
         ))}
       </div>
