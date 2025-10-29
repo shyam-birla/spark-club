@@ -1,115 +1,255 @@
+
 'use client';
 
-import { useState, useEffect } from 'react';
+import { useReducer, useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { client } from '../../../../sanity/lib/client';
+import { clientWriteClient } from '../../../../sanity/lib/client';
+import { toast } from 'react-hot-toast';
 import dynamic from 'next/dynamic';
-import 'react-quill-new/dist/quill.snow.css'; // Import Quill styles
 
-const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false }); // Dynamically import ReactQuill
+import Stepper from '@/components/ui/Stepper';
+import AuthorCard from '@/components/ui/AuthorCard';
+import FileUpload from '@/components/ui/FileUpload';
+import BlogDetailsSection from '@/components/BlogDetailsSection';
+import { IoMdCheckmark } from 'react-icons/io';
 
-export default function NewBlogPostPage() {
+const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
+import 'react-quill-new/dist/quill.snow.css';
+
+const initialFormData = {
+  title: '',
+  slug: '',
+  category: '',
+  coverImage: null,
+  body: '',
+};
+
+function formReducer(state, action) {
+  switch (action.type) {
+    case 'UPDATE_FIELD':
+      return { ...state, [action.field]: action.value };
+    case 'SET_FORM_DATA':
+      return { ...state, ...action.payload };
+    default:
+      return state;
+  }
+}
+
+const steps = [
+  { id: 'postDetails', name: 'Post Details' },
+  { id: 'author', name: 'Author' },
+  { id: 'media', name: 'Media' },
+];
+
+export default function NewBlogPage() {
   const { data: session, status } = useSession();
   const router = useRouter();
-  const [formData, setFormData] = useState({
-    title: '',
-    body: '',
-    coverImage: null,
-    author: '',
-    newAuthor: {
-      name: '',
-      role: '',
-      image: null,
-      linkedinUrl: '',
-      githubUrl: '',
-      instagramUrl: '',
-      whatsappNo: '',
-    },
-  });
-  const [authorType, setAuthorType] = useState('existing');
-  const [authors, setAuthors] = useState([]);
+  const [formData, dispatch] = useReducer(formReducer, initialFormData);
+  const [errors, setErrors] = useState({});
+  const [validatedFields, setValidatedFields] = useState({});
+  const [completedSections, setCompletedSections] = useState({});
+  const [activeSection, setActiveSection] = useState('postDetails');
+  const [saving, setSaving] = useState(false);
+  const [uploadingCoverImage, setUploadingCoverImage] = useState(false);
+  const [coverImagePreview, setCoverImagePreview] = useState(null);
+  const [authorProfile, setAuthorProfile] = useState(null);
+  const [authorProfileIdInput, setAuthorProfileIdInput] = useState('');
+  const [editableAuthorLinkedin, setEditableAuthorLinkedin] = useState('');
+  const [editableAuthorGithub, setEditableAuthorGithub] = useState('');
+  const [editableAuthorPortfolio, setEditableAuthorPortfolio] = useState('');
 
   useEffect(() => {
-    client.fetch(`*[_type == "person"]{_id, name}`).then(setAuthors);
-  }, []);
-  const [saving, setSaving] = useState(false);
+    if (status === 'unauthenticated') {
+      router.push('/login');
+    }
+  }, [status, router]);
 
-  const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (name.startsWith('newAuthor')) {
-      const field = name.split('.')[1];
-      const newAuthor = { ...formData.newAuthor, [field]: type === 'file' ? files[0] : value };
-      setFormData(prev => ({ ...prev, newAuthor }));
-    } else if (type === 'file') {
-      setFormData(prev => ({ ...prev, [name]: files[0] }));
-    } else {
-      setFormData(prev => ({ ...prev, [name]: value }));
+  useEffect(() => {
+    const savedData = localStorage.getItem('blogFormData');
+    if (savedData) {
+      dispatch({ type: 'SET_FORM_DATA', payload: JSON.parse(savedData) });
+    }
+  }, []);
+
+  useEffect(() => {
+    if (formData.title) {
+      const generatedSlug = formData.title.toLowerCase().replace(/\s+/g, '-').slice(0, 96);
+      dispatch({ type: 'UPDATE_FIELD', field: 'slug', value: generatedSlug });
+    }
+  }, [formData.title, dispatch]);
+
+  useEffect(() => {
+    localStorage.setItem('blogFormData', JSON.stringify(formData));
+  }, [formData]);
+
+  const handleCoverImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      dispatch({ type: 'UPDATE_FIELD', field: 'coverImage', value: file });
+      setCoverImagePreview(URL.createObjectURL(file));
     }
   };
 
+  const clearCoverImage = () => {
+    dispatch({ type: 'UPDATE_FIELD', field: 'coverImage', value: null });
+    setCoverImagePreview(null);
+    const inputElement = document.getElementById('coverImage');
+    if (inputElement) {
+      inputElement.value = '';
+    }
+  };
+
+  const handleLookupAuthor = useCallback(async () => {
+    if (!authorProfileIdInput.trim()) {
+      toast.error('Please enter an Author Profile ID to look up.');
+      return;
+    }
+    try {
+      const response = await fetch('/api/profile/lookup', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ uniqueProfileId: authorProfileIdInput }),
+      });
+      if (!response.ok) {
+        const errorData = await response.json();
+        throw new Error(errorData.error || 'Author profile not found');
+      }
+      const profile = await response.json();
+      setAuthorProfile(profile);
+      setEditableAuthorLinkedin(profile.linkedinUrl || '');
+      setEditableAuthorGithub(profile.githubUrl || '');
+      setEditableAuthorPortfolio(profile.portfolioUrl || '');
+      toast.success(`Found author: ${profile.name}`);
+    } catch (error) {
+      toast.error(error.message);
+      setAuthorProfile(null);
+    }
+  }, [authorProfileIdInput]);
+
+  const clearAuthor = () => {
+    setAuthorProfile(null);
+    setAuthorProfileIdInput('');
+    setEditableAuthorLinkedin('');
+    setEditableAuthorGithub('');
+    setEditableAuthorPortfolio('');
+  };
+
+  const validateForm = useCallback(() => {
+    const newErrors = {};
+    const newValidatedFields = {};
+
+    if (formData.title.trim()) {
+      newValidatedFields.title = true;
+    } else {
+      newErrors.title = 'Title is required.';
+    }
+
+    if (formData.body.trim() && formData.body.trim() !== '<p><br></p>') {
+      newValidatedFields.body = true;
+    } else {
+      newErrors.body = 'Blog content is required.';
+    }
+
+    if (authorProfile) {
+      newValidatedFields.author = true;
+    } else {
+      newErrors.author = 'Author is required.';
+    }
+
+    setErrors(newErrors);
+    setValidatedFields(newValidatedFields);
+
+    return Object.keys(newErrors).length === 0;
+  }, [formData, authorProfile]);
+
+  useEffect(() => {
+    validateForm();
+  }, [formData, authorProfile, validateForm]);
+
+  const handleNextSection = useCallback(() => {
+    const currentIndex = steps.findIndex(step => step.id === activeSection);
+    if (currentIndex < steps.length - 1) {
+      setCompletedSections(prev => ({ ...prev, [activeSection]: true }));
+      setActiveSection(steps[currentIndex + 1].id);
+    }
+  }, [activeSection, steps]);
+
+  const handlePrevSection = useCallback(() => {
+    const currentIndex = steps.findIndex(step => step.id === activeSection);
+    if (currentIndex > 0) {
+      setActiveSection(steps[currentIndex - 1].id);
+    }
+  }, [activeSection]);
+
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!validateForm()) {
+      toast.error('Please correct the errors in the form.');
+      return;
+    }
     setSaving(true);
 
     try {
-      let coverImageAsset;
-      let authorRef;
-
-      if (formData.coverImage) {
-        coverImageAsset = await client.assets.upload('image', formData.coverImage);
+      let coverImageAsset = null;
+      console.log('formData.coverImage before upload:', formData.coverImage);
+      if (formData.coverImage instanceof File) {
+        setUploadingCoverImage(true);
+        coverImageAsset = await clientWriteClient.assets.upload('image', formData.coverImage);
+        setUploadingCoverImage(false);
       }
 
-      if (authorType === 'new') {
-        let authorImageAsset;
-        if (formData.newAuthor.image) {
-          authorImageAsset = await client.assets.upload('image', formData.newAuthor.image);
-        }
+      let finalAuthorRef = null;
+      const socialLinksEdited = !(
+        (editableAuthorLinkedin === (authorProfile?.linkedinUrl || '')) &&
+        (editableAuthorGithub === (authorProfile?.githubUrl || '')) &&
+        (editableAuthorPortfolio === (authorProfile?.portfolioUrl || ''))
+      );
 
+      if (authorProfile && !socialLinksEdited) {
+        finalAuthorRef = { _type: 'reference', _ref: authorProfile._id };
+      } else {
         const newPerson = {
           _type: 'person',
-          name: formData.newAuthor.name,
-          role: formData.newAuthor.role,
-          linkedinUrl: formData.newAuthor.linkedinUrl,
-          githubUrl: formData.newAuthor.githubUrl,
-          instagramUrl: formData.newAuthor.instagramUrl,
-          whatsappNo: formData.newAuthor.whatsappNo,
-          image: authorImageAsset ? { _type: 'image', asset: { _type: 'reference', _ref: authorImageAsset._id } } : null,
+          name: authorProfile?.name || 'Unknown Author',
+          image: authorProfile?.profileImage || null,
+          linkedinUrl: editableAuthorLinkedin,
+          githubUrl: editableAuthorGithub,
+          portfolioUrl: editableAuthorPortfolio,
         };
-        const createdPerson = await client.create(newPerson);
-        authorRef = { _type: 'reference', _ref: createdPerson._id };
-      } else {
-        authorRef = { _type: 'reference', _ref: formData.author };
+        finalAuthorRef = newPerson;
       }
+
+      const submissionData = {
+        ...formData,
+        author: finalAuthorRef,
+        coverImage: coverImageAsset ? { _type: 'image', asset: { _type: 'reference', _ref: coverImageAsset._id } } : null,
+      };
 
       const response = await fetch('/api/blog/new', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          ...formData,
-          coverImage: coverImageAsset ? { _type: 'image', asset: { _type: 'reference', _ref: coverImageAsset._id } } : null,
-          author: authorRef,
-        }),
+        body: JSON.stringify(submissionData),
       });
 
       if (!response.ok) {
-        throw new Error('Failed to create blog post');
+        const errorData = await response.json();
+        console.error('API Error Status:', response.status);
+        console.error('API Error Data:', errorData);
+        throw new Error(errorData.message || 'Failed to create blog submission');
       }
 
-      alert('Blog post submitted for approval!');
+      toast.success('Blog submitted for approval!');
       router.push('/blog');
     } catch (error) {
       console.error(error);
-      alert('Something went wrong. Please try again.');
+      toast.error('Something went wrong. Please try again.');
     } finally {
       setSaving(false);
     }
   };
 
-  if (status === 'loading') {
-    return <div>Loading...</div>;
-  }
-
+  if (status === 'loading') return <div>Loading...</div>;
   if (status === 'unauthenticated') {
     router.push('/login');
     return null;
@@ -117,121 +257,77 @@ export default function NewBlogPostPage() {
 
   return (
     <main className="container mx-auto px-4 py-12 md:py-20">
-      <h1 className="text-3xl font-bold mb-6">Submit a New Blog Post</h1>
-      <form onSubmit={handleSubmit} className="space-y-6">
-        <div>
-          <label htmlFor="title" className="block text-sm font-medium text-gray-700">Title</label>
-          <input
-            type="text"
-            name="title"
-            id="title"
-            value={formData.title}
-            onChange={handleChange}
-            className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
-            required
-          />
-        </div>
-        <div>
-          <label htmlFor="coverImage" className="block text-sm font-medium text-gray-700">Cover Image</label>
-          <input
-            type="file"
-            name="coverImage"
-            id="coverImage"
-            onChange={handleChange}
-            className="mt-1 block w-full"
-          />
-        </div>
-        <div>
-          <label className="block text-sm font-medium text-gray-700">Author</label>
-          <div className="mt-2 flex items-center gap-4">
-            <label>
-              <input type="radio" name="authorType" value="existing" checked={authorType === 'existing'} onChange={() => setAuthorType('existing')} />
-              Existing Author
-            </label>
-            <label>
-              <input type="radio" name="authorType" value="new" checked={authorType === 'new'} onChange={() => setAuthorType('new')} />
-              New Author
-            </label>
-          </div>
-        </div>
+      <div className="max-w-4xl mx-auto">
+        <Stepper steps={steps} activeSection={activeSection} completedSections={completedSections} />
+        <div className="mt-8">
+          <form onSubmit={handleSubmit} className="space-y-8">
+            {activeSection === 'postDetails' && (
+              <BlogDetailsSection
+                formData={formData}
+                dispatch={dispatch}
+                errors={errors}
+                validatedFields={validatedFields}
+              />
+            )}
 
-        {authorType === 'existing' ? (
-          <div>
-            <label htmlFor="author" className="block text-sm font-medium text-gray-700">Select Author</label>
-            <select name="author" id="author" value={formData.author} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
-              <option value="">Select an author</option>
-              {authors.map(author => (
-                <option key={author._id} value={author._id}>{author.name}</option>
-              ))}
-            </select>
-          </div>
-        ) : (
-          <div className="p-4 border border-gray-200 rounded-md">
-            <h3 className="text-lg font-medium text-gray-900">New Author Details</h3>
-            <div className="mt-4 grid grid-cols-1 gap-y-6 gap-x-4 sm:grid-cols-6">
-              <div className="sm:col-span-3">
-                <label htmlFor="newAuthor.name" className="block text-sm font-medium text-gray-700">Name</label>
-                <input type="text" name="newAuthor.name" id="newAuthor.name" value={formData.newAuthor.name} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
+            {activeSection === 'author' && (
+              <div className="space-y-6">
+                <h2 className="text-2xl font-bold mb-6 text-gray-800 flex items-center">
+                  Author Details
+                  {validatedFields.author && <IoMdCheckmark className="ml-2 text-green-500" />}
+                </h2>
+                <div className="flex items-end gap-2">
+                  <input
+                    type="text"
+                    id="authorProfileId"
+                    value={authorProfileIdInput}
+                    onChange={(e) => setAuthorProfileIdInput(e.target.value)}
+                    className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
+                    placeholder="Enter author's unique profile ID"
+                  />
+                  <button type="button" onClick={handleLookupAuthor} className="bg-blue-500 text-white px-4 py-2 rounded-md">Lookup</button>
+                  {(authorProfile || authorProfileIdInput.trim()) && (
+                    <button type="button" onClick={clearAuthor} className="bg-red-500 text-white px-4 py-2 rounded-md">Clear</button>
+                  )}
+                </div>
+                {authorProfile && (
+                  <AuthorCard
+                    authorProfile={authorProfile}
+                    editableAuthorLinkedin={editableAuthorLinkedin}
+                    setEditableAuthorLinkedin={setEditableAuthorLinkedin}
+                    editableAuthorGithub={editableAuthorGithub}
+                    setEditableAuthorGithub={setEditableAuthorGithub}
+                    editableAuthorPortfolio={editableAuthorPortfolio}
+                    setEditableAuthorPortfolio={setEditableAuthorPortfolio}
+                  />
+                )}
               </div>
-              <div className="sm:col-span-3">
-                <label htmlFor="newAuthor.role" className="block text-sm font-medium text-gray-700">Role</label>
-                <input type="text" name="newAuthor.role" id="newAuthor.role" value={formData.newAuthor.role} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
-              </div>
-              <div className="sm:col-span-6">
-                <label htmlFor="newAuthor.image" className="block text-sm font-medium text-gray-700">Image</label>
-                <input type="file" name="newAuthor.image" id="newAuthor.image" onChange={handleChange} className="mt-1 block w-full" />
-              </div>
-              <div className="sm:col-span-3">
-                <label htmlFor="newAuthor.linkedinUrl" className="block text-sm font-medium text-gray-700">LinkedIn URL</label>
-                <input type="url" name="newAuthor.linkedinUrl" id="newAuthor.linkedinUrl" value={formData.newAuthor.linkedinUrl} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
-              </div>
-              <div className="sm:col-span-3">
-                <label htmlFor="newAuthor.githubUrl" className="block text-sm font-medium text-gray-700">GitHub URL</label>
-                <input type="url" name="newAuthor.githubUrl" id="newAuthor.githubUrl" value={formData.newAuthor.githubUrl} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
-              </div>
-              <div className="sm:col-span-3">
-                <label htmlFor="newAuthor.instagramUrl" className="block text-sm font-medium text-gray-700">Instagram URL</label>
-                <input type="url" name="newAuthor.instagramUrl" id="newAuthor.instagramUrl" value={formData.newAuthor.instagramUrl} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
-              </div>
-              <div className="sm:col-span-3">
-                <label htmlFor="newAuthor.whatsappNo" className="block text-sm font-medium text-gray-700">WhatsApp Number</label>
-                <input type="text" name="newAuthor.whatsappNo" id="newAuthor.whatsappNo" value={formData.newAuthor.whatsappNo} onChange={handleChange} className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm" />
-              </div>
+            )}
+
+            {activeSection === 'media' && (
+              <FileUpload
+                coverImagePreview={coverImagePreview}
+                handleCoverImageChange={handleCoverImageChange}
+                clearCoverImage={clearCoverImage}
+                uploadingCoverImage={uploadingCoverImage}
+              />
+            )}
+
+            <div className="flex justify-between mt-8">
+              {activeSection !== 'postDetails' && (
+                <button type="button" onClick={handlePrevSection} className="bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors">Previous</button>
+              )}
+              {activeSection !== 'media' ? (
+                <button type="button" onClick={handleNextSection} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors ml-auto">Next</button>
+              ) : (
+                <button type="submit" disabled={saving || uploadingCoverImage} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400 ml-auto">
+                  {saving ? 'Submitting...' : 'Submit for Approval'}
+                </button>
+              )}
             </div>
-          </div>
-        )}
-
-        <div>
-          <label htmlFor="body" className="block text-sm font-medium text-gray-700">Body</label>
-          <ReactQuill
-            theme="snow" // or "bubble"
-            value={formData.body}
-            onChange={(value) => setFormData(prev => ({ ...prev, body: value }))}
-            className="mt-1 block w-full"
-            modules={{
-              toolbar: [
-                [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
-                [{ size: [] }],
-                ['bold', 'italic', 'underline', 'strike', 'blockquote'],
-                [{ 'list': 'ordered' }, { 'list': 'bullet' }, { 'indent': '-1' }, { 'indent': '+1' }],
-                ['link', 'image', 'video'],
-                ['clean']
-              ],
-            }}
-            formats={[
-              'header', 'font', 'size',
-              'bold', 'italic', 'underline', 'strike', 'blockquote',
-              'list', 'indent',
-              'link', 'image', 'video'
-            ]}
-          />
+          </form>
         </div>
-        <div className="text-right">
-          <button type="submit" disabled={saving} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400">
-            {saving ? 'Submitting...' : 'Submit for Approval'}
-          </button>
-        </div>
-      </form>
+      </div>
     </main>
   );
 }

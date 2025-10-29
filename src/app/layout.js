@@ -8,7 +8,7 @@ import NextAuthProvider from '@/components/NextAuthProvider';
 import { Analytics } from '@vercel/analytics/react';
 import { SpeedInsights } from '@vercel/speed-insights/next';
 import ProfileChecker from '@/components/ProfileChecker';
-
+// import { Metadata } from 'next'; // Metadata type import hata diya gaya (JS mein zaroorat nahi)
 
 const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
@@ -16,9 +16,11 @@ const spaceGrotesk = Space_Grotesk({
   display: 'swap',
 });
 
+// Metadata object ko update kiya gaya hai (TypeScript type hata diya gaya)
 export const metadata = {
-  title: "SPARK Club - Igniting Innovation",
+  title: "SPARK Community",
   description: "The official website of the SPARK tech club, a community for builders, innovators, and learners.",
+
 };
 
 export const viewport = {
@@ -28,18 +30,19 @@ export const viewport = {
 
 // socialLinksQuery ko yahan se hata diya gaya hai
 
+// Function signature se TypeScript type annotation hata di gayi
 export default async function RootLayout({ children }) {
   // socialLinks ka data fetching yahan se hata diya gaya hai
 
   return (
     <html lang="en" className={spaceGrotesk.className}>
       <body className={`bg-white text-gray-700`}>
-        <NextAuthProvider> 
+        <NextAuthProvider>
           <DynamicGlobal3DCanvas />
-          
+
           <div className="relative z-10 flex flex-col min-h-screen">
             <Navbar />
-            
+
             <main className="flex-grow pt-16 bg-white/80 backdrop-blur-sm">
               <ProfileChecker>{children}</ProfileChecker>
             </main>

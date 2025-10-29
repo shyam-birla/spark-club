@@ -1,7 +1,9 @@
 
+import { v4 as uuidv4 } from 'uuid';
+
 import { getServerSession } from 'next-auth/next';
 import { authOptions } from '@/app/api/auth/[...nextauth]/route';
-import { client } from '../../../../../sanity/lib/client';
+import { serverWriteClient } from '../../../../../sanity/lib/client';
 
 export async function POST(request) {
   const session = await getServerSession(authOptions);
@@ -10,11 +12,12 @@ export async function POST(request) {
     return new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
   }
 
-  const { title, description, tags, technologies, githubUrl, liveUrl, mainImage, cardImage, teamMembers, nonMemberContributors } = await request.json();
+  const { title, description, tags, technologies, githubUrl, liveUrl, mainImage, cardImage, teamMembers, nonMemberContributors, projectType, status, galleryImages, soloContributor } = await request.json();
+  console.log('Received galleryImages:', galleryImages);
   const userEmail = session.user.email;
 
   try {
-    const profile = await client.fetch(`*[_type == "profile" && userEmail == $email][0]`, { email: userEmail });
+    const profile = await serverWriteClient.fetch(`*[_type == "profile" && userEmail == $email][0]`, { email: userEmail });
 
     if (!profile) {
       return new Response(JSON.stringify({ message: 'Profile not found' }), { status: 404 });
@@ -25,7 +28,7 @@ export async function POST(request) {
       for (const contributor of nonMemberContributors) {
         let imageAsset;
         if (contributor.image) {
-          imageAsset = await client.assets.upload('image', contributor.image);
+          imageAsset = await serverWriteClient.assets.upload('image', contributor.image);
         }
 
         const newPerson = {
@@ -36,30 +39,38 @@ export async function POST(request) {
           githubUrl: contributor.githubUrl,
           image: imageAsset ? { _type: 'image', asset: { _type: 'reference', _ref: imageAsset._id } } : null,
         };
-        const createdPerson = await client.create(newPerson);
-        newPersonRefs.push({ _type: 'reference', _ref: createdPerson._id });
+        const createdPerson = await serverWriteClient.create(newPerson);
+        newPersonRefs.push({
+          profileRef: { _type: 'reference', _ref: createdPerson._id },
+          projectRole: contributor.role,
+          isTeamLead: false, // Default for non-member contributors
+        });
       }
     }
 
-    const allTeamMembers = [...teamMembers.map(memberId => ({ _type: 'reference', _ref: memberId })), ...newPersonRefs];
+    const allTeamMembers = [...teamMembers, ...newPersonRefs];
 
     const newProject = {
-      _type: 'project',
+      _type: 'projectSubmission',
       title,
       slug: { _type: 'slug', current: title.toLowerCase().replace(/\s+/g, '-').slice(0, 96) },
       author: { _type: 'reference', _ref: profile._id },
-      description: [{ _type: 'block', children: [{ _type: 'span', text: description }] }],
-      tags: tags.split(',').map(tag => tag.trim()),
-      technologies: [], // We'll handle this later
+      description: [{ _key: uuidv4(), _type: 'block', children: [{ _type: 'span', text: description.replace(/<[^>]*>?/gm, '') }] }],
+      tags: Array.isArray(tags) ? tags.map(tag => String(tag).trim()) : [],
+      technologies: technologies.map(techId => ({ _key: uuidv4(), _type: 'reference', _ref: techId })),
       githubUrl,
       liveUrl,
       mainImage,
       cardImage,
-      teamMembers: allTeamMembers,
+      galleryImages,
+      projectType,
+      status,
       approvalStatus: 'pending_approval',
+      ...(projectType === 'solo' && soloContributor ? { soloContributor: soloContributor } : {}),
+      ...(projectType === 'team' && allTeamMembers.length > 0 ? { teamMembers: allTeamMembers } : {}),
     };
 
-    const createdProject = await client.create(newProject);
+    const createdProject = await serverWriteClient.create(newProject);
 
     return new Response(JSON.stringify(createdProject), { status: 201 });
   } catch (error) {

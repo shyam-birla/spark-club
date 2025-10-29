@@ -11,12 +11,20 @@ export const client = createClient({
   useCdn: false, 
 })
 
-export const writeClient = createClient({
+export const serverWriteClient = createClient({
   projectId,
   dataset,
   apiVersion,
   useCdn: false,
   token: process.env.SANITY_API_WRITE_TOKEN,
+});
+
+export const clientWriteClient = createClient({
+  projectId,
+  dataset,
+  apiVersion,
+  useCdn: false,
+  token: process.env.NEXT_PUBLIC_SANITY_API_WRITE_TOKEN,
 });
 
 // === YEH CODE ADD KIYA GAYA HAI ===

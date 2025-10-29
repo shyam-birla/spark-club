@@ -191,7 +191,7 @@ export default function ProfileClient({ session, profileData }) {
                                     <div className="space-y-4">
                                         {trulyCompleted.map(progress => (
                                             <div key={progress.roadmap._id}>
-                                                <Link href={`/certificates/${progress.roadmap.slug}`} className="font-bold hover:underline text-orange-600">{progress.roadmap.title}</Link>
+                                                <Link href={`/certificates/${progress.roadmap.slug?.current || progress.roadmap.slug}`} className="font-bold hover:underline text-orange-600">{progress.roadmap.title}</Link>
                                                 <p className="text-xs text-gray-500">Completed on: {formatDate(progress.lastUpdated)}</p>
                                             </div>
                                         ))}
@@ -209,7 +209,7 @@ export default function ProfileClient({ session, profileData }) {
                                      <div className="space-y-4">
                                         {profileData.projects.map(p => (
                                             <div key={p._id}>
-                                                <Link href={`/projects/${p.slug.current}`} className="font-bold hover:underline">{p.title}</Link>
+                                                <Link href={`/projects/${p.slug}`} className="font-bold hover:underline">{p.title}</Link>
                                             </div>
                                         ))}
                                     </div>

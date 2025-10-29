@@ -4,7 +4,9 @@ import Link from 'next/link';
 import PortableTextComponent from '@/components/PortableTextComponent';
 import Breadcrumbs from '@/components/Breadcrumbs';
 import ImageGalleryWithLightbox from '@/components/ImageGalleryWithLightbox'; // Import the gallery component
-import { FaGithub, FaExternalLinkAlt, FaCheckCircle, FaHourglassHalf, FaCodeBranch, FaUsers, FaInfoCircle, FaCode, FaHome, FaProjectDiagram, FaLinkedin, FaTwitter, FaFacebook } from 'react-icons/fa';
+import { FaGithub, FaExternalLinkAlt, FaCheckCircle, FaHourglassHalf, FaCodeBranch, FaUsers, FaInfoCircle, FaCode, FaHome, FaProjectDiagram } from 'react-icons/fa';
+import ShareButtons from '@/components/ShareButtons';
+import ProjectCard from '@/components/ProjectCard';
 
 // Yeh Next.js ko batata hai ki kaun kaun se project pages hain
 export async function generateStaticParams() {
@@ -160,24 +162,7 @@ export default async function ProjectDetailPage({ params }) {
                       </Link>
                     )}
                   </div>
-                  <div className="flex flex-wrap gap-3 mt-4 mb-4">
-                    <h3 className="font-bold text-lg text-black">Share:</h3>
-                    <Link href={`https://twitter.com/intent/tweet?url=${encodeURIComponent(window.location.href)}&text=${encodeURIComponent(project.title)}`} target="_blank">
-                      <button className="bg-blue-400 text-white px-4 py-2 rounded-md font-semibold text-sm hover:bg-blue-500 transition-colors flex items-center gap-2">
-                        <FaTwitter /> Twitter
-                      </button>
-                    </Link>
-                    <Link href={`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(window.location.href)}`} target="_blank">
-                      <button className="bg-blue-700 text-white px-4 py-2 rounded-md font-semibold text-sm hover:bg-blue-800 transition-colors flex items-center gap-2">
-                        <FaFacebook /> Facebook
-                      </button>
-                    </Link>
-                    <Link href={`https://www.linkedin.com/shareArticle?mini=true&url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(project.title)}&summary=${encodeURIComponent(project.description)}`} target="_blank">
-                      <button className="bg-blue-600 text-white px-4 py-2 rounded-md font-semibold text-sm hover:bg-blue-700 transition-colors flex items-center gap-2">
-                        <FaLinkedin /> LinkedIn
-                      </button>
-                    </Link>
-                  </div>
+                  <ShareButtons title={project.title} description={project.description} />
                 </section>
     
                 {project.description && (

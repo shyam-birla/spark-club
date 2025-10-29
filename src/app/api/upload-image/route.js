@@ -1,14 +1,12 @@
-// src/app/api/upload-image/route.js
-
-import { NextResponse } from 'next/server';
+import { serverWriteClient } from '../../../../sanity/lib/client';
 import { getServerSession } from 'next-auth/next';
-import { authOptions } from '../auth/[...nextauth]/route';
-import { writeClient } from '../../../../sanity/lib/client';
+import { authOptions } from '@/app/api/auth/[...nextauth]/route';
 
 export async function POST(request) {
   const session = await getServerSession(authOptions);
-  if (!session?.user?.email) {
-    return NextResponse.json({ message: 'Not authenticated' }, { status: 401 });
+
+  if (!session) {
+    return new Response(JSON.stringify({ message: 'Unauthorized' }), { status: 401 });
   }
 
   try {
@@ -16,19 +14,14 @@ export async function POST(request) {
     const file = formData.get('file');
 
     if (!file) {
-      return NextResponse.json({ message: 'No file provided' }, { status: 400 });
+      return new Response(JSON.stringify({ message: 'No file uploaded' }), { status: 400 });
     }
 
-    const fileBuffer = await file.arrayBuffer();
+    const asset = await serverWriteClient.assets.upload('image', file);
 
-    const document = await writeClient.assets.upload('image', Buffer.from(fileBuffer), {
-      contentType: file.type,
-      filename: file.name,
-    });
-
-    return NextResponse.json(document, { status: 200 });
+    return new Response(JSON.stringify({ assetId: asset._id, assetUrl: asset.url }), { status: 201 });
   } catch (error) {
-    console.error('Image upload error:', error);
-    return NextResponse.json({ message: 'Image upload failed', error: error.message }, { status: 500 });
+    console.error('Error uploading image:', error);
+    return new Response(JSON.stringify({ message: 'Error uploading image' }), { status: 500 });
   }
 }

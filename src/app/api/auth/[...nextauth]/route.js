@@ -3,7 +3,7 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
-import { client } from '../../../../../sanity/lib/client';
+import { client, serverWriteClient } from '../../../../../sanity/lib/client';
 
 export const authOptions = {
   providers: [
@@ -35,10 +35,22 @@ export const authOptions = {
       }
       // Add user role to the token
       if (user) {
-        const userProfile = await client.fetch(
+        let userProfile = await client.fetch(
           `*[_type == "profile" && userEmail == $email][0]`,
           { email: user.email }
         );
+
+        if (!userProfile) {
+          // Create a new profile for the user
+          const newUser = {
+            _type: 'profile',
+            userEmail: user.email,
+            userName: user.name,
+            role: 'member', // Default role
+          };
+          userProfile = await serverWriteClient.create(newUser);
+        }
+
         token.role = userProfile?.role || 'member';
       }
       return token;

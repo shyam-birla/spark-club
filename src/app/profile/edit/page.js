@@ -1,5 +1,6 @@
 'use client';
 
+import { toast } from 'react-hot-toast';
 import { useState, useEffect } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
@@ -104,7 +105,7 @@ export default function EditProfilePage() {
             setImageAsset(document);
         } catch (error) {
             console.error('Image upload error:', error);
-            alert('Image upload failed. Please try again.');
+            toast.error('Image upload failed. Please try again.');
         } finally {
             setIsUploading(false);
         }
@@ -175,12 +176,12 @@ export default function EditProfilePage() {
                 throw new Error(errorData.message || 'Failed to update profile');
             }
 
-            alert('Profile updated successfully!');
+            toast.success('Profile updated successfully!');
             router.push('/profile');
             router.refresh();
         } catch (error) {
             console.error(error);
-            alert('Something went wrong. Please try again.');
+            toast.error('Something went wrong. Please try again.');
         } finally {
             setSaving(false);
         }

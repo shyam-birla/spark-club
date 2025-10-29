@@ -1,4 +1,7 @@
 
+import researchSubmission from './researchSubmission';
+import blogSubmission from './blogSubmission';
+import projectSubmission from './projectSubmission';
 import aboutPage from './aboutPage';
 import blockContent from './blockContent';
 import blogPost from './blogPost';
@@ -33,6 +36,9 @@ import emailVerification from './emailVerification';
 
 
 export const schemaTypes = [
+    blogSubmission,
+    projectSubmission,
+    researchSubmission,
     aboutPage,
     blockContent,
     blogPost,

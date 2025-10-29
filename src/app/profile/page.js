@@ -16,6 +16,7 @@ async function getFullUserProfile(email) {
         // Projects authored by user
         "projects": *[_type == "project" && references(^._id)]{
             ...,
+            "slug": slug.current, // Explicitly get slug string
             // Project technologies (expanded) - using 'name'
             "technologies": technologies[]->{
                 _id,
@@ -26,6 +27,7 @@ async function getFullUserProfile(email) {
         // Personal/external projects - expand technologies here! - using 'name'
         "externalProjects": externalProjects[]{
             ...,
+            "slug": slug.current, // Explicitly get slug string
             "technologies": technologies[]->{
                 _id,
                 name, // Correct field name

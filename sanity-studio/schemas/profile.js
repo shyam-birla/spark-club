@@ -7,11 +7,8 @@ const profile = {
         {
             name: 'uniqueProfileId',
             title: 'Unique Profile ID',
-            type: 'slug',
-            options: {
-                source: 'userName',
-                maxLength: 96,
-            },
+            type: 'number',
+            initialValue: () => Math.floor(100000000 + Math.random() * 900000000),
             validation: Rule => Rule.required(),
         },
         {
