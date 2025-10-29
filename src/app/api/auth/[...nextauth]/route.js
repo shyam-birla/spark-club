@@ -3,6 +3,8 @@
 import NextAuth from 'next-auth';
 import GoogleProvider from 'next-auth/providers/google';
 import GithubProvider from 'next-auth/providers/github';
+import CredentialsProvider from 'next-auth/providers/credentials';
+import bcrypt from 'bcryptjs'; // Import bcryptjs
 import { client, serverWriteClient } from '../../../../../sanity/lib/client';
 
 export const authOptions = {
@@ -14,6 +16,36 @@ export const authOptions = {
     GithubProvider({
       clientId: process.env.GITHUB_CLIENT_ID,
       clientSecret: process.env.GITHUB_CLIENT_SECRET,
+    }),
+    CredentialsProvider({
+      name: 'Credentials',
+      credentials: {
+        email: { label: 'Email', type: 'text' },
+        password: { label: 'Password', type: 'password' },
+      },
+      async authorize(credentials) {
+        if (!credentials?.email || !credentials?.password) {
+          return null; // No email or password provided
+        }
+
+        const userProfile = await client.fetch(
+          `*[_type == "profile" && userEmail == $email][0]`,
+          { email: credentials.email }
+        );
+
+        if (!userProfile || !userProfile.hashedPassword) {
+          return null; // User not found or no password set (e.g., OAuth user)
+        }
+
+        const isValidPassword = await bcrypt.compare(credentials.password, userProfile.hashedPassword);
+
+        if (isValidPassword) {
+          // Return user object (NextAuth expects at least id, email, name)
+          return { id: userProfile._id, email: userProfile.userEmail, name: userProfile.userName };
+        } else {
+          return null; // Invalid password
+        }
+      },
     }),
   ],
   secret: process.env.NEXTAUTH_SECRET,

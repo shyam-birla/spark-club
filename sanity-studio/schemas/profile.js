@@ -39,6 +39,30 @@ const profile = {
         { name: 'linkedinUrl', title: 'LinkedIn Profile URL', type: 'url' },
         { name: 'githubUrl', title: 'GitHub Profile URL', type: 'url' },
         { name: 'portfolioUrl', title: 'Personal Portfolio URL', type: 'url' },
+
+        // --- Fields for Email/Password Authentication ---
+        {
+            name: 'hashedPassword',
+            title: 'Hashed Password',
+            type: 'string',
+            // IMPORTANT: This field should ONLY store securely hashed passwords.
+            // Never store plain text passwords.
+            readOnly: true, // Should not be editable directly in Sanity Studio
+        },
+        {
+            name: 'passwordResetToken',
+            title: 'Password Reset Token',
+            type: 'string',
+            readOnly: true,
+        },
+        {
+            name: 'passwordResetExpires',
+            title: 'Password Reset Expires',
+            type: 'datetime',
+            readOnly: true,
+        },
+        // --- End Email/Password Authentication Fields ---
+
         { name: 'education', title: 'Education', type: 'array', of: [{ type: 'education' }] },
         { name: 'workExperience', title: 'Work Experience', type: 'array', of: [{ type: 'workExperience' }] },
         {

@@ -5,6 +5,7 @@ import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
 import { client, clientWriteClient } from '../../../../sanity/lib/client';
 import { toast } from 'react-hot-toast';
+import { FaProjectDiagram, FaArrowLeft, FaArrowRight, FaTrash, FaCheckCircle, FaSpinner } from 'react-icons/fa';
 
 // Import custom hooks
 import useTechnologies from '@/hooks/useTechnologies';
@@ -555,7 +556,7 @@ export default function NewProjectPage() {
 
         <main className="container mx-auto px-4 py-12 md:py-20">
 
-          <h1 className="text-3xl font-bold mb-6">Submit a New Project</h1>
+          <h1 className="text-3xl font-bold mb-6 flex items-center gap-2"><FaProjectDiagram /> Submit a New Project</h1>
 
           <div className="max-w-4xl mx-auto">
 
@@ -695,23 +696,23 @@ export default function NewProjectPage() {
 
                   {activeSection !== 'projectDetails' && (
 
-                    <button type="button" onClick={handlePrevSection} className="bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors">Previous</button>
+                    <button type="button" onClick={handlePrevSection} className="flex items-center gap-2 bg-gray-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-gray-700 transition-colors"><FaArrowLeft /> Previous</button>
 
                   )}
 
                   {activeSection !== 'links' ? (
 
-                    <button type="button" onClick={handleNextSection} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors ml-auto">Next</button>
+                    <button type="button" onClick={handleNextSection} className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors ml-auto">Next <FaArrowRight /></button>
 
                   ) : (
 
                     <div className="text-right">
 
-                      <button type="button" onClick={clearDraft} className="bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors mr-4">Clear Draft</button>
+                      <button type="button" onClick={clearDraft} className="flex items-center gap-2 bg-red-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-red-700 transition-colors mr-4"><FaTrash /> Clear Draft</button>
 
-                      <button type="submit" disabled={saving || uploadingMainImage || uploadingCardImage} className="bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400">
+                      <button type="submit" disabled={saving || uploadingMainImage || uploadingCardImage} className="flex items-center gap-2 bg-blue-600 text-white px-6 py-2 rounded-lg font-semibold hover:bg-blue-700 transition-colors disabled:bg-gray-400">
 
-                        {saving ? 'Submitting...' : 'Submit for Approval'}
+                        {saving ? <><FaSpinner className="animate-spin" /> Submitting...</> : <><FaCheckCircle /> Submit for Approval</>}
 
                       </button>
 

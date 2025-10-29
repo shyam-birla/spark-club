@@ -76,6 +76,7 @@ const ProjectDetailsSection = ({
             value={formData.title}
             onChange={(e) => dispatch({ type: 'UPDATE_FIELD', field: 'title', value: e.target.value })} // Use dispatch
             className={`mt-1 block w-full px-3 py-2 border ${errors.title ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+            placeholder="e.g., AI-Powered Chatbot for Customer Support"
             required
           />
           {errors.title && <p className="mt-2 text-sm text-red-600">{errors.title}</p>}
@@ -117,10 +118,11 @@ const ProjectDetailsSection = ({
               value={currentTagInput}
               onChange={handleTagInputChange}
               onKeyDown={handleAddTag}
-              placeholder="Add tags (space, comma, or enter to add)"
+              placeholder="e.g., AI, Web Development, Machine Learning"
               className="flex-grow border-none focus:ring-0 focus:outline-none p-0"
             />
           </div>
+          <p className="mt-1 text-xs text-gray-500">Add keywords that describe your project. Press space, comma, or enter to add a tag.</p>
         </div>
         <div className="md:col-span-2">
           <label htmlFor="description" className="block text-sm font-medium text-gray-700 flex items-center">
@@ -136,6 +138,7 @@ const ProjectDetailsSection = ({
                 // setErrors(prev => ({ ...prev, description: '' })); // Errors handled in parent
               }}
               className={`mt-1 block w-full ${errors.description ? 'border border-red-500 rounded-md' : ''}`}
+              placeholder="Provide a detailed description of your project, its goals, and features."
               modules={{
                 toolbar: [
                   [{ 'header': '1' }, { 'header': '2' }, { 'font': [] }],
@@ -152,6 +155,7 @@ const ProjectDetailsSection = ({
         </div>
         <div className="md:col-span-2">
           <label htmlFor="technologies" className="block text-sm font-medium text-gray-700">Technologies</label>
+          <p className="mt-1 text-xs text-gray-500 mb-2">Select the key technologies used in your project.</p>
           {formData.technologies.length > 0 && (
             <div className="mt-1 mb-2 flex flex-wrap items-center gap-2 p-2 border border-gray-200 rounded-md bg-gray-50">
               {formData.technologies.map(techId => {
@@ -215,6 +219,7 @@ const ProjectDetailsSection = ({
                     value={newTechnologyName}
                     onChange={(e) => handleNewTechnologyNameChange(e.target.value)}
                     className="mt-1 block w-full px-3 py-2 border border-blue-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500"
+                    placeholder="e.g., React, Python, TensorFlow"
                   />
                 </div>
                 <div>
@@ -225,7 +230,9 @@ const ProjectDetailsSection = ({
                     id="newTechnologyLogo"
                     onChange={(e) => handleNewTechnologyLogoChange(e.target.files[0])}
                     className="mt-1 block w-full"
+                    accept="image/*"
                   />
+                  <p className="mt-1 text-xs text-gray-500">Upload a logo for the new technology (optional).</p>
                   {newTechnologyLogoPreview && (
                     <div className="mt-2 relative w-fit">
                       <img src={newTechnologyLogoPreview} alt="Logo Preview" className="max-w-[80px] h-auto rounded-md shadow" />

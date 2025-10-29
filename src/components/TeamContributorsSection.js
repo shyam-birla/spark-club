@@ -48,7 +48,7 @@ const [expandedMembers, setExpandedMembers] = React.useState({});
           <div className="flex items-end gap-2">
             <input
               type="text"
-              placeholder="Contributor Profile ID"
+              placeholder="Contributor Profile ID (e.g., 123456789)"
               value={formData.soloContributor.uniqueProfileId || ''}
               onChange={(e) => handleSoloContributorChange('uniqueProfileId', e.target.value)}
               className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
@@ -72,7 +72,7 @@ const [expandedMembers, setExpandedMembers] = React.useState({});
               </div>
               <input
                 type="text"
-                placeholder="Role in Project"
+                placeholder="Role in Project (e.g., Lead Developer, Designer)"
                 value={formData.soloContributor.role}
                 onChange={(e) => handleSoloContributorChange('role', e.target.value)}
                 className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
@@ -93,7 +93,7 @@ const [expandedMembers, setExpandedMembers] = React.useState({});
               <div className="flex items-end gap-2">
                 <input
                   type="text"
-                  placeholder="Member Profile ID"
+                  placeholder="Member Profile ID (e.g., 123456789)"
                   value={member.uniqueProfileId || ''}
                   onChange={(e) => handleTeamMemberChange('teamMembers', index, 'uniqueProfileId', e.target.value)}
                   className="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"
@@ -126,7 +126,7 @@ const [expandedMembers, setExpandedMembers] = React.useState({});
                     <div className="mt-2">
                       <input
                         type="text"
-                        placeholder="Role in Project"
+                        placeholder="Role in Project (e.g., Backend Developer, UI/UX Designer)"
                         value={member.role}
                         onChange={(e) => handleTeamMemberChange('teamMembers', index, 'role', e.target.value)}
                         className="mt-2 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm"

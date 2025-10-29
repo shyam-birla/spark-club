@@ -21,6 +21,7 @@ const ProjectLinksSection = ({ formData, dispatch, errors, validatedFields }) =>
             value={formData.githubUrl}
             onChange={(e) => dispatch({ type: 'UPDATE_FIELD', field: 'githubUrl', value: e.target.value })}
             className={`mt-1 block w-full px-3 py-2 border ${errors.githubUrl ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+            placeholder="https://github.com/your-username/your-project"
           />
           {errors.githubUrl && <p className="mt-2 text-sm text-red-600">{errors.githubUrl}</p>}
         </div>
@@ -36,6 +37,7 @@ const ProjectLinksSection = ({ formData, dispatch, errors, validatedFields }) =>
             value={formData.liveUrl}
             onChange={(e) => dispatch({ type: 'UPDATE_FIELD', field: 'liveUrl', value: e.target.value })}
             className={`mt-1 block w-full px-3 py-2 border ${errors.liveUrl ? 'border-red-500' : 'border-gray-300'} rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500`}
+            placeholder="https://your-project-live-demo.com"
           />
           {errors.liveUrl && <p className="mt-2 text-sm text-red-600">{errors.liveUrl}</p>}
         </div>

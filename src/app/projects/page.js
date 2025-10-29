@@ -1,7 +1,7 @@
 import { client } from '../../../sanity/lib/client';
 import ProjectListClient from '@/components/ProjectListClient'; // Import the new client component
 
-const projectsQuery = `*[_type == "project" && approvalStatus == "published"] | order(displayOrder asc) {
+const projectsQuery = `*[_type == "projectSubmission" && approvalStatus == "approved"] | order(_createdAt desc) {
   _id,
   title,
   "slug": slug.current,
