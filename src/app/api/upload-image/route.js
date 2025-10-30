@@ -22,6 +22,6 @@ export async function POST(request) {
     return new Response(JSON.stringify({ assetId: asset._id, assetUrl: asset.url }), { status: 201 });
   } catch (error) {
     console.error('Error uploading image:', error);
-    return new Response(JSON.stringify({ message: 'Error uploading image' }), { status: 500 });
+    return new Response(JSON.stringify({ message: 'Error uploading image', error: error.message }), { status: 500 });
   }
 }

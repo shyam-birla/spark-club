@@ -10,8 +10,8 @@ const AuthorCard = ({ authorProfile, editableAuthorLinkedin, editableAuthorGithu
       </div>
       <div className="p-6 pt-0">
         <div className="flex items-center gap-4">
-          {authorProfile?.profileImage ? (
-            <Image src={authorProfile.profileImage} alt={authorProfile.name} width={64} height={64} className="w-16 h-16 rounded-full object-cover" />
+          {authorProfile?.profileRef?.userImage?.asset?.url ? (
+            <Image src={authorProfile.profileRef.userImage.asset.url} alt={authorProfile.name} width={64} height={64} className="w-16 h-16 rounded-full object-cover" />
           ) : (
             <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
               <span className="text-xl font-bold text-gray-600">{authorProfile?.name ? authorProfile.name.charAt(0).toUpperCase() : ''}</span>

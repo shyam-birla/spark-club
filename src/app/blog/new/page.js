@@ -4,9 +4,10 @@
 import { useReducer, useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { clientWriteClient } from '../../../../sanity/lib/client';
+import { client, clientWriteClient } from '../../../../sanity/lib/client';
 import { toast } from 'react-hot-toast';
 import dynamic from 'next/dynamic';
+import { portableTextToHtml } from '../../../utils/portableTextToHtml';
 
 import Stepper from '@/components/ui/Stepper';
 import AuthorCard from '@/components/ui/AuthorCard';
@@ -42,7 +43,7 @@ const steps = [
   { id: 'media', name: 'Media' },
 ];
 
-export default function NewBlogPage() {
+export default function NewBlogPage({ slug }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [formData, dispatch] = useReducer(formReducer, initialFormData);
@@ -58,6 +59,44 @@ export default function NewBlogPage() {
   const [editableAuthorLinkedin, setEditableAuthorLinkedin] = useState('');
   const [editableAuthorGithub, setEditableAuthorGithub] = useState('');
   const [editableAuthorPortfolio, setEditableAuthorPortfolio] = useState('');
+
+  useEffect(() => {
+    if (slug) {
+      // Fetch existing blog post data
+      client.fetch(`*[_type == "blogPost" && slug.current == $slug][0]{
+        title,
+        "slug": slug.current,
+        category,
+        body,
+        coverImage { asset->{url} },
+        author->{_id, name, uniqueProfileId, linkedinUrl, githubUrl, portfolioUrl, profileRef->{userImage{asset->{url}}}},
+      }`, { slug }).then(data => {
+        if (data) {
+          const formattedData = {
+            ...data,
+            body: portableTextToHtml(data.body), // Convert Portable Text to HTML
+          };
+          dispatch({ type: 'SET_FORM_DATA', payload: formattedData });
+          if (data.coverImage?.asset?.url) {
+            setCoverImagePreview(data.coverImage.asset.url);
+          }
+          if (data.author) {
+            setAuthorProfile(data.author);
+            setAuthorProfileIdInput(data.author.uniqueProfileId || '');
+            setEditableAuthorLinkedin(data.author.linkedinUrl || '');
+            setEditableAuthorGithub(data.author.githubUrl || '');
+            setEditableAuthorPortfolio(data.author.portfolioUrl || '');
+          }
+        } else {
+          toast.error('Blog post not found.');
+          router.push('/blog/new'); // Redirect to new if not found
+        }
+      }).catch(error => {
+        console.error('Error fetching blog post for edit:', error);
+        toast.error('Failed to load blog post for editing.');
+      });
+    }
+  }, [slug, dispatch, router]);
 
   useEffect(() => {
     if (status === 'unauthenticated') {
@@ -145,7 +184,7 @@ export default function NewBlogPage() {
       newErrors.title = 'Title is required.';
     }
 
-    if (formData.body.trim() && formData.body.trim() !== '<p><br></p>') {
+    if (String(formData.body || '').trim() && String(formData.body || '').trim() !== '<p><br></p>') {
       newValidatedFields.body = true;
     } else {
       newErrors.body = 'Blog content is required.';
@@ -226,8 +265,11 @@ export default function NewBlogPage() {
         coverImage: coverImageAsset ? { _type: 'image', asset: { _type: 'reference', _ref: coverImageAsset._id } } : null,
       };
 
-      const response = await fetch('/api/blog/new', {
-        method: 'POST',
+      const apiUrl = slug ? `/api/blog/${slug}` : '/api/blog/new';
+      const httpMethod = slug ? 'PUT' : 'POST';
+
+      const response = await fetch(apiUrl, {
+        method: httpMethod,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submissionData),
       });
@@ -236,10 +278,10 @@ export default function NewBlogPage() {
         const errorData = await response.json();
         console.error('API Error Status:', response.status);
         console.error('API Error Data:', errorData);
-        throw new Error(errorData.message || 'Failed to create blog submission');
+        throw new Error(errorData.message || `Failed to ${slug ? 'update' : 'create'} blog post`);
       }
 
-      toast.success('Blog submitted for approval!');
+      toast.success(`Blog ${slug ? 'updated' : 'submitted for approval'} successfully!`);
       router.push('/blog');
     } catch (error) {
       console.error(error);

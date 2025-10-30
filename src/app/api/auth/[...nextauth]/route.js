@@ -81,7 +81,13 @@ export const authOptions = {
             role: 'member', // Default role
             uniqueProfileId: Math.floor(100000000 + Math.random() * 900000000),
           };
-          userProfile = await serverWriteClient.create(newUser);
+          try {
+            userProfile = await serverWriteClient.create(newUser);
+          } catch (error) {
+            console.error('Error creating new user profile in Sanity:', error);
+            // Optionally, handle this error more gracefully, e.g., by returning null or throwing a specific error
+            return null; // Prevent session creation if profile creation fails
+          }
         }
 
         token.role = userProfile?.role || 'member';

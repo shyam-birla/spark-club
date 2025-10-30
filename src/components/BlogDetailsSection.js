@@ -5,7 +5,7 @@ import { clientWriteClient } from '../../sanity/lib/client';
 import { toast } from 'react-hot-toast';
 import React, { useCallback, useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import Quill from 'react-quill-new';
+
 import { IoMdCheckmark } from 'react-icons/io';
 
 const ReactQuill = dynamic(() => import('react-quill-new'), { ssr: false });
@@ -71,7 +71,7 @@ const BlogDetailsSection = ({ formData, dispatch, errors, validatedFields }) => 
         <select
           name="category"
           id="category"
-          value={formData.category}
+          value={formData.category || ''}
           onChange={(e) => dispatch({ type: 'UPDATE_FIELD', field: 'category', value: e.target.value })}
           className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
           required

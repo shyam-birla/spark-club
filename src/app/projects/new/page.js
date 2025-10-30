@@ -6,6 +6,7 @@ import { useRouter } from 'next/navigation';
 import { client, clientWriteClient } from '../../../../sanity/lib/client';
 import { toast } from 'react-hot-toast';
 import { FaProjectDiagram, FaArrowLeft, FaArrowRight, FaTrash, FaCheckCircle, FaSpinner } from 'react-icons/fa';
+import { portableTextToHtml } from '../../../utils/portableTextToHtml';
 
 // Import custom hooks
 import useTechnologies from '@/hooks/useTechnologies';
@@ -82,7 +83,7 @@ function formReducer(state, action) {
       return state;
   }
 }
-export default function NewProjectPage() {
+export default function NewProjectPage({ slug }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [formData, dispatch] = useReducer(formReducer, initialFormData);
@@ -151,6 +152,70 @@ export default function NewProjectPage() {
       
 
     
+
+      useEffect(() => {
+        if (slug) {
+          // Fetch existing project data
+          client.fetch(`*[_type in ["project", "projectSubmission"] && slug.current == $slug][0]{
+            title,
+            description,
+            tags,
+            technologies[]->{_id},
+            githubUrl,
+            liveUrl,
+            mainImage { asset->{url} },
+            cardImage { asset->{url} },
+            projectType,
+            status,
+            soloContributor { profileRef->{_id, uniqueProfileId, name, linkedinUrl, githubUrl, portfolioUrl, userImage{asset->{url}}}, projectRole },
+            teamMembers[] { _key, profileRef->{_id, uniqueProfileId, name, linkedinUrl, githubUrl, portfolioUrl, userImage{asset->{url}}}, projectRole, isTeamLead },
+            galleryImages[] { asset->{url} },
+          }`, { slug }).then(data => {
+            if (data) {
+              const formattedData = {
+                ...data,
+                description: portableTextToHtml(data.description),
+                technologies: data.technologies ? data.technologies.map(tech => tech._id) : [],
+                mainImage: data.mainImage?.asset?.url || null,
+                cardImage: data.cardImage?.asset?.url || null,
+                galleryImages: data.galleryImages ? data.galleryImages.map(img => img.asset.url) : [],
+                soloContributor: data.soloContributor ? {
+                  profileId: data.soloContributor.profileRef?.uniqueProfileId || '',
+                  name: data.soloContributor.profileRef?.name || '',
+                  email: data.soloContributor.profileRef?.email || '',
+                  linkedinUrl: data.soloContributor.profileRef?.linkedinUrl || '',
+                  githubUrl: data.soloContributor.profileRef?.githubUrl || '',
+                  portfolioUrl: data.soloContributor.profileRef?.portfolioUrl || '',
+                  userImage: data.soloContributor.profileRef?.userImage || null,
+                  role: data.soloContributor.projectRole,
+                } : { profileId: '', role: '' },
+                teamMembers: data.teamMembers ? data.teamMembers.map(member => ({
+                  profileId: member.profileRef?.uniqueProfileId || '',
+                  name: member.profileRef?.name || '',
+                  email: member.profileRef?.email || '',
+                  linkedinUrl: member.profileRef?.linkedinUrl || '',
+                  githubUrl: member.profileRef?.githubUrl || '',
+                  portfolioUrl: member.profileRef?.portfolioUrl || '',
+                  userImage: member.profileRef?.userImage || null,
+                  role: member.projectRole,
+                  isTeamLead: member.isTeamLead,
+                })) : [],
+              };
+              dispatch({ type: 'SET_FORM_DATA', payload: formattedData });
+              // Update image previews
+              if (data.mainImage?.asset?.url) previews.mainImage = data.mainImage.asset.url;
+              if (data.cardImage?.asset?.url) previews.cardImage = data.cardImage.asset.url;
+              if (data.galleryImages) previews.galleryImages = data.galleryImages.map(img => img.asset.url);
+            } else {
+              toast.error('Project not found.');
+              router.push('/projects/new'); // Redirect to new if not found
+            }
+          }).catch(error => {
+            console.error('Error fetching project for edit:', error);
+            toast.error('Failed to load project for editing.');
+          });
+        }
+      }, [slug, dispatch, router]);
 
       useEffect(() => {
 
@@ -406,7 +471,8 @@ export default function NewProjectPage() {
                 body: imageFormData,
               });
               if (!response.ok) {
-                throw new Error('Failed to upload main image');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to upload main image');
               }
               const data = await response.json();
               mainImageAsset = { _id: data.assetId, url: data.assetUrl };
@@ -428,7 +494,8 @@ export default function NewProjectPage() {
                 body: imageFormData,
               });
               if (!response.ok) {
-                throw new Error('Failed to upload card image');
+                const errorData = await response.json();
+                throw new Error(errorData.error || 'Failed to upload card image');
               }
               const data = await response.json();
               cardImageAsset = { _id: data.assetId, url: data.assetUrl };
@@ -451,7 +518,8 @@ export default function NewProjectPage() {
                   body: imageFormData,
                 });
                 if (!response.ok) {
-                  throw new Error(`Failed to upload gallery image ${index + 1}`);
+                  const errorData = await response.json();
+                  throw new Error(errorData.error || `Failed to upload gallery image ${index + 1}`);
                 }
                 const data = await response.json();
                 galleryImageAssets.push({ _type: 'image', _key: `gallery-${data.assetId}-${index}`, asset: { _type: 'reference', _ref: data.assetId } });
@@ -502,9 +570,12 @@ export default function NewProjectPage() {
 
     
 
-          const response = await fetch('/api/projects/new', {
+          const apiUrl = slug ? `/api/projects/${slug}` : '/api/projects/new';
+          const httpMethod = slug ? 'PUT' : 'POST';
 
-            method: 'POST',
+          const response = await fetch(apiUrl, {
+
+            method: httpMethod,
 
             headers: { 'Content-Type': 'application/json' },
 
@@ -514,11 +585,14 @@ export default function NewProjectPage() {
 
     
 
-          if (!response.ok) throw new Error('Failed to create project');
+          if (!response.ok) {
+            const errorData = await response.json();
+            throw new Error(errorData.error || `Failed to ${slug ? 'update' : 'create'} project`);
+          }
 
     
 
-          toast.success('Project submitted for approval!');
+          toast.success(`Project ${slug ? 'updated' : 'submitted for approval'} successfully!`);
 
           localStorage.removeItem('new-project-draft');
 

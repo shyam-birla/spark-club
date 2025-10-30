@@ -47,6 +47,13 @@ const person = {
       title: 'WhatsApp Number',
       type: 'string',
     },
+    {
+      name: 'profileRef',
+      title: 'Associated Profile',
+      type: 'reference',
+      to: [{ type: 'profile' }],
+      description: 'Link to the user's profile document if this person is a registered user.'
+    },
   ],
 };
 

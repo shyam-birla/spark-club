@@ -59,12 +59,12 @@ const [expandedMembers, setExpandedMembers] = React.useState({});
           {formData.soloContributor.name && (
             <div className="mt-2 p-2 border rounded-md bg-gray-50">
               <div className="flex items-center gap-4">
-                {!formData.soloContributor.profileImage ? (
+                {!formData.soloContributor.profileRef?.userImage?.asset?.url ? (
                 <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
                   <span className="text-xl font-bold text-gray-600">{getInitials(formData.soloContributor.name)}</span>
                 </div>
               ) : (
-                <Image src={formData.soloContributor.profileImage} alt={formData.soloContributor.name} width={64} height={64} className="w-16 h-16 rounded-full" />
+                <Image src={formData.soloContributor.profileRef.userImage.asset.url} alt={formData.soloContributor.name} width={64} height={64} className="w-16 h-16 rounded-full" />
               )}
                 <div>
                   <p><strong>Name:</strong> {formData.soloContributor.name}</p>
@@ -109,12 +109,12 @@ const [expandedMembers, setExpandedMembers] = React.useState({});
                     onClick={() => toggleMemberDetails(index)}
                   >
                     <div className="flex items-center gap-4">
-                      {!member.profileImage ? (
+                      {!member.profileRef?.userImage?.asset?.url ? (
                       <div className="w-16 h-16 rounded-full bg-gray-300 flex items-center justify-center">
                         <span className="text-xl font-bold text-gray-600">{getInitials(member.name)}</span>
                       </div>
                     ) : (
-                      <Image src={member.profileImage} alt={member.name} width={64} height={64} className="w-16 h-16 rounded-full" />
+                      <Image src={member.profileRef.userImage.asset.url} alt={member.name} width={64} height={64} className="w-16 h-16 rounded-full" />
                     )}
                       <div>
                         <p><strong>Name:</strong> {member.name}</p>

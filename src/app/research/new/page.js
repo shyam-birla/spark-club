@@ -3,7 +3,7 @@
 import { useReducer, useState, useEffect, useCallback } from 'react';
 import { useSession } from 'next-auth/react';
 import { useRouter } from 'next/navigation';
-import { clientWriteClient } from '../../../../sanity/lib/client';
+import { client, clientWriteClient } from '../../../../sanity/lib/client';
 import { toast } from 'react-hot-toast';
 
 // Import custom hooks
@@ -56,7 +56,7 @@ function formReducer(state, action) {
   }
 }
 
-export default function NewResearchProjectPage() {
+export default function NewResearchProjectPage({ slug }) {
   const { data: session, status } = useSession();
   const router = useRouter();
   const [formData, dispatch] = useReducer(formReducer, initialFormData);
@@ -77,11 +77,51 @@ export default function NewResearchProjectPage() {
 
 
   useEffect(() => {
-    const draft = JSON.parse(localStorage.getItem('new-research-draft'));
-    if (draft) {
-      dispatch({ type: 'SET_FORM_DATA', payload: draft });
+    if (slug) {
+      // Fetch existing research project data
+      client.fetch(`*[_type == "researchProject" && slug.current == $slug][0]{
+        title,
+        description,
+        status,
+        researchArea,
+        publicationLink,
+        githubUrl,
+        posterImage { asset->{url} },
+        authors[] { _key, profileRef->{_id, uniqueProfileId, name, linkedinUrl, githubUrl, portfolioUrl, image{asset->{url}}} },
+        mentors[] { _key, profileRef->{_id, uniqueProfileId, name, linkedinUrl, githubUrl, portfolioUrl, image{asset->{url}}} },
+      }`, { slug }).then(data => {
+        if (data) {
+          const formattedData = {
+            ...data,
+            posterImage: data.posterImage?.asset?.url || null,
+            authors: data.authors ? data.authors.map(author => ({
+              profileId: author.profileRef.uniqueProfileId,
+              name: author.profileRef.name,
+              linkedinUrl: author.profileRef.linkedinUrl,
+              githubUrl: author.profileRef.githubUrl,
+              portfolioUrl: author.profileRef.portfolioUrl,
+            })) : [],
+            mentors: data.mentors ? data.mentors.map(mentor => ({
+              profileId: mentor.profileRef.uniqueProfileId,
+              name: mentor.profileRef.name,
+              linkedinUrl: mentor.profileRef.linkedinUrl,
+              githubUrl: mentor.profileRef.githubUrl,
+              portfolioUrl: mentor.profileRef.portfolioUrl,
+            })) : [],
+          };
+          dispatch({ type: 'SET_FORM_DATA', payload: formattedData });
+          // Update image preview
+          if (data.posterImage?.asset?.url) previews.posterImage = data.posterImage.asset.url;
+        } else {
+          toast.error('Research project not found.');
+          router.push('/research/new'); // Redirect to new if not found
+        }
+      }).catch(error => {
+        console.error('Error fetching research project for edit:', error);
+        toast.error('Failed to load research project for editing.');
+      });
     }
-  }, []);
+  }, [slug, dispatch, router]);
 
   useEffect(() => {
     const dataToSave = { ...formData, posterImage: null };
@@ -169,15 +209,18 @@ export default function NewResearchProjectPage() {
         })),
       };
 
-      const response = await fetch('/api/research/new', {
-        method: 'POST',
+      const apiUrl = slug ? `/api/research/${slug}` : '/api/research/new';
+      const httpMethod = slug ? 'PUT' : 'POST';
+
+      const response = await fetch(apiUrl, {
+        method: httpMethod,
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(submissionData),
       });
 
-      if (!response.ok) throw new Error('Failed to create research project');
+      if (!response.ok) throw new Error(`Failed to ${slug ? 'update' : 'create'} research project`);
 
-      toast.success('Research project submitted for approval!');
+      toast.success(`Research project ${slug ? 'updated' : 'submitted for approval'} successfully!`);
       localStorage.removeItem('new-research-draft');
       router.push('/research');
     } catch (error) {
