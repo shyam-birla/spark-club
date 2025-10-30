@@ -19,7 +19,7 @@ export default function MyContentPage() {
       const userEmail = session.user.email;
       const query = `*[_type == "profile" && userEmail == $email][0]{
         "blogPosts": *[_type == "blogPost" && author._ref == ^._id]{_id, title, "slug": slug.current},
-        "projects": *[_type == "project" && author._ref == ^._id]{_id, title, "slug": slug.current},
+        "projects": *[_type == "project" || _type == "projectSubmission" && author._ref == ^._id]{_id, title, "slug": slug.current},
         "researchProjects": *[_type == "researchProject" && author._ref == ^._id]{_id, title, "slug": slug.current}
       }`;
 
