@@ -17,7 +17,7 @@ const useImageUpload = (imageConfig, dispatch) => {
       }
     }
     setPreviews(initialPreviews);
-  }, [imageConfig]);
+  }, [JSON.stringify(imageConfig)]);
 
   const handleImageChange = useCallback((e, imageKey) => {
     const { updateAction, multiple } = imageConfig[imageKey];
@@ -34,7 +34,7 @@ const useImageUpload = (imageConfig, dispatch) => {
         setPreviews(prev => ({ ...prev, [imageKey]: URL.createObjectURL(file) }));
       }
     }
-  }, [dispatch, imageConfig]);
+  }, [dispatch, JSON.stringify(imageConfig)]);
 
   const clearImage = useCallback((imageKey, index = null) => {
     const { updateAction, multiple } = imageConfig[imageKey];
@@ -45,7 +45,7 @@ const useImageUpload = (imageConfig, dispatch) => {
       dispatch({ type: updateAction, field: imageKey, value: null });
       setPreviews(prev => ({ ...prev, [imageKey]: null }));
     }
-  }, [dispatch, imageConfig]);
+  }, [dispatch, JSON.stringify(imageConfig)]);
 
   return {
     previews,
