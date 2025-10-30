@@ -52,7 +52,7 @@ const person = {
       title: 'Associated Profile',
       type: 'reference',
       to: [{ type: 'profile' }],
-      description: 'Link to the user's profile document if this person is a registered user.'
+      description: 'Link to the user\'s profile document if this person is a registered user.'
     },
   ],
 };
