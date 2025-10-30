@@ -36,6 +36,9 @@ export default async function RootLayout({ children }) {
 
   return (
     <html lang="en" className={spaceGrotesk.className}>
+      <head>
+        <link rel="icon" href="/favicon.ico" />
+      </head>
       <body className={`bg-white text-gray-700`}>
         <NextAuthProvider>
           <DynamicGlobal3DCanvas />
