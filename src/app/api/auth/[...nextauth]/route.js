@@ -79,6 +79,7 @@ export const authOptions = {
             userEmail: user.email,
             userName: user.name,
             role: 'member', // Default role
+            uniqueProfileId: Math.floor(100000000 + Math.random() * 900000000),
           };
           userProfile = await serverWriteClient.create(newUser);
         }
