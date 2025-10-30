@@ -202,10 +202,6 @@ export default function NewProjectPage({ slug }) {
                 })) : [],
               };
               dispatch({ type: 'SET_FORM_DATA', payload: formattedData });
-              // Update image previews
-              if (data.mainImage?.asset?.url) previews.mainImage = data.mainImage.asset.url;
-              if (data.cardImage?.asset?.url) previews.cardImage = data.cardImage.asset.url;
-              if (data.galleryImages) previews.galleryImages = data.galleryImages.map(img => img.asset.url);
             } else {
               toast.error('Project not found.');
               router.push('/projects/new'); // Redirect to new if not found

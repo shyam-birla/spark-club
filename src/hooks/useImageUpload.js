@@ -1,8 +1,10 @@
 // src/hooks/useImageUpload.js
-import { useState, useCallback, useEffect } from 'react';
+import { useState, useCallback, useEffect, useMemo } from 'react';
 
 const useImageUpload = (imageConfig, dispatch) => {
   const [previews, setPreviews] = useState({});
+
+  const stringifiedImageConfig = useMemo(() => JSON.stringify(imageConfig), [imageConfig]);
 
   useEffect(() => {
     const initialPreviews = {};
@@ -17,7 +19,7 @@ const useImageUpload = (imageConfig, dispatch) => {
       }
     }
     setPreviews(initialPreviews);
-  }, [JSON.stringify(imageConfig)]);
+  }, [stringifiedImageConfig]);
 
   const handleImageChange = useCallback((e, imageKey) => {
     const { updateAction, multiple } = imageConfig[imageKey];
@@ -34,7 +36,7 @@ const useImageUpload = (imageConfig, dispatch) => {
         setPreviews(prev => ({ ...prev, [imageKey]: URL.createObjectURL(file) }));
       }
     }
-  }, [dispatch, JSON.stringify(imageConfig)]);
+  }, [dispatch, stringifiedImageConfig]);
 
   const clearImage = useCallback((imageKey, index = null) => {
     const { updateAction, multiple } = imageConfig[imageKey];
@@ -45,7 +47,7 @@ const useImageUpload = (imageConfig, dispatch) => {
       dispatch({ type: updateAction, field: imageKey, value: null });
       setPreviews(prev => ({ ...prev, [imageKey]: null }));
     }
-  }, [dispatch, JSON.stringify(imageConfig)]);
+  }, [dispatch, stringifiedImageConfig]);
 
   return {
     previews,

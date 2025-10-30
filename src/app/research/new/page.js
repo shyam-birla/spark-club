@@ -110,8 +110,6 @@ export default function NewResearchProjectPage({ slug }) {
             })) : [],
           };
           dispatch({ type: 'SET_FORM_DATA', payload: formattedData });
-          // Update image preview
-          if (data.posterImage?.asset?.url) previews.posterImage = data.posterImage.asset.url;
         } else {
           toast.error('Research project not found.');
           router.push('/research/new'); // Redirect to new if not found
